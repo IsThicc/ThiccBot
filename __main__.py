@@ -8,7 +8,7 @@ import discord
 import asyncio
 from discord.ext import commands
 import os
-import datetime
+# import datetime
 from config import TOKEN
 #
 #

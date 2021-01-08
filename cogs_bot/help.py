@@ -1,11 +1,11 @@
 #
-#           QChat-bot Times.py | 2020 (c) Mrmagicpie
+#           IsThicc-bot Help.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import discord
-import asyncio
+# import asyncio
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
