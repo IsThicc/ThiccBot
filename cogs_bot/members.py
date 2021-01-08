@@ -63,7 +63,7 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
         channel = self.bot.get_channel(796955089628954666)
 
         welcome = em(
-            title=f"Welcome to {self.where_am_i}!",
+            title=f"{member} has left {self.where_am_i}!",
             description=f"""
 {member} has left {self.where_am_i}! <a:sad:796961152579534868>
             """,
