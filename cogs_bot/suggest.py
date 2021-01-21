@@ -11,7 +11,7 @@ class Suggestions(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.channel.id != 801929449124790353: return
+        if message.channel.id != 801929449124790353 or message.author.bot: return
         content = ""
         # Remove Markdown
         msg = message.content
