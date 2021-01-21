@@ -26,13 +26,14 @@ class Suggestions(commands.Cog):
         ##########################
 
         em = Embed(title=f'New suggestion from {message.author}', colour=discord.Colour.blue(), description=content)
+        em.set_thumbnail(url=message.author.avatar_url_as(format='png'))
         msg = await self.bot.get_channel(801929480875802624).send(embed=em)
 
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
 
-        await message.reply(f'{msg.jump_url}', delete_after=3)
-        await asyncio.sleep(3)
+        await message.reply(f'{msg.jump_url}', delete_after=5)
+        await asyncio.sleep(5)
         await message.delete()
 
 
