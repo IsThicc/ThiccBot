@@ -1,3 +1,5 @@
 # Copyright (c) 2020 IsThicc
 jishaku
 discord
+aiomysql
+discord-py-slash-commands

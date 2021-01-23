@@ -4,13 +4,18 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord
 import asyncio
-from discord.ext import commands
 import os
-# import datetime
-from config import TOKEN
+
+import aiomysql
+import discord
+from config import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
+from discord.ext import commands
 from discord_slash import SlashCommand
+
+from db.database import Pool
+
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -36,6 +41,29 @@ bot.slash = SlashCommand(bot, auto_register = True, auto_delete = False)
 
 bot.remove_command('help')
 bot.load_extension('jishaku')
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+
+async def _init_async():
+    _pool = await aiomysql.create_pool(
+        host = mysql_host,
+        port = 3306,
+        db = mysql_db,
+        user = mysql_user,
+        password = mysql_password,
+        autocommit = True,
+        loop = bot.loop
+    )
+
+    bot.db = Pool(_pool)
+
+    await bot.db.execute('CREATE TABLE IF NOT EXISTS tags(name VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL PRIMARY KEY, content VARCHAR(150) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL, owner BIGINT NOT NULL, command_id BIGINT NOT NULL, createdat DATETIME')
+
+bot.loop.create_task(_init_async())
 
 #
 #

@@ -1,1 +1,6 @@
 TOKEN = "change me"
+
+mysql_host = "1.1.1.1"
+mysql_db = "isthicc_bot"
+mysql_user = "root"
+mysql_password = ""
