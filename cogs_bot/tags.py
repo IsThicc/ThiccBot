@@ -10,8 +10,8 @@ class Tags(commands.Cog):
         self.bot = bot
         self.slash = self.bot.slash
 
-        self.staff = self.bot.fetch_guild(739510335949635736).get_role(744012353808498808)
-    
+        self.staff = self.bot.fetch_guild(739510335949635736) # .get_role(744012353808498808)
+        self.staff = self.staff.get_role(744012353808498808)
     async def perm_error(self, ctx):
         await ctx.send(embeds=[discord.Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
 
