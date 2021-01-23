@@ -10,6 +10,7 @@ from discord.ext import commands
 import os
 # import datetime
 from config import TOKEN
+from discord_slash import SlashCommand
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -30,6 +31,9 @@ async def get_prefix(bot, message):
 #
 #
 bot = commands.Bot(command_prefix=get_prefix, intents=discord.Intents.all())
+
+bot.slash = SlashCommand(bot, auto_register = True, auto_delete = False)
+
 bot.remove_command('help')
 bot.load_extension('jishaku')
 
@@ -54,10 +58,12 @@ for cog_dir in os.listdir(os.getcwd()):
 #
 #
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     """
     Basic function to do basic tasks when the bot logs in.
-    :return: Changes status, and sends necessary messages to indicate the bot has started.
+    Changes status, and sends necessary messages to indicate the bot has started.
+
+    :returns: Returns None, does the actions above
     """
 
     print(f'''
