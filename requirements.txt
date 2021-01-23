@@ -2,4 +2,4 @@
 jishaku
 discord
 aiomysql
-discord-py-slash-commands
+discord-py-slash-command
