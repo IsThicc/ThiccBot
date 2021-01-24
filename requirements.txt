@@ -1,5 +1,5 @@
 # Copyright (c) 2020 IsThicc
 jishaku
-discord
+git+https://github.com/Rapptz/discord.py.git # Newer discord.py for reply support
 aiomysql
 discord-py-slash-command
