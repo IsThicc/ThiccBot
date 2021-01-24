@@ -79,7 +79,7 @@ class Tags(commands.Cog):
         if name in self.bot.slash.commands.keys():
             return await ctx.send(content='Tag already exists with that name!', complete_hidden = True)
 
-        self.slash.add_slash_command(self.template, name, guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {owner}')
+        self.slash.add_slash_command(self.template, name, guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {ctx.author}')
         await self.bot.db.add_tag(name, content, ctx.author.id, ctx.command_id)
 
         embed = discord.Embed(description=f'Created tag {name}!', colour=discord.Colour.green())
