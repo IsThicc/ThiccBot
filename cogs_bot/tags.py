@@ -9,8 +9,6 @@ class Tags(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.slash = self.bot.slash
-
-        self.staff = self.bot.fetch_guild(739510335949635736).get_role(744012353808498808)
     
     async def perm_error(self, ctx):
         await ctx.send(embeds=[discord.Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
@@ -72,8 +70,10 @@ class Tags(commands.Cog):
 
     @cmd.cog_subcommand(base='tag', name='create', guild_ids=ids, options=createopts)
     async def tag_create(self, ctx: SlashContext, name: str, content: str):
-
-        if self.staff not in ctx.author.roles:
+        staff = await self.bot.fetch_guild(739510335949635736)
+        staff = staff.get_role(744012353808498808)
+        
+        if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
         
         if name in self.bot.slash.commands.keys():
@@ -88,8 +88,10 @@ class Tags(commands.Cog):
 
     @cmd.cog_subcommand(base='tag', name='delete', guild_ids=ids, options=delopts)
     async def tag_delete(self, ctx: SlashContext, tag: str):
+        staff = await self.bot.fetch_guild(739510335949635736)
+        staff = staff.get_role(744012353808498808)
 
-        if self.staff not in ctx.author.roles:
+        if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
 
         if tag not in self.bot.slash.commands.keys():
