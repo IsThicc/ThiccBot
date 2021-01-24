@@ -72,7 +72,7 @@ class Tags(commands.Cog):
     async def tag_create(self, ctx: SlashContext, name: str, content: str):
         staff = await self.bot.fetch_guild(739510335949635736)
         staff = staff.get_role(744012353808498808)
-        
+
         if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
         
