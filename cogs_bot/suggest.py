@@ -25,7 +25,7 @@ class Suggestions(commands.Cog):
                 content += letter
         ##########################
 
-        em = Embed(colour=discord.Colour.blue(), description=content)
+        em = Embed(colour=discord.Colour.blue(), description=f"```{content}```")
         em.set_author(name=f'New suggestion from {message.author}', icon_url=message.author.avatar_url_as(format='png'))
         msg = await self.bot.get_channel(801929480875802624).send(embed=em)
 
