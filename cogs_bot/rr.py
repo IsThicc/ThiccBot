@@ -8,7 +8,7 @@ class ReactionRoles(commands.Cog):
         
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if payload.message_id == 0: # change
+        if payload.message_id == 804177369584631810: # change
             if str(payload.emoji) == "🔔":
                 role = self.isthicc.get_role(804161887704973323)
                 await payload.member.add_roles(role)
@@ -21,7 +21,7 @@ class ReactionRoles(commands.Cog):
                 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        if payload.message_id == 0: # change
+        if payload.message_id == 804177369584631810: # change
             if str(payload.emoji) == "🔔":
                 role = self.isthicc.get_role(804161887704973323)
                 await payload.member.remove_roles(role)
