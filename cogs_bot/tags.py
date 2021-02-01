@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 from discord_slash import SlashContext, utils
 from discord_slash import cog_ext as cmd
+from discord import Embed
 
 class Tags(commands.Cog):
     def __init__(self, bot):
@@ -11,7 +12,7 @@ class Tags(commands.Cog):
         self.slash = self.bot.slash
     
     async def perm_error(self, ctx):
-        await ctx.send(embeds=[discord.Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
+        await ctx.send(embeds=[Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
 
     tagopts = [
         {
@@ -48,8 +49,7 @@ class Tags(commands.Cog):
     
     async def template(self, ctx, reply_id: int = None):
         r = await self.bot.db.execute('SELECT tag, content, owner, date FROM tag WHERE command_id = ?', (ctx.command_id,))
-        content = discord.Embed(title=r[0][0], description=r[0][1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[0][3], "%Y-%m-%d"))
-        content.set_footer(text=f'Tag created by {r[0][2]}, Created At')
+        content = Embed(title=r[0][0], description=r[0][1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[0][3], "%Y-%m-%d")).set_footer(text=f'Tag created by {r[0][2]}, Created At')
         if reply_id:
             try:
                 msg = await ctx.channel.fetch_message(reply_id)
@@ -82,7 +82,7 @@ class Tags(commands.Cog):
         self.slash.add_slash_command(self.template, name, guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {ctx.author}')
         await self.bot.db.add_tag(name, content, ctx.author.id, ctx.command_id)
 
-        embed = discord.Embed(description=f'Created tag {name}!', colour=discord.Colour.green())
+        embed = Embed(description=f'Created tag {name}!', colour=discord.Colour.green())
 
         await ctx.send(embeds=[embed])
 
