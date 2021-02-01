@@ -93,18 +93,30 @@ class staff_cog(commands.Cog):
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
                 )
+
+                positions = []
+                for position in response['details']['position']:
+                    positions.append(f'- {position}')
                 yay.add_field(
                     name="Position",
-                    value="\n- ".join(response['details']['position'])
+                    value="\n".join(positions)
                 )
                 yay.add_field(
                     name="VPN IP",
                     value=response['details']['ip']
                 )
+
+                github = []
+                for access in response['details']['github_access']:
+                    github.append(f'- {access}')
                 yay.add_field(
                     name="GitHub Access",
                     value="\n- ".join(response['details']['github_access'])
                 )
+
+                sysaccess = []
+                for access in response['details']['system_access']:
+                    sysaccess.append(f'- {access}')
                 yay.add_field(
                     name="System Access",
                     value="\n- ".join(response['details']['system_access'])
