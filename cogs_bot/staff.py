@@ -86,7 +86,7 @@ class staff_cog(commands.Cog):
             await asyncio.sleep(2)
 
             if code == 200:
-                response = request.json()
+                response = await request.json()
                 yay = em(
                     title=f"Showing info for {member}",
                     description=f"Processed file: **``{response['details']['name']}.yml``**",
