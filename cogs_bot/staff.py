@@ -95,7 +95,7 @@ class staff_cog(commands.Cog):
                 )
                 yay.add_field(
                     name="Position",
-                    value="\n- ".join(response['details']['position'])
+                    value=" - ".join(response['details']['position'])
                 )
                 yay.add_field(
                     name="VPN IP",
