@@ -9,6 +9,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
 from datetime import datetime
+from aiohttp import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -18,6 +19,7 @@ from datetime import datetime
 class staff_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.session = ClientSession()
 
 #
 #
@@ -79,7 +81,7 @@ class staff_cog(commands.Cog):
             )
             msg = await ctx.send(embed=view)
             # TODO: Change this to aiohttp?
-            request = requests.get(f"http://10.42.10.4:5000/staff/{member}")
+            request = self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status_code
             await asyncio.sleep(2)
 
@@ -111,6 +113,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 )
+                request.close()
                 return await msg.em(embed=yay)
 
             elif code == 403:
