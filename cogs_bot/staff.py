@@ -111,7 +111,7 @@ class staff_cog(commands.Cog):
                     github.append(f'- {access}')
                 yay.add_field(
                     name="GitHub Access",
-                    value="\n- ".join(response['details']['github_access'])
+                    value="\n".join(github)
                 )
 
                 sysaccess = []
@@ -119,7 +119,7 @@ class staff_cog(commands.Cog):
                     sysaccess.append(f'- {access}')
                 yay.add_field(
                     name="System Access",
-                    value="\n- ".join(response['details']['system_access'])
+                    value="\n".join(sysaccess)
                 )
                 yay.set_footer(
                     icon_url=self.bot.user.avatar_url,
