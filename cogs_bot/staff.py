@@ -114,7 +114,7 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 )
                 request.close()
-                return await msg.em(embed=yay)
+                return await msg.edit(embed=yay)
 
             elif code == 403:
                 oof = em(
