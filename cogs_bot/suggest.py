@@ -33,8 +33,6 @@ class Suggestions(commands.Cog):
         await msg.add_reaction('👎')
 
         await message.reply(f'{msg.jump_url}', delete_after=5)
-        await asyncio.sleep(5)
-        await message.delete()
 
 
 def setup(bot):
