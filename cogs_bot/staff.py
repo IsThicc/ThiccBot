@@ -82,7 +82,7 @@ class staff_cog(commands.Cog):
             msg = await ctx.send(embed=view)
             # TODO: Change this to aiohttp?
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
-            code = request.status_code
+            code = request.status
             await asyncio.sleep(2)
 
             if code == 200:
