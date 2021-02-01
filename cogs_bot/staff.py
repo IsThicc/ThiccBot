@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, requests, asyncio
+import discord, asyncio
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
