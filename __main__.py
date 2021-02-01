@@ -12,6 +12,7 @@ import discord
 from config import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
 from discord.ext import commands
 from discord_slash import SlashCommand
+from discord import Activity, ActivityType, Status
 
 from db.database import Pool
 
@@ -102,12 +103,12 @@ async def on_ready() -> None:
 |--------------------|
     ''')
 
-    await bot.change_presence(status=discord.Status.online,
-                              activity=discord.Activity(name="Still waking up 😒, hold on!",
-                                                        type=discord.ActivityType.watching))
+    await bot.change_presence(status=Status.online,
+                              activity=Activity(name="Still waking up 😒, hold on!",
+                                                        type=ActivityType.watching))
 
     await asyncio.sleep(10)
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(name="IsThicc.xyz!", type=discord.ActivityType.playing))
+    await bot.change_presence(status=Status.dnd, activity=Activity(name="IsThicc.xyz!", type=ActivityType.playing))
 
 #
 #
