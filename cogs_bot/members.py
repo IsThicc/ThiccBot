@@ -48,9 +48,7 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
         )
         welcome.set_thumbnail(url=member.avatar_url)
         msg = await channel.send(f'{member.mention}')
-        await channel.send(embed=welcome)
-        await asyncio.sleep(1)
-        await msg.delete()
+        await channel.send(embed=welcome, delete_after=1)
 
 #
 #
