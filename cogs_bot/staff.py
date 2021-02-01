@@ -1,5 +1,5 @@
 #
-#           IsThicc-bot Help.py | 2020 (c) IsThicc
+#           IsThicc-bot Staff.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -42,18 +42,18 @@ class staff_cog(commands.Cog):
             return await ctx.send(embed=rip)
 
         if option == "view":
-            if not ctx.author.has_role(739510850079162530):
-                noperms = em(
-                    title="You don't have permission!",
-                    description="Sorry! You don't have permission to execute this part!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                )
-                noperms.set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                )
-                return await ctx.send(embed=noperms)
+#             if not ctx.author.has_role(739510850079162530):
+#                 noperms = em(
+#                     title="You don't have permission!",
+#                     description="Sorry! You don't have permission to execute this part!",
+#                     colour=discord.Colour.red(),
+#                     timestamp=datetime.utcnow()
+#                 )
+#                 noperms.set_footer(
+#                     icon_url=self.bot.user.avatar_url,
+#                     text="IsThicc Staff"
+#                 )
+#                 return await ctx.send(embed=noperms)
 
             if member is None:
                 nomember = em(
