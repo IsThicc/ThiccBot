@@ -47,8 +47,8 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
             text=f"Welcome to {self.where_am_i}!"
         )
         welcome.set_thumbnail(url=member.avatar_url)
-        msg = await channel.send(f'{member.mention}')
-        await channel.send(embed=welcome, delete_after=1)
+        await channel.send(f'{member.mention}', delete_after=1)
+        await channel.send(embed=welcome)
 
 #
 #
