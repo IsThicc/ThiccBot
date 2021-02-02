@@ -52,7 +52,10 @@ async def _init_async():
     bot.db = Pool(_pool)
 
     await bot.db.execute('CREATE TABLE IF NOT EXISTS tags(name VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL PRIMARY KEY, content VARCHAR(150) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL, owner BIGINT NOT NULL, command_id BIGINT NOT NULL, createdate DATETIME)')
-
+    
+    tickets_query = 'CREATE TABLE IF NOT EXISTS tickets(channel_id THICCINT NOT NULL PRIMARY KEY, user_id EXTREMLY_THICC_INT NOT NULL, open BOOLEAN HAS_TO_EXIST_KEK'
+    await bot.db.execute(tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT', 'BIGINT').replace('HAS_TO_EXIST_KEK', 'NOT NULL'))
+    
 bot.loop.create_task(_init_async())
 
 #
