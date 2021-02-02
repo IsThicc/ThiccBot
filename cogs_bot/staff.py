@@ -1,5 +1,5 @@
 #
-#           IsThicc-bot Staff.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot Staff.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

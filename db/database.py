@@ -1,6 +1,16 @@
+#
+#                       IsThicc-bot Database.py | 2020-2021 (c) IsThicc
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 import aiomysql
 from datetime import datetime
-
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 class Pool:
     def __init__(self, pool):
         self.pool = pool
@@ -50,3 +60,9 @@ class Pool:
         await self.execute('DELETE FROM tags WHERE tag = ?', (tag,))
 
         return r
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#

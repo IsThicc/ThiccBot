@@ -1,14 +1,26 @@
-import asyncio
-
-import discord
+#
+#                         IsThicc-bot Suggest.py | 2020-2021 (c) IsThicc
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+import discord, asyncio
 from discord import Embed
 from discord.ext import commands
-
-
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 class Suggestions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id != 801929449124790353 or message.author.bot: return
@@ -34,6 +46,10 @@ class Suggestions(commands.Cog):
 
         await message.reply(f'{msg.jump_url}', delete_after=5)
 
-
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 def setup(bot):
     bot.add_cog(Suggestions(bot))

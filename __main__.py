@@ -1,22 +1,15 @@
 #
-#           IsThicc-bot __main__.py | 2020 (c) IsThicc
+#                          IsThicc-bot __main__.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import asyncio
-import os
-
-import aiomysql
-import discord
+import asyncio, os, aiomysql, discord
 from config import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
 from discord.ext import commands
 from discord_slash import SlashCommand
 from discord import Activity, ActivityType, Status
-
 from db.database import Pool
-
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -37,18 +30,14 @@ async def get_prefix(bot, message):
 #
 #
 bot = commands.Bot(command_prefix=get_prefix, intents=discord.Intents.all())
-
 bot.slash = SlashCommand(bot, auto_register = True, auto_delete = False)
-
 bot.remove_command('help')
 bot.load_extension('jishaku')
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 async def _init_async():
     _pool = await aiomysql.create_pool(
         host = mysql_host,

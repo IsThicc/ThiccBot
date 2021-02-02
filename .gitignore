@@ -1,5 +1,7 @@
 .idea/
 config.py
+*.old
+**/*.old
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

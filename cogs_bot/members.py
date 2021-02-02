@@ -1,5 +1,5 @@
 #
-#           IsThicc-bot Members.py | 2020 (c) IsThicc
+#                           IsThicc-bot Members.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -15,7 +15,6 @@ from datetime import datetime
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class members(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

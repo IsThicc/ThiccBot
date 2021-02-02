@@ -1,18 +1,35 @@
+#
+#                              IsThicc-bot Tags.py | 2020-2021 (c) IsThicc
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 from datetime import datetime
-
 import discord
 from discord.ext import commands
 from discord_slash import SlashContext, utils
 from discord_slash import cog_ext as cmd
 from discord import Embed
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 
 class Tags(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.slash = self.bot.slash
-    
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     async def perm_error(self, ctx):
         await ctx.send(embeds=[Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     tagopts = [
         {
@@ -22,6 +39,8 @@ class Tags(commands.Cog):
             "required": False
         }
     ]
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     createopts = [
         {
@@ -38,6 +57,8 @@ class Tags(commands.Cog):
         }
     ]
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     delopts = [
         {
             "name": "tag",
@@ -46,7 +67,12 @@ class Tags(commands.Cog):
             "required": True
         }
     ]
-    
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     async def template(self, ctx, reply_id: int = None):
         r = await self.bot.db.execute('SELECT tag, content, owner, date FROM tag WHERE command_id = ?', (ctx.command_id,))
         content = Embed(title=r[0][0], description=r[0][1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[0][3], "%Y-%m-%d")).set_footer(text=f'Tag created by {r[0][2]}, Created At')
@@ -61,6 +87,11 @@ class Tags(commands.Cog):
 
     ids = [739510335949635736]
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     @commands.Cog.listener()
     async def on_ready(self):
         tags = await self.bot.db.execute('SELECT * FROM tags')
@@ -68,6 +99,11 @@ class Tags(commands.Cog):
             owner = str(self.bot.get_user(int(tag[0][2]))) if owner else "Unknown"
             self.slash.add_slash_command(self.template, tag[0][1], guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {owner}')
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     @cmd.cog_subcommand(base='tag', name='create', guild_ids=ids, options=createopts)
     async def tag_create(self, ctx: SlashContext, name: str, content: str):
         staff = await self.bot.fetch_guild(739510335949635736)
@@ -86,6 +122,11 @@ class Tags(commands.Cog):
 
         await ctx.send(embeds=[embed])
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     @cmd.cog_subcommand(base='tag', name='delete', guild_ids=ids, options=delopts)
     async def tag_delete(self, ctx: SlashContext, tag: str):
         staff = await self.bot.fetch_guild(739510335949635736)
@@ -101,6 +142,10 @@ class Tags(commands.Cog):
 
         utils.manage_commands.remove_slash_command(self.bot.user.id, self.bot.http.token, ctx.guild.id, cmdid)
 
-
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 def setup(bot):
     bot.add_cog(Tags(bot))
