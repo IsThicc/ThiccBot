@@ -17,6 +17,7 @@ from datetime import datetime
 class tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.db = self.bot.db
 
 #
 #
@@ -160,7 +161,8 @@ class tickets(commands.Cog):
         )
         await ticket.send(content="<@!796953153010532362>", embed=opened)
 
-        # TODO: Insert AioMySQL stuff here.
+        await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ',' + str(reaction_user.id) + ',true)')
+        # parse as str in query, but the database will parse it as whatever you chose it to be in phpmyadmin.
         #   #           Use:                       Column name:
         #   #
         #   # Channel id(ticket.id):                 ticket_id
@@ -178,10 +180,8 @@ class tickets(commands.Cog):
         av = self.bot.user.avatar_url
 
         try:
-            # TODO: Select channel id(ctx.channel.id) to see if it even exists, and then proceed
-            print("Select AioMySQL stuff")
-
-        except Exception:  # TODO: AioMySQL error to catch if it doesn't exist in the table
+            r = await self.db.execute('SELECT * FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+        except Exception:
             not_ticket = em(
                 title="Sorry!",
                 description="Sorry! This channel isn't a ticket. Please use this command again in a ticket.",
@@ -204,7 +204,7 @@ class tickets(commands.Cog):
             text="IsThicc Tickets"
         )
 
-        # TODO: Move the ticket, change the status in the db, change ticket name
+        await self.db.execute('UPDATE tickets SET closing = false WHERE channel_id = ' + str(ctx.channel.id))
 
         msg = await ctx.send(embed=closing)
         await asyncio.sleep(3)
