@@ -26,7 +26,7 @@ class Tags(commands.Cog):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-    async def perm_error(self, ctx):
+    async def perm_error(self, ctx: commands.Context):
         await ctx.send(embeds=[Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -73,7 +73,7 @@ class Tags(commands.Cog):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-    async def template(self, ctx, reply_id: int = None):
+    async def template(self, ctx: commands.Context, reply_id: int = None):
         r = await self.bot.db.execute('SELECT tag, content, owner, date FROM tag WHERE command_id = ?', (ctx.command_id,))
         content = Embed(title=r[0][0], description=r[0][1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[0][3], "%Y-%m-%d")).set_footer(text=f'Tag created by {r[0][2]}, Created At')
         if reply_id:
