@@ -5,7 +5,6 @@
 #
 #
 import discord
-# import asyncio
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -19,6 +18,7 @@ from datetime import datetime
 class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.avatar = bot.user.avatar_url
 
 #
 #
@@ -46,7 +46,7 @@ If you have questions with the bot or any of questions please don't hesitate to 
         )
         help.set_footer(
             text="IsThicc Software",
-            icon_url=self.bot.user.avatar_url
+            icon_url=self.avatar
         )
         await ctx.send(embed=help)
 
