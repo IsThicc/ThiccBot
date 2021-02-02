@@ -20,6 +20,7 @@ class staff_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession()
+        self.avatar = bot.user.avatar_url
 
 #
 #
@@ -38,7 +39,7 @@ class staff_cog(commands.Cog):
                 timestamp=datetime.utcnow()
             )
             rip.set_footer(
-                icon_url=self.bot.user.avatar_url,
+                icon_url=self.avatar,
                 text="IsThicc Staff"
             )
             return await ctx.send(embed=rip)
@@ -52,7 +53,7 @@ class staff_cog(commands.Cog):
 #                     timestamp=datetime.utcnow()
 #                 )
 #                 noperms.set_footer(
-#                     icon_url=self.bot.user.avatar_url,
+#                     icon_url=self.avatar,
 #                     text="IsThicc Staff"
 #                 )
 #                 return await ctx.send(embed=noperms)
@@ -65,7 +66,7 @@ class staff_cog(commands.Cog):
                     timestamp=datetime.utcnow()
                 )
                 nomember.set_footer(
-                    icon_url=self.bot.user.avatar_url,
+                    icon_url=self.avatar,
                     text="IsThicc Staff"
                 )
                 return await ctx.send(embed=nomember)
@@ -76,11 +77,10 @@ class staff_cog(commands.Cog):
                 timestamp=datetime.utcnow()
             )
             view.set_footer(
-                icon_url=self.bot.user.avatar_url,
+                icon_url=self.avatar,
                 text="IsThicc Staff"
             )
             msg = await ctx.send(embed=view)
-            # TODO: Change this to aiohttp?
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
             await asyncio.sleep(2)
@@ -122,7 +122,7 @@ class staff_cog(commands.Cog):
                     value="\n".join(sysaccess)
                 )
                 yay.set_footer(
-                    icon_url=self.bot.user.avatar_url,
+                    icon_url=self.avatar,
                     text="IsThicc Staff"
                 )
                 request.close()
@@ -136,7 +136,7 @@ class staff_cog(commands.Cog):
                     timestamp=datetime.utcnow()
                 )
                 oof.set_footer(
-                    icon_url=self.bot.user.avatar_url,
+                    icon_url=self.avatar,
                     text="IsThicc Staff"
                 )
                 return await msg.edit(embed=oof)
@@ -149,7 +149,7 @@ class staff_cog(commands.Cog):
                     timestamp=datetime.utcnow()
                 )
                 no.set_footer(
-                    icon_url=self.bot.user.avatar_url,
+                    icon_url=self.avatar,
                     text="IsThicc Staff"
                 )
                 return await msg.edit(embed=no)
@@ -161,7 +161,7 @@ class staff_cog(commands.Cog):
                     timestamp=datetime.utcnow()
                 )
                 uh.set_footer(
-                    icon_url=self.bot.user.avatar_url,
+                    icon_url=self.avatar,
                     text="IsThicc Staff"
                 )
                 return await msg.edit(embed=uh)
@@ -174,7 +174,7 @@ class staff_cog(commands.Cog):
                 timestamp=datetime.utcnow()
             )
             E.set_footer(
-                icon_url=self.bot.user.avatar_url,
+                icon_url=self.avatar,
                 text="IsThicc Staff"
             )
             return await ctx.send(embed=E)
