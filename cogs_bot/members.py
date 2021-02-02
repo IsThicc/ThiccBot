@@ -18,7 +18,6 @@ from datetime import datetime
 class members(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.where_am_i = "IsThicc Software"
 
 #
 #
@@ -32,9 +31,9 @@ class members(commands.Cog):
         channel = self.bot.get_channel(796955089628954666)
 
         welcome = em(
-            title=f"Welcome to {self.where_am_i}!",
+            title="Welcome to IsThicc Software!",
             description=f"""
-Welcome to {self.where_am_i} {member.mention}!
+Welcome to IsThicc Software {member.mention}!
 
 Please check out <#739927724700860506> before you continue! And make sure to ask for support in <#744252916684161094> if you need any help!
             """,
@@ -43,7 +42,7 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
         )
         welcome.set_footer(
             icon_url=self.bot.user.avatar_url,
-            text=f"Welcome to {self.where_am_i}!"
+            text="Welcome to IsThicc Software!"
         )
         welcome.set_thumbnail(url=member.avatar_url)
         await channel.send(f'{member.mention}', delete_after=1)
@@ -60,16 +59,16 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
         channel = self.bot.get_channel(796955089628954666)
 
         welcome = em(
-            title=f"{member} has left {self.where_am_i}!",
+            title=f"{member} has left IsThicc Software!",
             description=f"""
-{member} has left {self.where_am_i}! <a:sad:796961152579534868>
+{member} has left IsThicc Software! <a:sad:796961152579534868>
             """,
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
         )
         welcome.set_footer(
             icon_url=self.bot.user.avatar_url,
-            text=f"{member} has left {self.where_am_i}!"
+            text=f"{member} has left IsThicc Software!"
         )
         await channel.send(embed=welcome)
 
