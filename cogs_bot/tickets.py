@@ -1,5 +1,5 @@
 #
-#                           IsThicc-bot Tickets.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot Tickets.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -163,8 +163,7 @@ class tickets(commands.Cog):
 
         await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ',' + str(reaction_user.id) + ',true)')
         # parse as str in query, but the database will parse it as whatever you chose it to be in phpmyadmin.
-        #   #           Use:                       Column name:
-        #   #
+
         #   # Channel id(ticket.id):                 ticket_id
         #   # Ticket opener id(reaction_user.id):    user_id
         #   # Open or closed(bool: true):            open_close
@@ -205,8 +204,18 @@ class tickets(commands.Cog):
         )
 
         await self.db.execute('UPDATE tickets SET closing = false WHERE channel_id = ' + str(ctx.channel.id))
+        user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
 
         msg = await ctx.send(embed=closing)
+        user = await self.bot.get_user(user[0])
+        closed = discord.utils.get(ctx.guild.categories, name="『 Archived Tickets 』")
+        time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+        await ctx.channel.edit(
+            name=f"Archived-{user.display_name}",
+            topic=f"Ticket opened by {user.mention}. Closed by {ctx.author.mention} at {time}!",
+            category=closed,
+            reason="Ticket Closed."
+        )
         await asyncio.sleep(3)
 
         closed = em(
