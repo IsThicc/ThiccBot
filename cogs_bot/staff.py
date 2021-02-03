@@ -45,18 +45,6 @@ class staff_cog(commands.Cog):
             return await ctx.send(embed=rip)
 
         if option == "view":
-#             if not ctx.author.has_role(739510850079162530):
-#                 noperms = em(
-#                     title="You don't have permission!",
-#                     description="Sorry! You don't have permission to execute this part!",
-#                     colour=discord.Colour.red(),
-#                     timestamp=datetime.utcnow()
-#                 )
-#                 noperms.set_footer(
-#                     icon_url=self.avatar,
-#                     text="IsThicc Staff"
-#                 )
-#                 return await ctx.send(embed=noperms)
 
             if member is None:
                 nomember = em(
@@ -166,6 +154,20 @@ class staff_cog(commands.Cog):
                 )
                 return await msg.edit(embed=uh)
 
+        elif option == "edit":
+
+            no = em(
+                title="This option is under development!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            no.set_footer(
+                icon_url=self.avatar,
+                text="IsThicc Staff"
+            )
+            return await ctx.send(embed=no)
+
+
         else:
             E = em(
                 title="So uh, yea...",
@@ -179,15 +181,31 @@ class staff_cog(commands.Cog):
             )
             return await ctx.send(embed=E)
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    @staff.error
+    async def staff_error(self, ctx, error):
 
-
+        if isinstance(error, commands.MissingRole):
+            oof = em(
+                title="Missing Permissions!",
+                description="Sorry! This command is only for staff members!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            oof.set_footer(
+                icon_url=self.avatar,
+                text="IsThicc"
+            )
+            await ctx.send(embed=oof)
 
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
-
 def setup(bot):
     bot.add_cog(staff_cog(bot))
