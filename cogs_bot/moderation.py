@@ -284,12 +284,12 @@ class mod(commands.Cog):
     @commands.has_role(739510850079162530)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
-    async def unwarn(self, ctx, member: discord.Member):
+    async def unwarn(self, ctx, member: discord.Member, warnid: str):
         self.avatar = self.bot.user.avatar_url
 
         unwarned = em(
             title="Unwarned!",
-            description=f"I removed the most recent warning for {member.mention}!",
+            description=f"I removed the warning `{warnid}` for {member.mention}!",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
         )
@@ -298,7 +298,7 @@ class mod(commands.Cog):
             text="IsThicc Moderation"
         )
         await ctx.send(embed=unwarned)
-        await self.db.unwarn(ctx.author.id)
+        await self.db.unwarn(warnid)
 
 #
 #
