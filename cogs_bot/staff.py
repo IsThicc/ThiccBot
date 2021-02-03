@@ -20,7 +20,6 @@ class staff_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession()
-        self.avatar = bot.user.avatar_url
 
 #
 #
@@ -31,6 +30,7 @@ class staff_cog(commands.Cog):
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
     async def staff(self, ctx, option = None, member = None):
+        self.avatar = self.bot.user.avatar_url
         if option == None:
             rip = em(
                 title="Uh Oh!",
@@ -188,6 +188,7 @@ class staff_cog(commands.Cog):
 #
     @staff.error
     async def staff_error(self, ctx, error):
+        self.avatar = self.bot.user.avatar_url
 
         if isinstance(error, commands.MissingRole):
             oof = em(

@@ -18,7 +18,6 @@ from datetime import datetime
 class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.avatar = bot.user.avatar_url
 
 #
 #
@@ -33,6 +32,8 @@ class help(commands.Cog):
         :param ctx: Basic Discord.py context.
         :return: Returns Help embed.
         """
+
+        self.avatar = self.bot.user.avatar_url
 
         help = em(
             title="IsThicc Help!",

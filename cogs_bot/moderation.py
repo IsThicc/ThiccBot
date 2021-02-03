@@ -17,7 +17,6 @@ from datetime import datetime
 class mod(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.avatar  = bot.user.avatar_url
 
 #
 #
@@ -28,6 +27,7 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def ban(self, ctx, member: discord.Member, reason = "Banned from IsThicc Software", *):
+        self.avatar = self.bot.user.avatar_url
 
         lets_make_sure = em(
             title=f"Are you sure you want to ban {member.display_name}?",
@@ -137,6 +137,7 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def kick(self, ctx, member: discord.Member, reason = "Kicked from IsThicc Software", *):
+        self.avatar = self.bot.user.avatar_url
 
         lets_make_sure = em(
             title=f"Are you sure you want to kick {member.display_name}?",
@@ -246,6 +247,7 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def warn(self, ctx, member: discord.Member, reason, *):
+        self.avatar = self.bot.user.avatar_url
 
         warned = em(
             title="You have been warned in IsThicc Software!",
@@ -287,6 +289,7 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def unwarn(self, ctx, member: discord.Member):
+        self.avatar = self.bot.user.avatar_url
 
         unwarned = em(
             title="Unwarned!",
@@ -312,6 +315,7 @@ class mod(commands.Cog):
     @warn.error
     @unwarn.error
     async def mod_error(self, ctx, error):
+        self.avatar = self.bot.user.avatar_url
 
         if isinstance(error, commands.MissingRole):
             oof = em(
