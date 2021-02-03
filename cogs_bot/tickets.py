@@ -17,7 +17,7 @@ from datetime import datetime
 class tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db = self.bot.db
+        self.db = bot.db
 
 #
 #
