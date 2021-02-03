@@ -17,6 +17,7 @@ from datetime import datetime
 class mod(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
+        self.db      = bot.db
 
 #
 #
@@ -246,7 +247,7 @@ class mod(commands.Cog):
     @commands.has_role(744012353808498808)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
-    async def warn(self, ctx, member: discord.Member, reason, *):
+    async def warn(self, ctx, member: discord.Member, reason = "No reason specified.", *):
         self.avatar = self.bot.user.avatar_url
 
         warned = em(
@@ -271,14 +272,7 @@ class mod(commands.Cog):
         await ctx.send(embed=ctx_warned)
         await member.send(embed=warned)
 
-        # TODO: Insert user id, datetime.now, and reason into warning db.
-        #   #
-        #   #   Tables:
-        #   #       user_id
-        #   #       reason
-        #   #       time
-        #   #
-        #   # Psst, can you also do the magic insert if not whatever in database.py? Thank you for everything big bran fxc!
+        await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True)
 
 #
 #
@@ -302,8 +296,7 @@ class mod(commands.Cog):
             text="IsThicc Moderation"
         )
         await ctx.send(embed=unwarned)
-
-        # TODO: Figure out how to unwarn someone but keep it in the db.
+        await self.db.unwarn(ctx.author.id)
 
 #
 #
