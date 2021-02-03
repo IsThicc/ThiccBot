@@ -42,6 +42,8 @@ class Pool:
 
     # Helper Methods
     
+    # Tags
+    
     async def add_tag(self, tag: str, content: str, owner: int, command_id: int) -> None:
         """
         :param tag: tag name
@@ -60,6 +62,14 @@ class Pool:
         await self.execute('DELETE FROM tags WHERE tag = ?', (tag,))
 
         return r
+    
+    # Mod
+    
+    async def warn(self, _id: int, reason: str, datetime: datetime, current: bool, warnid: str) -> None:
+        await self.execute("INSERT INTO warnings VALUES('" + str(_id) + "','" + reason + "'," + datetime + "," + current + ",)")
+        
+    async def unwarn(self, warnid: int):
+        await self.execute("UPDATE warnings SET current = false WHERE warn_id = '" + warnid + "'")
 
 #
 #
