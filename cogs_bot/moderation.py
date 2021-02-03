@@ -8,6 +8,7 @@ import discord, asyncio
 from discord.ext import commands
 from discord import Embed as em
 from datetime import datetime
+import random, string
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -272,7 +273,8 @@ class mod(commands.Cog):
         await ctx.send(embed=ctx_warned)
         await member.send(embed=warned)
 
-        await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True)
+        warn_id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True, warn_id)
 
 #
 #
