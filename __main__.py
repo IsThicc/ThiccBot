@@ -56,7 +56,7 @@ async def _init_async():
     tickets_query = 'CREATE TABLE IF NOT EXISTS tickets(channel_id THICCINT NOT NULL PRIMARY KEY, user_id EXTREMLY_THICC_INT NOT NULL, open BOOLEAN HAS_TO_EXIST_KEK'
     await bot.db.execute(tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT', 'BIGINT').replace('HAS_TO_EXIST_KEK', 'NOT NULL'))
     
-bot.loop.create_task(_init_async())
+bot.loop.run_until_complete(_init_async())
 
 #
 #
