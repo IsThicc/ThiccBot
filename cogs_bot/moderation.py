@@ -47,10 +47,12 @@ class mod(commands.Cog):
         try:
 
             def yes_no(reaction, user):
+                print('ok')
                 return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
 
             reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
 
+            print(reaction)
         except asyncio.TimeoutError:
 
             timeout = em(
@@ -69,6 +71,7 @@ class mod(commands.Cog):
         await msg.clear_reactions()
         emoji = str(reaction.emoji)
 
+        print(emoji)
         if emoji == '👍':
 
             bye_hoe = em(
