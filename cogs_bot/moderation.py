@@ -28,7 +28,7 @@ class mod(commands.Cog):
     @commands.has_guild_permissions(ban_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
-    async def ban(self, ctx, member: discord.Member, reason = "Banned from IsThicc Software", *):
+    async def ban(self, ctx, member: discord.Member, *, reason = "Banned from IsThicc Software"):
         self.avatar = self.bot.user.avatar_url
 
         lets_make_sure = em(
@@ -138,7 +138,7 @@ class mod(commands.Cog):
     @commands.has_guild_permissions(kick_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
-    async def kick(self, ctx, member: discord.Member, reason = "Kicked from IsThicc Software", *):
+    async def kick(self, ctx, member: discord.Member, *, reason = "Kicked from IsThicc Software"):
         self.avatar = self.bot.user.avatar_url
 
         lets_make_sure = em(
@@ -248,7 +248,7 @@ class mod(commands.Cog):
     @commands.has_role(744012353808498808)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
-    async def warn(self, ctx, member: discord.Member, reason = "No reason specified.", *):
+    async def warn(self, ctx, member: discord.Member, *, reason = "No reason specified."):
         self.avatar = self.bot.user.avatar_url
 
         warned = em(
