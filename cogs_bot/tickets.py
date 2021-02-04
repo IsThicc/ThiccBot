@@ -30,7 +30,7 @@ class tickets(commands.Cog):
         emoji = str(payload.emoji)
         open_channel = self.bot.get_channel(806012160198705183)
         reaction_user = self.bot.get_user(payload.user_id)
-        guild = self.bot.get_guide(payload.guide_id)
+        guild = self.bot.fetch_guild(payload.guide_id)
         av = self.bot.user.avatar_url
 
         if payload.channel_id != open_channel.id:
