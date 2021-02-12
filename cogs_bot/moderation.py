@@ -108,29 +108,25 @@ class mod(commands.Cog):
                 )
                 return await msg.edit(embed=ohno)
 
-            ded = em(
+            return await msg.edit(embed=em(
                 title="Banned!",
                 description=f"I banned {member} for {reason}!",
                 colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
-            )
-            ded.set_footer(
+            ).set_footer(
                 icon_url=self.avatar,
                 text="IsThicc Moderation"
-            )
-            return await msg.edit(embed=ded)
+            ))
 
         else:
-            no = em(
+            return await msg.edit(embed=em(
                 title=f"I won't ban {member}!",
                 colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
-            )
-            no.set_footer(
+            ).set_footer(
                 icon_url=self.avatar,
                 text="IsThicc Moderation"
-            )
-            return await msg.edit(embed=no)
+            ))
 
 #
 #
@@ -141,7 +137,6 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def kick(self, ctx, member: discord.Member, *, reason = "Kicked from IsThicc Software"):
-        self.avatar = self.bot.user.avatar_url
 
         lets_make_sure = em(
             title=f"Are you sure you want to kick {member.display_name}?",
@@ -149,7 +144,7 @@ class mod(commands.Cog):
             timestamp=datetime.utcnow()
         )
         lets_make_sure.set_footer(
-            icon_url=self.avatar,
+            icon_url=self.bot.user.avatar_url,
             text="IsThicc Moderation"
         )
         msg = await ctx.send(embed=lets_make_sure)
@@ -165,82 +160,70 @@ class mod(commands.Cog):
 
         except asyncio.TimeoutError:
 
-            timeout = em(
+            await msg.clear_reactions()
+            return await msg.edit(embed=em(
                 title="Timed out!",
                 description="You timed out! make sure to react within 60 seconds next time!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            timeout.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Moderation"
-            )
-            await msg.clear_reactions()
-            return await msg.edit(embed=timeout)
+            ))
 
         await msg.clear_reactions()
         emoji = str(reaction.emoji)
 
         if emoji == '👍':
 
-            bye_hoe = em(
-                title="You have been kicked from IsThicc Software!",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            )
-            bye_hoe.add_field(
-                name="Reason:",
-                value=reason
-            )
-            bye_hoe.add_field(
-                name="Kicked by:",
-                value=ctx.author
-            )
-            bye_hoe.set_footer(
-                icon_url=self.avatar,
-                text="IsThicc Moderation"
-            )
             try:
 
-                await member.send(embed=bye_hoe)
+                await member.send(embed=em(
+                    title="You have been kicked from IsThicc Software!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).add_field(
+                    name="Reason:",
+                    value=reason
+                ).add_field(
+                    name="Kicked by:",
+                    value=ctx.author
+                ).set_footer(
+                    icon_url=self.avatar,
+                    text="IsThicc Moderation"
+                ))
                 await member.ban(reason=reason)
 
             except Exception:
-                ohno = em(
+                return await msg.edit(embed=em(
                     title="Uh oh!",
                     description=f"Sorry! I couldn't kick {member.mention}! Please make sure I have proper permissions!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
-                )
-                ohno.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Moderation"
-                )
-                return await msg.edit(embed=ohno)
+                ))
 
-            ded = em(
+            return await msg.edit(embed=em(
                 title="Kicked!",
                 description=f"I kicked {member} for {reason}!",
                 colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
-            )
-            ded.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Moderation"
-            )
-            return await msg.edit(embed=ded)
+            ))
 
         else:
-            no = em(
+            return await msg.edit(embed=em(
                 title=f"I won't kick {member}!",
                 colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
-            )
-            no.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Moderation"
-            )
-            return await msg.edit(embed=no)
+            ))
 
 #
 #
@@ -251,29 +234,24 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def warn(self, ctx, member: discord.Member, *, reason = "No reason specified."):
-        self.avatar = self.bot.user.avatar_url
 
-        warned = em(
-            title="You have been warned in IsThicc Software!",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        )
-        warned.set_footer(
-            icon_url=self.avatar,
-            text="IsThicc Moderation"
-        )
-        ctx_warned = em(
+        await ctx.send(embed=em(
             title="Warned!",
             description=f"I warned {member.mention} for {reason}!",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
-        )
-        ctx_warned.set_footer(
-            icon_url=self.avatar,
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
             text="IsThicc Moderation"
-        )
-        await ctx.send(embed=ctx_warned)
-        await member.send(embed=warned)
+        ))
+        await member.send(embed=em(
+            title="You have been warned in IsThicc Software!",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Moderation"
+        ))
 
         warn_id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
         await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True, warn_id)
@@ -287,20 +265,29 @@ class mod(commands.Cog):
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
     async def unwarn(self, ctx, member: discord.Member, warnid: str):
-        self.avatar = self.bot.user.avatar_url
 
-        unwarned = em(
-            title="Unwarned!",
-            description=f"I removed the warning `{warnid}` for {member.mention}!",
-            colour=discord.Colour.green(),
-            timestamp=datetime.utcnow()
-        )
-        unwarned.set_footer(
-            icon_url=self.avatar,
-            text="IsThicc Moderation"
-        )
-        await ctx.send(embed=unwarned)
-        await self.db.unwarn(warnid)
+        try:
+            await self.db.unwarn(warnid)
+            return await ctx.send(embed=em(
+                title="Unwarned!",
+                description=f"I removed the warning `{warnid}` for {member.mention}!",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
+        except Exception as e:
+            print(e)
+            return await ctx.send(embed=em(
+                title="Error!",
+                description=f"An internal error has occurred! Sorry about this!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
 
 #
 #
@@ -312,32 +299,27 @@ class mod(commands.Cog):
     @warn.error
     @unwarn.error
     async def mod_error(self, ctx, error):
-        self.avatar = self.bot.user.avatar_url
 
         if isinstance(error, commands.MissingRole):
-            oof = em(
+            return await ctx.send(embed=em(
                 title="Missing Permissions!",
                 description="Sorry! This command is only for staff members!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            oof.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc"
-            )
-            await ctx.send(embed=oof)
+            ))
 
         if isinstance(error, commands.MissingPermissions):
-            no = em(
+            return await ctx.send(embed=em(
                 title="Sorry! You don't have permission!",
                 timestamp=datetime.utcnow(),
                 colour=discord.Colour.red()
-            )
-            no.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Moderation"
-            )
-            return await ctx.send(embed=no)
+            ))
 
 #
 #
