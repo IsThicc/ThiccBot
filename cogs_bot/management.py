@@ -95,7 +95,7 @@ class staff_cog(commands.Cog):
         )
         )
 
-        request = await self.session.post(f"http://10.42.10.4:5000/token/{message}")
+        request = await self.session.post(f"http://10.42.10.4:5000/token/{message.content}")
         code = request.status
         await asyncio.sleep(2)
         if code == 403:
