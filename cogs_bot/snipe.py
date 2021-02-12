@@ -32,7 +32,7 @@ class snipe(commands.Cog):
         
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        self.editsnipe_cache[after.message.channel.id]: (before, after)
+        self.editsnipe_cache[after.channel.id]: (before, after)
     
     
     @commands.command()
@@ -45,7 +45,7 @@ class snipe(commands.Cog):
             description=f'{msg.author.mention} ({msg.author}):\n{msg.content}',
             timestamp=msg.created_at
         ).set_footer(
-            text='Sniped message created at'
+            text='Sniped message sent at'
         )
 
         await ctx.send(embed=e)
@@ -54,18 +54,15 @@ class snipe(commands.Cog):
     @commands.command()
     @commands.has_role(744012353808498808)
     async def editsnipe(self, ctx):
-        # TODO: Make this fetch a message?
         b = self.editsnipe_cache[ctx.channel.id][0]
         a = self.editsnipe_cache[ctx.channel.id][1]
         e = em(
             title='IsThicc | Edit Snipe',
             colour=discord.Colour.blue,
             description=f'{b.author.mention} ({b.author}):\n**Before:** {b.content}\n**After:** {a.content}',
-            timestamp=datetime.utcnow()
-            # TODO: Make the timestamp work?
-            # timestamp=msg.created_at
+            timestamp=b.created_at
         ).set_footer(
-            text='Edit snipe message created at'
+            text='Edit snipe message sent at'
         )
         
         await ctx.send(embed=e)
