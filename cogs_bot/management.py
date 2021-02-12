@@ -23,15 +23,15 @@ class staff_cog(commands.Cog):
         self.bot = bot
         self.session = ClientSession()
 
-    #
-    #
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    #
-    #
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option=None):
+    async def announce(self, ctx, option=None):
 
         msg = await ctx.send(embed=em(
             title="Please supply your password!",
@@ -66,13 +66,13 @@ class staff_cog(commands.Cog):
             )
 
             def pass_check(m):
-                return m == ctx.author and m.channel == ctx.author.dm_channel
+                return m.author == ctx.author and m.channel == ctx.author.dm_channel
 
             message = await self.bot.wait_for("on_message", check=pass_check)
 
         except asyncio.TimeoutError:
             await msg.edit(embed=timeout)
-            await pass_dm.edit(embed=timeout)
+            return await pass_dm.edit(embed=timeout)
 
         except:
             return await msg.edit(embed=em(
@@ -95,34 +95,200 @@ class staff_cog(commands.Cog):
         )
         )
 
-        request = await self.session.get(f"http://10.42.10.4:5000/")  # TODO: Set this to request the backend API
+        request = await self.session.post(f"http://10.42.10.4:5000/token/{message}")
         code = request.status
         await asyncio.sleep(2)
+        if code == 403:
+            return await ctx.author.send(
+                embed=em(
+                    title="Uh oh!",
+                    description="Oh no, your provided password is not valid!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Management"
+                )
+            )
+        elif code == 500:
+            return await ctx.author.send(
+                embed=em(
+                    title="Uh oh!",
+                    description="Oh no, the Backend API has responded with 500! Please tell IsThicc Management!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Management"
+                )
+            )
 
-        # TODO: Finish this to process data and/or tell them no auth
+        try:
+            # Service
+            service_dm = await ctx.author.send(embed=em(
+                title="Please send your service below(all, specific name)!",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
 
+            def service_check(m):
+                return m.author == ctx.author and m.channel == ctx.author.dm_channel
+
+            service = await self.bot.wait_for("on_message", check=service_check)
+
+        except asyncio.TimeoutError:
+            await msg.edit(embed=timeout)
+            return await service_dm.edit(embed=timeout)
+
+        except:
+            return await msg.edit(embed=em(
+                title="An unknown error occurred!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
+
+        try:
+            # Announcement
+            announce_dm = await ctx.author.send(embed=em(
+                title="Please send your announcement below!",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
+
+            def announce_check(m):
+                return m.author == ctx.author and m.channel == ctx.author.dm_channel
+
+            announcement = await self.bot.wait_for("on_message", check=announce_check)
+
+        except asyncio.TimeoutError:
+            await msg.edit(embed=timeout)
+            return await announce_dm.edit(embed=timeout)
+
+        except:
+            return await msg.edit(embed=em(
+                title="An unknown error occurred!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
+
+        try:
+            # Type
+            type_dm = await ctx.author.send(embed=em(
+                title="What type do you want to send(webhook, email)!",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
+
+            def announce_check(m):
+                return m.author == ctx.author and m.channel == ctx.author.dm_channel
+
+            announce_type = await self.bot.wait_for("on_message", check=announce_check)
+
+        except asyncio.TimeoutError:
+            await msg.edit(embed=timeout)
+            return await type_dm.edit(embed=timeout)
+
+        except:
+            return await msg.edit(embed=em(
+                title="An unknown error occurred!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+            )
+
+        request = await self.session.post(f"http://10.42.10.4:5000/announce/{announce_type.content}/{service.content}",
+                                          headers={
+                                              "Authorization": message.content,
+                                              "content": announcement.content
+                                          })
+        code = request.status
+        response = await request.read()
+
+        if code != 200:
+            await msg.edit(
+                embed=em(
+                    title="Uh oh!",
+                    description="An internal error has occurred! Please check your dms!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Management"
+                )
+            )
+
+            return await ctx.author.send(
+                embed=em(
+                    title="Oh no!",
+                    description=f"""
+**Error:**
+```css
+{response}```
+                    """,
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Management"
+                )
+            )
+
+        return await ctx.author.send(
+            embed=em(
+                title="Success!",
+                description=f"You have sent your announcement to {service.content}!",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+        )
 
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-# @staff.error
-# async def staff_error(self, ctx, error):
-#     self.avatar = self.bot.user.avatar_url
-#
-#     if isinstance(error, commands.MissingRole):
-#         oof = em(
-#             title="Missing Permissions!",
-#             description="Sorry! This command is only for staff members!",
-#             colour=discord.Colour.red(),
-#             timestamp=datetime.utcnow()
-#         )
-#         oof.set_footer(
-#             icon_url=self.avatar,
-#             text="IsThicc"
-#         )
-#         await ctx.send(embed=oof)
+    @announce.error
+    async def staff_error(self, ctx, error):
+        self.avatar = self.bot.user.avatar_url
+
+        if isinstance(error, commands.MissingRole):
+            oof = em(
+                title="Missing Permissions!",
+                description="Sorry! This command is only for staff members!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            oof.set_footer(
+                icon_url=self.avatar,
+                text="IsThicc"
+            )
+            await ctx.send(embed=oof)
 
 #
 #
