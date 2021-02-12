@@ -45,14 +45,13 @@ class mod(commands.Cog):
         await msg.add_reaction('👎')
 
         try:
-
+            print('e1')
             def yes_no(reaction, user):
-                print('ok')
                 return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
+            print('e2')
+            reaction, user = await self.bot.wait_for('reaction_add', check=yes_no) # , timeout=60)
+            print('e')
 
-            reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
-
-            print(reaction)
         except asyncio.TimeoutError:
 
             timeout = em(
@@ -162,7 +161,7 @@ class mod(commands.Cog):
             def yes_no(reaction, user):
                 return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
 
-            reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
+            reaction, user = await self.bot.wait_for('reaction_add', check=yes_no, timeout=60)
 
         except asyncio.TimeoutError:
 
