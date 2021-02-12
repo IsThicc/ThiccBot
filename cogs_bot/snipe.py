@@ -1,5 +1,5 @@
 #
-#                               IsThicc-bot snipe.py | 2020 (c) IsThicc
+#                               sThicc-bot Snipe.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -28,17 +28,17 @@ class snipe(commands.Cog):
 #
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        self.snipe[message.channel.id]_cache = message
+        self.snipe_cache[message.channel.id] = message
         
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        self.editsnipe_cache[message.channel.id]: (before, after)
+        self.editsnipe_cache[after.message.channel.id]: (before, after)
     
     
     @commands.command()
     @commands.has_role(744012353808498808)
     async def snipe(self, ctx):
-    msg = self.snipe_cache[ctx.channel.id]
+        msg = self.snipe_cache[ctx.channel.id]
         e = em(
             title='IsThicc | Snipe',
             colour=discord.Colour.blue,
@@ -47,20 +47,23 @@ class snipe(commands.Cog):
         ).set_footer(
             text='Sniped message created at'
         )
-        
+
         await ctx.send(embed=e)
         del self.snipe_cache[ctx.channel.id]
         
     @commands.command()
     @commands.has_role(744012353808498808)
     async def editsnipe(self, ctx):
-    b = self.editsnipe_cache[ctx.channel.id][0]
-    a = self.editsnipe_cache[ctx.channel.id][1]
+        # TODO: Make this fetch a message?
+        b = self.editsnipe_cache[ctx.channel.id][0]
+        a = self.editsnipe_cache[ctx.channel.id][1]
         e = em(
             title='IsThicc | Edit Snipe',
             colour=discord.Colour.blue,
             description=f'{b.author.mention} ({b.author}):\n**Before:** {b.content}\n**After:** {a.content}',
-            timestamp=msg.created_at
+            timestamp=datetime.utcnow()
+            # TODO: Make the timestamp work?
+            # timestamp=msg.created_at
         ).set_footer(
             text='Edit snipe message created at'
         )
