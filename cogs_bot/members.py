@@ -7,7 +7,6 @@
 import discord
 import asyncio
 from discord.ext import commands
-from discord.ext.commands import BucketType
 from discord import Embed as em
 from datetime import datetime
 #
@@ -30,7 +29,8 @@ class members(commands.Cog):
         await asyncio.sleep(2)
         channel = self.bot.get_channel(796955089628954666)
 
-        welcome = em(
+        await channel.send(f'{member.mention}', delete_after=1)
+        await channel.send(embed=em(
             title="Welcome to IsThicc Software!",
             description=f"""
 Welcome to IsThicc Software {member.mention}!
@@ -39,14 +39,10 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
             """,
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
-        )
-        welcome.set_footer(
+        ).set_thumbnail(url=member.avatar_url).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="Welcome to IsThicc Software!"
-        )
-        welcome.set_thumbnail(url=member.avatar_url)
-        await channel.send(f'{member.mention}', delete_after=1)
-        await channel.send(embed=welcome)
+        ))
 
 #
 #
@@ -56,21 +52,17 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 
-        channel = self.bot.get_channel(796955089628954666)
-
-        welcome = em(
+        await self.bot.get_channel(796955089628954666).send(embed=em(
             title=f"{member} has left IsThicc Software!",
             description=f"""
 {member} has left IsThicc Software! <a:sad:796961152579534868>
             """,
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
-        )
-        welcome.set_footer(
+        ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text=f"{member} has left IsThicc Software!"
-        )
-        await channel.send(embed=welcome)
+        ))
 
 #
 #

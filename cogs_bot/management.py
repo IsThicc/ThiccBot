@@ -275,20 +275,17 @@ class staff_cog(commands.Cog):
 #
     @announce.error
     async def staff_error(self, ctx, error):
-        self.avatar = self.bot.user.avatar_url
 
         if isinstance(error, commands.MissingRole):
-            oof = em(
+            return await ctx.send(embed=em(
                 title="Missing Permissions!",
                 description="Sorry! This command is only for staff members!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            oof.set_footer(
-                icon_url=self.avatar,
-                text="IsThicc"
-            )
-            await ctx.send(embed=oof)
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
 
 #
 #

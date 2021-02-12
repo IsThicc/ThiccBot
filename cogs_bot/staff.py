@@ -18,7 +18,7 @@ from aiohttp import ClientSession
 
 class staff_cog(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot     = bot
         self.session = ClientSession()
 
 #
@@ -29,157 +29,133 @@ class staff_cog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option = None, member = None):
-        self.avatar = self.bot.user.avatar_url
+    async def staff(self, ctx, option=None, member=None):
+
         if option == None:
-            rip = em(
+            return await ctx.send(embed=em(
                 title="Uh Oh!",
                 description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            rip.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Staff"
-            )
-            return await ctx.send(embed=rip)
+            ))
 
         if option == "view":
-
             if member is None:
-                nomember = em(
+                return await ctx.send(embed=em(
                     title="You didn't supply a member!",
                     description="Oh no, you forgot to supply a member to check! Make sure you do that next time!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
-                )
-                nomember.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
-                return await ctx.send(embed=nomember)
+                ))
 
-            view = em(
+            msg = await ctx.send(embed=em(
                 title=f"Attempting to view: {member}",
                 colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
-            )
-            view.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Staff"
-            )
-            msg = await ctx.send(embed=view)
+            ))
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
             await asyncio.sleep(2)
 
             if code == 200:
                 response = await request.json()
-                yay = em(
-                    title=f"Showing info for {member}",
-                    description=f"Processed file: **``{response['details']['name']}.yml``**",
-                    colour=discord.Colour.green(),
-                    timestamp=datetime.utcnow()
-                )
-
                 positions = []
                 for position in response['details']['position']:
                     positions.append(f'- {position}')
-                yay.add_field(
-                    name="Position",
-                    value="\n".join(positions)
-                )
-                yay.add_field(
-                    name="VPN IP",
-                    value=response['details']['ip']
-                )
 
                 github = []
                 for access in response['details']['github_access']:
                     github.append(f'- {access}')
-                yay.add_field(
-                    name="GitHub Access",
-                    value="\n".join(github)
-                )
 
                 sysaccess = []
                 for access in response['details']['system_access']:
                     sysaccess.append(f'- {access}')
-                yay.add_field(
+                request.close()
+
+                return await msg.edit(embed=em(
+                    title=f"Showing info for {member}",
+                    description=f"Processed file: **``{response['details']['name']}.yml``**",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).add_field(
+                    name="Position",
+                    value="\n".join(positions)
+                ).add_field(
+                    name="VPN IP",
+                    value=response['details']['ip']
+                ).add_field(
+                    name="GitHub Access",
+                    value="\n".join(github)
+                ).add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
-                )
-                yay.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
-                request.close()
-                return await msg.edit(embed=yay)
+                ))
 
             elif code == 403:
-                oof = em(
+                return await msg.edit(embed=em(
                     title="Oh no!",
                     description="You requested a staff member you're not allowed to access!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
-                )
-                oof.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
-                return await msg.edit(embed=oof)
+                ))
 
             elif code == 404:
-                no = em(
+                return await msg.edit(embed=em(
                     title="Unknown Staff Member!",
                     description="Your requested Staff Member does not exist!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
-                )
-                no.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
-                return await msg.edit(embed=no)
+                ))
+
             else:
-                uh = em(
+                return await msg.edit(embed=em(
                     title="U h",
                     description="You ran into an unknown response code! Make sure to report this to the developers!",
                     colour=discord.Colour.dark_red(),
                     timestamp=datetime.utcnow()
-                )
-                uh.set_footer(
-                    icon_url=self.avatar,
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
-                return await msg.edit(embed=uh)
+                ))
 
         elif option == "edit":
-
-            no = em(
+            return await ctx.send(embed=em(
                 title="This option is under development!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            no.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Staff"
-            )
-            return await ctx.send(embed=no)
-
+            ))
 
         else:
-            E = em(
+            return await ctx.send(embed=em(
                 title="So uh, yea...",
                 description="So you found this command! Good on you, just one issue, I haven't finished coding it! Make sure to yell at Mrmagicpie to finish this!",
                 colour=discord.Colour.dark_red(),
                 timestamp=datetime.utcnow()
-            )
-            E.set_footer(
-                icon_url=self.avatar,
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
                 text="IsThicc Staff"
-            )
-            return await ctx.send(embed=E)
+            ))
 
 #
 #
@@ -188,20 +164,17 @@ class staff_cog(commands.Cog):
 #
     @staff.error
     async def staff_error(self, ctx, error):
-        self.avatar = self.bot.user.avatar_url
 
         if isinstance(error, commands.MissingRole):
-            oof = em(
+            await ctx.send(embed=em(
                 title="Missing Permissions!",
                 description="Sorry! This command is only for staff members!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-            )
-            oof.set_footer(
-                icon_url=self.avatar,
-                text="IsThicc"
-            )
-            await ctx.send(embed=oof)
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            ))
 
 #
 #

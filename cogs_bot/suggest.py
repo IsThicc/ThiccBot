@@ -5,7 +5,7 @@
 #
 #
 import discord, asyncio
-from discord import Embed
+from discord import Embed as em
 from discord.ext import commands
 #
 #
@@ -23,6 +23,7 @@ class Suggestions(commands.Cog):
 #
     @commands.Cog.listener()
     async def on_message(self, message):
+
         if message.channel.id != 801929449124790353 or message.author.bot: return
         content = ""
         # Remove Markdown
@@ -31,15 +32,22 @@ class Suggestions(commands.Cog):
             if letter == "`":
                 continue
             elif letter in ['~', '_', "*", "|"]:
-                if msg[msg.index(letter) + 1] == letter: # check if **, __, or ~~
+                if msg[msg.index(letter) + 1] == letter:  # check if **, __, or ~~
                     continue
             else:
                 content += letter
-        ##########################
 
-        em = Embed(colour=discord.Colour.blue(), description=f"```{content}```")
-        em.set_author(name=f'New suggestion from {message.author}', icon_url=message.author.avatar_url_as(format='png'))
-        msg = await self.bot.get_channel(801929480875802624).send(embed=em)
+        # em = Embed(colour=discord.Colour.blue(), description=f"```{content}```")
+        # em.set_author(name=f'New suggestion from {message.author}', icon_url=message.author.avatar_url_as(format='png'))
+        msg = await self.bot.get_channel(801929480875802624).send(
+            embed=em(
+                colour=discord.Colour.blue(),
+                description=f"```{content}```"
+            ).set_author(
+                name=f"New suggestion from {message.author}",
+                icon_url=message.author.avatar_url
+            )
+        )
 
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')

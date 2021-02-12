@@ -1,5 +1,5 @@
 #
-#                               IsThicc-bot Help.py | 2020 (c) IsThicc
+#                              IsThicc-bot Help.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -14,7 +14,6 @@ from datetime import datetime
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -33,30 +32,24 @@ class help(commands.Cog):
         :return: Returns Help embed.
         """
 
-        self.avatar = self.bot.user.avatar_url
-
-        help = em(
+        return await ctx.send(embed=em(
             title="IsThicc Help!",
             description="""
 The IsThicc bot is a work-in-progress bot to help our staff with server management!
 
-If you have questions with the bot or any of questions please don't hesitate to reach out to our staff in <#744252916684161094>!
+The IsThicc Bot doesn't currently have any public commands! Please check back later. If you have questions with the bot or any of questions please don't hesitate to reach out to our staff in <#744252916684161094>!
             """,
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
-        )
-        help.set_footer(
+        ).set_footer(
             text="IsThicc Software",
-            icon_url=self.avatar
-        )
-        await ctx.send(embed=help)
+            icon_url=self.bot.user.avatar_url
+        ))
 
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
-
 def setup(bot):
     bot.add_cog(help(bot))
