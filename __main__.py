@@ -56,6 +56,8 @@ async def _init_async():
     tickets_query = 'CREATE TABLE IF NOT EXISTS tickets(channel_id THICCINT NOT NULL PRIMARY KEY, user_id EXTREMLY_THICC_INT NOT NULL, open BOOLEAN HAS_TO_EXIST_KEK)'
     await bot.db.execute(tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT', 'BIGINT').replace('HAS_TO_EXIST_KEK', 'NOT NULL'))
     
+    await bot.db.execute('CREATE TABLE IF NOT EXISTS warnings(warn_id VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL PRIMARY KEY, user_id BIGINT NOT NULL)')
+    
 bot.loop.run_until_complete(_init_async())
 
 #
