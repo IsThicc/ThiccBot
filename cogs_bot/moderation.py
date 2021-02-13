@@ -7,6 +7,7 @@
 import discord, asyncio
 from discord.ext import commands
 from discord import Embed as em
+from discord import Colour
 from datetime import datetime
 import random, string
 #
@@ -47,12 +48,10 @@ class mod(commands.Cog):
         try:
 
             def yes_no(reaction, user):
-                print('ok')
                 return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
 
             reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
-
-            print(reaction)
+            
         except asyncio.TimeoutError:
 
             timeout = em(
@@ -69,9 +68,8 @@ class mod(commands.Cog):
             return await msg.edit(embed=timeout)
 
         await msg.clear_reactions()
-        emoji = str(reaction.emoji)
-
-        print(emoji)
+        emoji = str(reaction)
+        
         if emoji == '👍':
 
             bye_hoe = em(
@@ -128,12 +126,75 @@ class mod(commands.Cog):
                 icon_url=self.avatar,
                 text="IsThicc Moderation"
             ))
+        
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+        
+    @commands.command()
+    @commands.has_guild_permissions(manage_roles=True)
+    async def warn(self, ctx, m: Member = None, reason: str = 'No reason specified.'):
+        if m is None:
+            return await ctx.reply('You didnt specify a member! Usage:\n`warn <member> <reason>')
+        
+        _id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        
+        await self.db.execute("INSERT INTO warnings VALUES('" + str(_id) + "','" + str(m.id) + "')")
+        e = em(description=f'I have warned {m.mention} for the reason **{reason}** with the warn id: `{_id}`', colour=Colour.teal(), timestamp=datetime.utcnow())
+        await ctx.reply(embed=e)
+
+        e2 = em(description=f'You got warned on **{ctx.guild}** by {ctx.author.mention} for the reason: **{reason}**\nWarn ID: `{_id}`', colour=Colour.red())
+        await m.send(embed=e2)
+       
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    
+    @commands.command(aliases=('delwarn',))
+    @commands.has_guild_permissions(manage_roles=True)
+    async def unwarn(self, ctx, m: Member = None, warnid: str = None):
+        if m is None or warnid is None:
+            return await ctx.reply('You didnt specify a member to unwarn! Usage:\n`unwarn <member> <warn id>`')
+         
+        await self.db.execute("DELETE FROM warnings WHERE warn_id = '" + warnid + "'")
+        e = em(description=f'I have removed the warning **{warnid}** from {m.mention}.', colour=Colour.green())
+        await ctx.reply(embed=e)
+
+        e2 = em(description=f'Your warning by the id **{warnid}** got removed by {ctx.author.mention}!', colour=Colour.teal())
+        await m.send(embed=e2)
+        
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+
+    @commands.command()
+    @commands.has_guild_permissions(manage_roles=True)
+    async def warnings(self, ctx, m: Member = None):
+        if m is None:
+            return await ctx.reply('You didnt specify a member to view warnings! Usage:\n`warnings <member>`')
+        
+        r = await self.db.execute('SELECT * FROM warnings WHERE user_id = "' + str(m.id) + '"')
+
+        warnings = []
+        for i in range(len(r)):
+            warnings.append(f'{i + 1} - {r[i][0]}')
+
+        e = em(title=f'{m}(s) Warnings', colour=Colour.teal(), description='\n'.join(warnings), timestamp=datetime.utcnow())
+        e.set_thumbnail(url=self.bot.user.avatar_url_as(format='png'))
+        await ctx.reply(embed=e)
 
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+
     @commands.has_guild_permissions(kick_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
@@ -173,7 +234,7 @@ class mod(commands.Cog):
             ))
 
         await msg.clear_reactions()
-        emoji = str(reaction.emoji)
+        emoji = str(reaction)
 
         if emoji == '👍':
 
@@ -193,7 +254,7 @@ class mod(commands.Cog):
                     icon_url=self.avatar,
                     text="IsThicc Moderation"
                 ))
-                await member.ban(reason=reason)
+                await member.kick(reason=reason)
 
             except Exception:
                 return await msg.edit(embed=em(
