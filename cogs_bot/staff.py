@@ -31,8 +31,8 @@ class staff_cog(commands.Cog):
     @commands.has_role(744012353808498808)
     async def staff(self, ctx, option=None, member: typing.Union[str, discord.Member] = None):
         
-        if type(member) == str:
-            member = discord.utils.get(ctx.guild.members, name=member)
+        # if type(member) == str:
+        #     member = discord.utils.get(ctx.guild.members, name=member)
 
         if option == None:
             return await ctx.send(embed=em(
@@ -84,7 +84,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            member = member.id
+            # member = member.id
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
