@@ -81,7 +81,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-                member = member.replace("<@!").replace(">")
+                member = member.replace("<@!", "").replace(">", "")
 
             else:
                 msg = await ctx.send(embed=em(
