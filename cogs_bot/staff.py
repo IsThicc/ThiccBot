@@ -141,9 +141,6 @@ class staff_cog(commands.Cog):
                 ).add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
                 )
 
                 if github_code == 200:
@@ -177,6 +174,11 @@ class staff_cog(commands.Cog):
                         value=company
                     )
                 github_r.close()
+
+                staff.set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                )
 
                 return await msg.edit(embed=staff)
 
