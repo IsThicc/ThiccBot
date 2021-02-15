@@ -175,6 +175,7 @@ class staff_cog(commands.Cog):
                         name="Company",
                         value=company
                     )
+                github.close()
 
                 return await msg.edit(embed=staff)
 
