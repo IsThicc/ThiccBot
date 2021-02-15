@@ -56,7 +56,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            discord_member = discord.utils.get(ctx.guild.members, name=ctx.author.name.split("#")[0])
+            discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
 
             print(discord_member)
 
@@ -92,7 +92,6 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            # member = member.id
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
@@ -124,6 +123,9 @@ class staff_cog(commands.Cog):
                 ).add_field(
                     name="VPN IP",
                     value=response['details']['ip']
+                ).add_field(
+                    name="Discord User",
+                    value=self.bot.get_user(response['details']['discord_id']).mention
                 ).add_field(
                     name="GitHub Access",
                     value="\n".join(github)
