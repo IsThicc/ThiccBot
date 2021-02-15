@@ -68,7 +68,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-                member = discord_member.id
+                member = member.id
                 print(member)
 
             else:
