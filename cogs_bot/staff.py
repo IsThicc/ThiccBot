@@ -63,6 +63,7 @@ class staff_cog(commands.Cog):
 
             # if discord_member != None:
             print(member)
+            print(type(member))
             if type(member) == discord.Member:
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member.display_name}",
