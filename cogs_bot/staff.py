@@ -157,7 +157,7 @@ class staff_cog(commands.Cog):
                     github_response = await github_r.json()
                     print(github_response)
 
-                    if github_response['twitter_username'] != None:
+                    if github_response['twitter_username'] is not None:
                         twitter = github_response['twitter_username']
                     else:
                         twitter = "No Twitter on GitHub!"
@@ -166,7 +166,7 @@ class staff_cog(commands.Cog):
                         value=twitter
                     )
 
-                    if github_response['hireable'] is True:
+                    if github_response['hireable'] == True:
                         hire = "Yes!"
                     else:
                         hire = "Not currently!"
@@ -175,7 +175,7 @@ class staff_cog(commands.Cog):
                         value=hire
                     )
 
-                    if github_response['blog'] != None or github_response['blog'] != "":
+                    if github_response['blog'] is not None or github_response['blog'] != "":
                         site = github_response['blog']
                     else:
                         site = "No Website on GitHub!"
@@ -184,7 +184,7 @@ class staff_cog(commands.Cog):
                         value=site
                     )
 
-                    if github_response['company'] != None:
+                    if github_response['company'] is not None:
                         if github_response['company'].startswith("@"):
                             company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
                         else:
