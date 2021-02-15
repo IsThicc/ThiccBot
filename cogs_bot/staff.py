@@ -53,8 +53,9 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            print(member)
-            if member == discord.Member:
+            discord_member = discord.utils.get(ctx.guild.members, name=member)
+
+            if discord_member != None:
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member.display_name}",
                     colour=discord.Colour.green(),
