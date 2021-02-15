@@ -93,12 +93,12 @@ class staff_cog(commands.Cog):
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
-            github_r = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
-            github_code = github_r.status
             await asyncio.sleep(2)
 
             if code == 200:
                 response = await request.json()
+                github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
+                github_code = github_r.status
                 positions = []
                 for position in response['details']['position']:
                     positions.append(f'- {position}')
@@ -175,7 +175,7 @@ class staff_cog(commands.Cog):
                         name="Company",
                         value=company
                     )
-                github.close()
+                github_r.close()
 
                 return await msg.edit(embed=staff)
 
