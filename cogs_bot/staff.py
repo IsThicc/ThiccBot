@@ -147,7 +147,7 @@ class staff_cog(commands.Cog):
 
                 if github_code == 200:
                     github_response = await github_r.json()
-                    if github_response['twitter_username'] is not None: twitter = github_response['twitter_username']
+                    if github_response['twitter_username'] != None: twitter = github_response['twitter_username']
                     else: twitter = "No Twitter on GitHub!"
                     staff.add_field(
                         name="Twitter",
@@ -159,13 +159,13 @@ class staff_cog(commands.Cog):
                         name="Open to commissions?",
                         value=hire
                     )
-                    if github_response['blog'] is not None or github_response['blog'] is not "": site = github_response['blog']
+                    if github_response['blog'] != None or github_response['blog'] != "": site = github_response['blog']
                     else: site = "No Website on GitHub!"
                     staff.add_field(
                         name="Website",
                         value=site
                     )
-                    if github_response['company'] is not None:
+                    if github_response['company'] != None:
                         if github_response['company'].startswith("@"):
                             company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
                         else:
