@@ -69,7 +69,6 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
                 member = discord_member.id
-                # print("id: " + str(member))
 
             elif member.startswith("<@"):
                 member = member.replace("<@!", "").replace(">", "")
@@ -128,6 +127,9 @@ class staff_cog(commands.Cog):
                 ).add_field(
                     name="GitHub Access",
                     value="\n".join(github)
+                ).add_field(
+                    name="GitHub ID",
+                    value=response['details']['github_id']
                 ).add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
