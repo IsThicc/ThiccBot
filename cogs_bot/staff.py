@@ -118,27 +118,35 @@ class staff_cog(commands.Cog):
                     description=f"Processed file: **``{response['details']['name']}.yml``**",
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
-                ).set_thumbnail(
+                )
+                staff.set_thumbnail(
                     url=self.bot.get_user(response['details']['discord_id']).avatar_url
-                ).add_field(
+                )
+                staff.add_field(
                     name="Position",
                     value="\n".join(positions)
-                ).add_field(
+                )
+                staff.add_field(
                     name="VPN IP",
                     value=response['details']['ip']
-                ).add_field(
+                )
+                staff.add_field(
                     name="Discord User",
                     value=self.bot.get_user(response['details']['discord_id']).mention
-                ).add_field(
+                )
+                staff.add_field(
                     name="GitHub Access",
                     value="\n".join(github)
-                ).add_field(
+                )
+                staff.add_field(
                     name="GitHub ID",
                     value=response['details']['github_id']
-                ).add_field(
+                )
+                staff.add_field(
                     name="GitHub Username",
                     value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
-                ).add_field(
+                )
+                staff.add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
                 )
@@ -148,34 +156,46 @@ class staff_cog(commands.Cog):
                     print('ded3')
                     github_response = await github_r.json()
                     print(github_response)
-                    if github_response['twitter_username'] != None: twitter = github_response['twitter_username']
-                    else: twitter = "No Twitter on GitHub!"
+
+                    if github_response['twitter_username'] != None:
+                        twitter = github_response['twitter_username']
+                    else:
+                        twitter = "No Twitter on GitHub!"
                     staff.add_field(
                         name="Twitter",
                         value=twitter
                     )
-                    if github_response['hireable'] is True: hire = "Yes!"
-                    else: hire = "Not currently!"
+
+                    if github_response['hireable'] is True:
+                        hire = "Yes!"
+                    else:
+                        hire = "Not currently!"
                     staff.add_field(
                         name="Open to commissions?",
                         value=hire
                     )
-                    if github_response['blog'] != None or github_response['blog'] != "": site = github_response['blog']
-                    else: site = "No Website on GitHub!"
+
+                    if github_response['blog'] != None or github_response['blog'] != "":
+                        site = github_response['blog']
+                    else:
+                        site = "No Website on GitHub!"
                     staff.add_field(
                         name="Website",
                         value=site
                     )
+
                     if github_response['company'] != None:
                         if github_response['company'].startswith("@"):
                             company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
                         else:
                             company = github_response['company']
-                    else: company = "No Company on GitHub!"
+                    else:
+                        company = "No Company on GitHub!"
                     staff.add_field(
                         name="Company",
                         value=company
                     )
+
                 print('ded2')
                 github_r.close()
                 print('ded1')
