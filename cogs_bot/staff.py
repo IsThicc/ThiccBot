@@ -81,6 +81,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
+            member = member.id
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
