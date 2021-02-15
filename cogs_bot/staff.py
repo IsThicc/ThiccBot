@@ -110,11 +110,13 @@ class staff_cog(commands.Cog):
                     sysaccess.append(f'- {access}')
                 request.close()
 
-                return await msg.edit(embed=em(
+                staff = em(
                     title=f"Showing info for {member}",
                     description=f"Processed file: **``{response['details']['name']}.yml``**",
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
+                ).set_thumbnail(
+                    url=self.bot.get_user(response['details']['discord_id']).avatar_url
                 ).add_field(
                     name="Position",
                     value="\n".join(positions)
@@ -132,16 +134,19 @@ class staff_cog(commands.Cog):
                     value=response['details']['github_id']
                 ).add_field(
                     name="GitHub Username",
-                    value=response['details']['github_username']
+                    value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
                 ).add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
                 ).set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                ))
+                )
+
+                return await msg.edit(embed=staff)
 
             elif code == 403:
+                request.close()
                 return await msg.edit(embed=em(
                     title="Oh no!",
                     description="You requested a staff member you're not allowed to access!",
@@ -153,6 +158,7 @@ class staff_cog(commands.Cog):
                 ))
 
             elif code == 404:
+                request.close()
                 return await msg.edit(embed=em(
                     title="Unknown Staff Member!",
                     description="Your requested Staff Member does not exist!",
@@ -164,6 +170,7 @@ class staff_cog(commands.Cog):
                 ))
 
             else:
+                request.close()
                 return await msg.edit(embed=em(
                     title="U h",
                     description="You ran into an unknown response code! Make sure to report this to the developers!",
