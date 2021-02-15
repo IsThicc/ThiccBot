@@ -54,14 +54,26 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
 
-            msg = await ctx.send(embed=em(
-                title=f"Attempting to view: {member}",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.bot.user.avatar_url,
-                text="IsThicc Staff"
-            ))
+            if member == discord.Member:
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {member.name}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+                member = member.id
+
+            else:
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {member}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
             await asyncio.sleep(2)

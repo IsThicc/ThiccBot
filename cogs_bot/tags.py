@@ -18,7 +18,7 @@ from discord import Embed
 
 class Tags(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot   = bot
         self.slash = self.bot.slash
 
 #
@@ -27,7 +27,11 @@ class Tags(commands.Cog):
 #
 #
     async def perm_error(self, ctx: commands.Context):
-        await ctx.send(embeds=[Embed(description='Invalid Permissions! Only IsThicc staff can run this command!', colour=discord.Colour.red())])
+        await ctx.send(
+            embed=Embed(
+                    description='Invalid Permissions! Only IsThicc staff can run this command!',
+                    colour=discord.Colour.red()
+                ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
