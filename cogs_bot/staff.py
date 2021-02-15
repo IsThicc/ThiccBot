@@ -29,7 +29,7 @@ class staff_cog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option=None, member: typing.Union[str, discord.Member] = None):
+    async def staff(self, ctx, option=None, member: str = None):
         
         # if type(member) == str:
         #     member = discord.utils.get(ctx.guild.members, name=member)
@@ -56,8 +56,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            # discord_member = discord.utils.get(ctx.guild.members, name=member)
-            discord_member = discord.utils.find(lambda m: m.name == member, ctx.guild.members)
+            discord_member = discord.utils.get(ctx.guild.members, name=ctx.author.name.split("#")[0])
 
             print(discord_member)
 
@@ -66,14 +65,14 @@ class staff_cog(commands.Cog):
             print(type(member))
             if type(member) == discord.Member:
                 msg = await ctx.send(embed=em(
-                    title=f"Attempting to view: {member.display_name}",
+                    title=f"Attempting to view: {discord_member.display_name}",
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-                member = member.id
+                member = discord_member.id
                 print("id: " + str(member))
 
             else:
