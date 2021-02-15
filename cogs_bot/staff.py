@@ -54,6 +54,7 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
             discord_member = discord.utils.get(ctx.guild.members, name=member)
+            print(discord_member)
 
             if discord_member != None:
                 msg = await ctx.send(embed=em(
@@ -64,7 +65,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-                member = member.id
+                member = discord_member.id
 
             else:
                 msg = await ctx.send(embed=em(
