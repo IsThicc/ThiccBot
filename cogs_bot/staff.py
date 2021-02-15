@@ -59,6 +59,7 @@ class staff_cog(commands.Cog):
             print(discord_member)
 
             # if discord_member != None:
+            print(member)
             if member == discord.Member:
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member.display_name}",
@@ -80,6 +81,7 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
+
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
             await asyncio.sleep(2)
