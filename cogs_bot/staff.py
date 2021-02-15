@@ -147,6 +147,7 @@ class staff_cog(commands.Cog):
                 if github_code == 200:
                     print('ded3')
                     github_response = await github_r.json()
+                    print(github_response)
                     if github_response['twitter_username'] != None: twitter = github_response['twitter_username']
                     else: twitter = "No Twitter on GitHub!"
                     staff.add_field(
