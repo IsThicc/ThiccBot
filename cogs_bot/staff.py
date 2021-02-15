@@ -58,7 +58,8 @@ class staff_cog(commands.Cog):
 
             print(discord_member)
 
-            if discord_member != None:
+            # if discord_member != None:
+            if member == discord.Member:
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member.display_name}",
                     colour=discord.Colour.green(),
