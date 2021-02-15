@@ -111,7 +111,6 @@ class staff_cog(commands.Cog):
                 sysaccess = []
                 for access in response['details']['system_access']:
                     sysaccess.append(f'- {access}')
-                request.close()
 
                 staff = em(
                     title=f"Showing info for {member}",
@@ -196,8 +195,6 @@ class staff_cog(commands.Cog):
                         value=company
                     )
 
-                print('ded2')
-                github_r.close()
                 print('ded1')
 
                 staff.set_footer(
@@ -205,6 +202,8 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 )
                 print('ded')
+                request.close()
+                github_r.close()
 
                 return await msg.edit(embed=staff)
 
