@@ -69,7 +69,7 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
                 member = member.id
-                print(member)
+                print("id: " + str(member))
 
             else:
                 msg = await ctx.send(embed=em(
