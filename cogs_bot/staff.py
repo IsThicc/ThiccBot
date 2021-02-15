@@ -29,7 +29,10 @@ class staff_cog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option=None, member: discord.Member = None):
+    async def staff(self, ctx, option=None, member: typing.Union[str, discord.Member] = None):
+        
+        if type(member) == str:
+            member = discord.utils.get(ctx.guild.members, name=member)
 
         if option == None:
             return await ctx.send(embed=em(
@@ -60,7 +63,7 @@ class staff_cog(commands.Cog):
 
             # if discord_member != None:
             print(member)
-            if member == discord.Member:
+            if type(member) == discord.Member:
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member.display_name}",
                     colour=discord.Colour.green(),
