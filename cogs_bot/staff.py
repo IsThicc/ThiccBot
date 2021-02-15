@@ -93,6 +93,8 @@ class staff_cog(commands.Cog):
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
             code = request.status
+            github_r = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
+            github_code = github_r.status
             await asyncio.sleep(2)
 
             if code == 200:
@@ -142,6 +144,37 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 )
+
+                if github_code == 200:
+                    github_response = await github_r.json()
+                    if github_response['twitter_username'] is not None: twitter = github_response['twitter_username']
+                    else: twitter = "No Twitter on GitHub!"
+                    staff.add_field(
+                        name="Twitter",
+                        value=twitter
+                    )
+                    if github_response['hireable'] is True: hire = "Yes!"
+                    else: hire = "Not currently!"
+                    staff.add_field(
+                        name="Open to commissions?",
+                        value=hire
+                    )
+                    if github_response['blog'] is not None or github_response['blog'] is not "": site = github_response['blog']
+                    else: site = "No Website on GitHub!"
+                    staff.add_field(
+                        name="Website",
+                        value=site
+                    )
+                    if github_response['company'] is not None:
+                        if github_response['company'].startswith("@"):
+                            company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
+                        else:
+                            company = github_response['company']
+                    else: company = "No Company on GitHub!"
+                    staff.add_field(
+                        name="Company",
+                        value=company
+                    )
 
                 return await msg.edit(embed=staff)
 
