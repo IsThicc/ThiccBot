@@ -157,9 +157,12 @@ class staff_cog(commands.Cog):
                     print(github_response)
 
                     if github_response['twitter_username'] is not None:
+                        print('ded3-1-1')
                         twitter = github_response['twitter_username']
                     else:
+                        print('ded3-1-2')
                         twitter = "No Twitter on GitHub!"
+                    print('ded3-1')
                     staff.add_field(
                         name="Twitter",
                         value=twitter
@@ -167,8 +170,11 @@ class staff_cog(commands.Cog):
 
                     if github_response['hireable'] == True:
                         hire = "Yes!"
+                        print('ded3-2-1')
                     else:
+                        print('ded3-2-2')
                         hire = "Not currently!"
+                    print('ded3-2')
                     staff.add_field(
                         name="Open to commissions?",
                         value=hire
@@ -176,20 +182,28 @@ class staff_cog(commands.Cog):
 
                     if github_response['blog'] is not None or github_response['blog'] != "":
                         site = github_response['blog']
+                        print('ded3-3-1')
                     else:
+                        print('ded3-3-2')
                         site = "No Website on GitHub!"
+                    print('ded3-3')
                     staff.add_field(
                         name="Website",
                         value=site
                     )
 
                     if github_response['company'] is not None:
+                        print('ded3-4-1')
                         if github_response['company'].startswith("@"):
+                            print('ded3-4-2')
                             company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
                         else:
+                            print('ded3-4-3')
                             company = github_response['company']
                     else:
+                        print('ded3-4-4')
                         company = "No Company on GitHub!"
+                    print('ded3-4')
                     staff.add_field(
                         name="Company",
                         value=company
