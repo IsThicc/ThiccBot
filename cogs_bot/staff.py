@@ -131,6 +131,9 @@ class staff_cog(commands.Cog):
                     name="GitHub ID",
                     value=response['details']['github_id']
                 ).add_field(
+                    name="GitHub Username",
+                    value=response['details']['github_username']
+                ).add_field(
                     name="System Access",
                     value="\n".join(sysaccess)
                 ).set_footer(
