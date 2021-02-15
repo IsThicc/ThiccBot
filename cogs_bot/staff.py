@@ -142,8 +142,10 @@ class staff_cog(commands.Cog):
                     name="System Access",
                     value="\n".join(sysaccess)
                 )
+                print('ded4')
 
                 if github_code == 200:
+                    print('ded3')
                     github_response = await github_r.json()
                     if github_response['twitter_username'] != None: twitter = github_response['twitter_username']
                     else: twitter = "No Twitter on GitHub!"
@@ -173,12 +175,15 @@ class staff_cog(commands.Cog):
                         name="Company",
                         value=company
                     )
+                print('ded2')
                 github_r.close()
+                print('ded1')
 
                 staff.set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 )
+                print('ded')
 
                 return await msg.edit(embed=staff)
 
