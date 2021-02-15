@@ -53,7 +53,9 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-            discord_member = discord.utils.get(ctx.guild.members, name=member)
+            # discord_member = discord.utils.get(ctx.guild.members, name=member)
+            discord_member = discord.utils.find(lambda m: m.name == member, ctx.guild.members)
+
             print(discord_member)
 
             if discord_member != None:
