@@ -99,6 +99,7 @@ class staff_cog(commands.Cog):
                 response = await request.json()
                 github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
                 github_code = github_r.status
+                print(github_code)
                 positions = []
                 for position in response['details']['position']:
                     positions.append(f'- {position}')
