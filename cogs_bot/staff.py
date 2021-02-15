@@ -53,10 +53,10 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
-
+            print(member)
             if member == discord.Member:
                 msg = await ctx.send(embed=em(
-                    title=f"Attempting to view: {member.name}",
+                    title=f"Attempting to view: {member.display_name}",
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
