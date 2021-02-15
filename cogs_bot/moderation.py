@@ -138,7 +138,7 @@ class mod(commands.Cog):
         
     @commands.command()
     @commands.has_guild_permissions(manage_roles=True)
-    async def warn(self, ctx, m: Member = None, reason: str = 'No reason specified.'):
+    async def warn(self, ctx, m: discord.Member = None, reason: str = 'No reason specified.'):
         if m is None:
             return await ctx.reply('You didnt specify a member! Usage:\n`warn <member> <reason>')
         
@@ -159,7 +159,7 @@ class mod(commands.Cog):
     
     @commands.command(aliases=('delwarn',))
     @commands.has_guild_permissions(manage_roles=True)
-    async def unwarn(self, ctx, m: Member = None, warnid: str = None):
+    async def unwarn(self, ctx, m: discord.Member = None, warnid: str = None):
         if m is None or warnid is None:
             return await ctx.reply('You didnt specify a member to unwarn! Usage:\n`unwarn <member> <warn id>`')
          
@@ -178,7 +178,7 @@ class mod(commands.Cog):
 
     @commands.command()
     @commands.has_guild_permissions(manage_roles=True)
-    async def warnings(self, ctx, m: Member = None):
+    async def warnings(self, ctx, m: discord.Member = None):
         if m is None:
             return await ctx.reply('You didnt specify a member to view warnings! Usage:\n`warnings <member>`')
         
