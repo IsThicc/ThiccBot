@@ -68,6 +68,7 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
                 member = discord_member.id
+                print(member)
 
             else:
                 msg = await ctx.send(embed=em(
