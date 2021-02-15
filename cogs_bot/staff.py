@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, typing
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -29,7 +29,7 @@ class staff_cog(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option=None, member=None):
+    async def staff(self, ctx, option=None, member: typing.Union[discord.Member, str] = None):
 
         if option == None:
             return await ctx.send(embed=em(
