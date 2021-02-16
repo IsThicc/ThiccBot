@@ -93,13 +93,13 @@ class staff_cog(commands.Cog):
 
                 request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
                 code = request.status
-                await asyncio.sleep(2)
 
                 if code == 200:
 
                     response = await request.json()
                     github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
                     github_code = github_r.status
+                    await asyncio.sleep(2)
 
                     positions = []
                     for position in response['details']['position']:
@@ -199,41 +199,41 @@ class staff_cog(commands.Cog):
 
                     return await msg.edit(embed=staff)
 
-            if code == 403:
-                request.close()
-                return await msg.edit(embed=em(
-                    title="Oh no!",
-                    description="You requested a staff member you're not allowed to access!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+                elif code == 403:
+                    request.close()
+                    return await msg.edit(embed=em(
+                        title="Oh no!",
+                        description="You requested a staff member you're not allowed to access!",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
 
-            elif code == 404:
-                request.close()
-                return await msg.edit(embed=em(
-                    title="Unknown Staff Member!",
-                    description="Your requested Staff Member does not exist!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+                elif code == 404:
+                    request.close()
+                    return await msg.edit(embed=em(
+                        title="Unknown Staff Member!",
+                        description="Your requested Staff Member does not exist!",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
 
-            else:
-                request.close()
-                return await msg.edit(embed=em(
-                    title="U h",
-                    description="You ran into an unknown response code! Make sure to report this to the developers!",
-                    colour=discord.Colour.dark_red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+                else:
+                    request.close()
+                    return await msg.edit(embed=em(
+                        title="U h",
+                        description="You ran into an unknown response code! Make sure to report this to the developers!",
+                        colour=discord.Colour.dark_red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
 
         elif option == "edit":
             return await ctx.send(embed=em(
@@ -274,6 +274,8 @@ class staff_cog(commands.Cog):
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Staff"
             ))
+        else:
+            print(error)
 
 #
 #
