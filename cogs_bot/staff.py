@@ -61,7 +61,7 @@ class staff_cog(commands.Cog):
                 discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
 
                 if discord_member is not None:
-                    msg = return await ctx.send(embed=em(
+                    msg = await ctx.send(embed=em(
                         title=f"Attempting to view: {discord_member.display_name}",
                         colour=discord.Colour.green(),
                         timestamp=datetime.utcnow()
@@ -69,6 +69,7 @@ class staff_cog(commands.Cog):
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+                    return
                 if member.startswith("<@"):
                     member = member.replace("<@", "").replace("!", "").replace(">", "") # ! isnt always there
                 else:
