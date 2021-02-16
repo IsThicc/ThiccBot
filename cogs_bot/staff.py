@@ -275,7 +275,7 @@ class staff_cog(commands.Cog):
                 text="IsThicc Staff"
             ))
         else:
-            print(error)
+            print(str(error))
 
 #
 #
