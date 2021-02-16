@@ -143,61 +143,61 @@ class staff_cog(commands.Cog):
                         value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
                     )
 
-                if github_code == 200:
+                    if github_code == 200:
 
-                    github_response = await github_r.json()
+                        github_response = await github_r.json()
 
-                    if github_response['twitter_username'] is not None: twitter = github_response['twitter_username']
-                    else: twitter = "No Twitter on GitHub!"
+                        if github_response['twitter_username'] is not None: twitter = github_response['twitter_username']
+                        else: twitter = "No Twitter on GitHub!"
+                        staff.add_field(
+                            name="Twitter",
+                            value=twitter
+                        )
+
+                        if github_response['hireable'] == True: hire = "Yes!"
+                        else: hire = "Not currently!"
+                        staff.add_field(
+                            name="Open to commissions?",
+                            value=hire
+                        )
+
+                        if github_response['blog'] is None or len(github_response['blog']) == 0 or github_response['blog'] == "":
+                            site = "No Website on GitHub!"
+                        else: site = github_response['blog']
+                        staff.add_field(
+                            name="Website",
+                            value=site
+                        )
+
+                        if github_response['company'] is not None:
+                            if github_response['company'].startswith("@"):
+                                try: company = f'[{github_response["company"].replace("@", "")}](https://github.com/{github_response["company"].replace("@", "")})'
+                                except: company = github_response['company']
+                            else:
+                                company = github_response['company']
+                        else: company = "No Company on GitHub!"
+                        staff.add_field(
+                            name="Company",
+                            value=company
+                        )
+
                     staff.add_field(
-                        name="Twitter",
-                        value=twitter
+                        name="Position",
+                        value="\n".join(positions)
+                    )
+                    staff.add_field(
+                        name="System Access",
+                        value="\n".join(sysaccess)
                     )
 
-                    if github_response['hireable'] == True: hire = "Yes!"
-                    else: hire = "Not currently!"
-                    staff.add_field(
-                        name="Open to commissions?",
-                        value=hire
+                    staff.set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
                     )
+                    request.close()
+                    github_r.close()
 
-                    if github_response['blog'] is None or len(github_response['blog']) == 0 or github_response['blog'] == "":
-                        site = "No Website on GitHub!"
-                    else: site = github_response['blog']
-                    staff.add_field(
-                        name="Website",
-                        value=site
-                    )
-
-                    if github_response['company'] is not None:
-                        if github_response['company'].startswith("@"):
-                            try: company = f'[{github_response["company"].replace("@", "")}](https://github.com/{github_response["company"].replace("@", "")})'
-                            except: company = github_response['company']
-                        else:
-                            company = github_response['company']
-                    else: company = "No Company on GitHub!"
-                    staff.add_field(
-                        name="Company",
-                        value=company
-                    )
-
-                staff.add_field(
-                    name="Position",
-                    value="\n".join(positions)
-                )
-                staff.add_field(
-                    name="System Access",
-                    value="\n".join(sysaccess)
-                )
-
-                staff.set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                )
-                request.close()
-                github_r.close()
-
-                return await msg.edit(embed=staff)
+                    return await msg.edit(embed=staff)
 
             if code == 403:
                 request.close()
