@@ -163,9 +163,9 @@ class staff_cog(commands.Cog):
                             value=hire
                         )
 
-                        if github_response['blog'] is not None or len(github_response['blog']) == 0 or github_response['blog'] == "":
-                            site = github_response['blog']
-                        else: site = "No Website on GitHub!"
+                        if github_response['blog'] is None or len(github_response['blog']) == 0 or github_response['blog'] == "":
+                            site = "No Website on GitHub!"
+                        else: site = github_response['blog']
                         staff.add_field(
                             name="Website",
                             value=site
