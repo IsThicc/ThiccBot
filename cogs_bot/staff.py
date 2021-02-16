@@ -197,7 +197,7 @@ class staff_cog(commands.Cog):
                         if github_response['company'].startswith("@"):
                             print('ded3-4-2')
                             try: company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
-                            except: print('eeeeeeeeeeeeeeeeeeeeeee')
+                            except: company = github_response['company']
                         else:
                             print('ded3-4-3')
                             company = github_response['company']
