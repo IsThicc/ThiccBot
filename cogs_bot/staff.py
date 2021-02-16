@@ -70,10 +70,10 @@ class staff_cog(commands.Cog):
                         text="IsThicc Staff"
                     ))
                     return
+                    member = str(discord_member.id)
+                    
                 if member.startswith("<@"):
                     member = member.replace("<@", "").replace("!", "").replace(">", "") # ! isnt always there
-                else:
-                    member = str(discord_member.id)
 
                 msg = await ctx.send(embed=em(
                     title=f"Attempting to view: {member}",
