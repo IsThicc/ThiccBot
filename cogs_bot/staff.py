@@ -125,23 +125,23 @@ class staff_cog(commands.Cog):
                     staff.add_field(
                         name="VPN IP",
                         value=response['details']['ip']
-                )
-                staff.add_field(
-                    name="Discord User",
-                    value=self.bot.get_user(response['details']['discord_id']).mention
-                )
-                staff.add_field(
-                    name="GitHub Access",
-                    value="\n".join(github)
-                )
-                staff.add_field(
-                    name="GitHub ID",
-                    value=response['details']['github_id']
-                )
-                staff.add_field(
-                    name="GitHub Username",
-                    value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
-                )
+                    )
+                    staff.add_field(
+                        name="Discord User",
+                        value=self.bot.get_user(response['details']['discord_id']).mention
+                    )
+                    staff.add_field(
+                        name="GitHub Access",
+                        value="\n".join(github)
+                    )
+                    staff.add_field(
+                        name="GitHub ID",
+                        value=response['details']['github_id']
+                    )
+                    staff.add_field(
+                        name="GitHub Username",
+                        value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
+                    )
 
                 if github_code == 200:
 
