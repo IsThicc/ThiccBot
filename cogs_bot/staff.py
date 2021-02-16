@@ -82,7 +82,7 @@ class staff_cog(commands.Cog):
                 ).set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
+                ))
                   
                     request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
                     code = request.status
