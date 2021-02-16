@@ -96,10 +96,11 @@ class staff_cog(commands.Cog):
             await asyncio.sleep(2)
 
             if code == 200:
+
                 response = await request.json()
                 github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
                 github_code = github_r.status
-                print(github_code)
+
                 positions = []
                 for position in response['details']['position']:
                     positions.append(f'- {position}')
@@ -113,17 +114,13 @@ class staff_cog(commands.Cog):
                     sysaccess.append(f'- {access}')
 
                 staff = em(
-                    title=f"Showing info for {member}",
+                    title=f"Showing info for {response['details']['name'].capitalize()}",
                     description=f"Processed file: **``{response['details']['name']}.yml``**",
                     colour=discord.Colour.green(),
                     timestamp=datetime.utcnow()
                 )
                 staff.set_thumbnail(
                     url=self.bot.get_user(response['details']['discord_id']).avatar_url
-                )
-                staff.add_field(
-                    name="Position",
-                    value="\n".join(positions)
                 )
                 staff.add_field(
                     name="VPN IP",
@@ -145,36 +142,21 @@ class staff_cog(commands.Cog):
                     name="GitHub Username",
                     value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
                 )
-                staff.add_field(
-                    name="System Access",
-                    value="\n".join(sysaccess)
-                )
-                print('ded4')
 
                 if github_code == 200:
-                    print('ded3')
+
                     github_response = await github_r.json()
-                    print(github_response)
 
                     if github_response['twitter_username'] is not None:
-                        print('ded3-1-1')
                         twitter = github_response['twitter_username']
-                    else:
-                        print('ded3-1-2')
-                        twitter = "No Twitter on GitHub!"
-                    print('ded3-1')
+                    else: twitter = "No Twitter on GitHub!"
                     staff.add_field(
                         name="Twitter",
                         value=twitter
                     )
 
-                    if github_response['hireable'] == True:
-                        hire = "Yes!"
-                        print('ded3-2-1')
-                    else:
-                        print('ded3-2-2')
-                        hire = "Not currently!"
-                    print('ded3-2')
+                    if github_response['hireable'] == True: hire = "Yes!"
+                    else: hire = "Not currently!"
                     staff.add_field(
                         name="Open to commissions?",
                         value=hire
@@ -182,41 +164,37 @@ class staff_cog(commands.Cog):
 
                     if github_response['blog'] is not None or github_response['blog'] != "":
                         site = github_response['blog']
-                        print('ded3-3-1')
-                    else:
-                        print('ded3-3-2')
-                        site = "No Website on GitHub!"
-                    print('ded3-3')
+                    else: site = "No Website on GitHub!"
                     staff.add_field(
                         name="Website",
                         value=site
                     )
 
                     if github_response['company'] is not None:
-                        print('ded3-4-1')
                         if github_response['company'].startswith("@"):
-                            print('ded3-4-2')
-                            try: company = f'[{github_response.replace("@", "")}](https://github.com/{github_response.replace("@", "")})'
+                            try: company = f'[{github_response["company"].replace("@", "")}](https://github.com/{github_response["company"].replace("@", "")})'
                             except: company = github_response['company']
                         else:
-                            print('ded3-4-3')
                             company = github_response['company']
-                    else:
-                        print('ded3-4-4')
-                        company = "No Company on GitHub!"
-                    print('ded3-4')
+                    else: company = "No Company on GitHub!"
                     staff.add_field(
                         name="Company",
                         value=company
                     )
 
-                print('ded1')
+                staff.add_field(
+                    name="Position",
+                    value="\n".join(positions)
+                )
+                staff.add_field(
+                    name="System Access",
+                    value="\n".join(sysaccess)
+                )
 
                 staff.set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 )
-                print('ded')
                 request.close()
                 github_r.close()
 
