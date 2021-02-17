@@ -32,6 +32,8 @@ class help(commands.Cog):
         :return: Returns Help embed.
         """
 
+        # TODO: Check if person has staff role, then display a different embed
+
         return await ctx.send(embed=em(
             title="IsThicc Help!",
             description="""

@@ -386,6 +386,8 @@ class mod(commands.Cog):
                 text="IsThicc Moderation"
             ))
 
+        else: print(str(error))
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

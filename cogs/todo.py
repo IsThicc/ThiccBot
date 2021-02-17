@@ -1,10 +1,10 @@
 #
-#                          IsThicc-bot Staff.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot TODO.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, typing
+import discord, asyncio
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em

@@ -98,6 +98,7 @@ class staff_cog(commands.Cog):
         request = await self.session.post(f"http://10.42.10.4:5000/token/{message.content}")
         code = request.status
         await asyncio.sleep(2)
+
         if code == 403:
             return await ctx.author.send(
                 embed=em(
@@ -110,6 +111,7 @@ class staff_cog(commands.Cog):
                     text="IsThicc Management"
                 )
             )
+
         elif code == 500:
             return await ctx.author.send(
                 embed=em(
@@ -132,8 +134,7 @@ class staff_cog(commands.Cog):
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
-            )
-            )
+            ))
 
             def service_check(m):
                 return m.author == ctx.author and m.channel == ctx.author.dm_channel
@@ -184,8 +185,7 @@ class staff_cog(commands.Cog):
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
-            )
-            )
+            ))
 
         try:
             # Type
@@ -196,8 +196,7 @@ class staff_cog(commands.Cog):
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
-            )
-            )
+            ))
 
             def announce_check(m):
                 return m.author == ctx.author and m.channel == ctx.author.dm_channel
@@ -225,7 +224,7 @@ class staff_cog(commands.Cog):
                                               "content": announcement.content
                                           })
         code = request.status
-        response = await request.read()
+        response = await request.json()
 
         if code != 200:
             await msg.edit(
@@ -286,6 +285,8 @@ class staff_cog(commands.Cog):
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
             ))
+
+        else: print(str(error))
 
 #
 #
