@@ -32,6 +32,8 @@ class staff_cog(commands.Cog):
     async def staff(self, ctx, option=None, member: str = None):
         try:
 
+            option = option.lower()
+
             # if type(member) == str:
             #     member = discord.utils.get(ctx.guild.members, name=member)
 
@@ -57,90 +59,69 @@ class staff_cog(commands.Cog):
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+                else:
 
-                discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
+                    discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
 
-                if discord_member is not None:
+                    if discord_member is not None:
+                        msg = await ctx.send(embed=em(
+                            title=f"Attempting to view: {discord_member.display_name}",
+                            colour=discord.Colour.green(),
+                            timestamp=datetime.utcnow()
+                        ).set_footer(
+                            icon_url=self.bot.user.avatar_url,
+                            text="IsThicc Staff"
+                        ))
+                        # return
+                    if member.startswith("<@"):
+                        member = member.replace("<@", "").replace("!", "").replace(">", "")  # ! isnt always there
+                    else:
+                        member = str(discord_member.id)
+
                     msg = await ctx.send(embed=em(
-                        title=f"Attempting to view: {discord_member.display_name}",
+                        title=f"Attempting to view: {member}",
                         colour=discord.Colour.green(),
                         timestamp=datetime.utcnow()
                     ).set_footer(
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
-                    return
-                    member = str(discord_member.id)
-                    
-                if member.startswith("<@"):
-                    member = member.replace("<@", "").replace("!", "").replace(">", "") # ! isnt always there
+                  
+                    request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
+                    code = request.status
 
-                msg = await ctx.send(embed=em(
-                    title=f"Attempting to view: {member}",
-                    colour=discord.Colour.green(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
-                request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
-                code = request.status
+                    if code == 200:
 
-                if code == 200:
-                    
-                    response = await request.json()
-                    github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
-                    github_code = github_r.status
-                    await asyncio.sleep(2)
+                        response = await request.json()
+                        github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
+                        github_code = github_r.status
+                        await asyncio.sleep(2)
 
-                    positions = []
-                    for position in response['details']['position']:
-                        positions.append(f'- {position}')
+                        positions = []
+                        for position in response['details']['position']:
+                            positions.append(f'- {position}')
 
-                    github = []
-                    for access in response['details']['github_access']:
-                        github.append(f'- {access}')
+                        github = []
+                        for access in response['details']['github_access']:
+                            github.append(f'- {access}')
 
-                    sysaccess = []
-                    for access in response['details']['system_access']:
-                        sysaccess.append(f'- {access}')
+                        sysaccess = []
+                        for access in response['details']['system_access']:
+                            sysaccess.append(f'- {access}')
 
-                    staff = em(
-                        title=f"Showing info for {response['details']['name'].capitalize()}",
-                        description=f"Processed file: **``{response['details']['name']}.yml``**",
-                        colour=discord.Colour.green(),
-                        timestamp=datetime.utcnow()
-                    )
-                    staff.set_thumbnail(
-                        url=self.bot.get_user(response['details']['discord_id']).avatar_url
-                    )
-                    staff.add_field(
-                        name="VPN IP",
-                        value=response['details']['ip']
-                    )
-                    staff.add_field(
-                        name="Discord User",
-                        value=self.bot.get_user(response['details']['discord_id']).mention
-                    )
-                    staff.add_field(
-                        name="GitHub Access",
-                        value="\n".join(github)
-                    )
-                    staff.add_field(
-                        name="GitHub ID",
-                        value=response['details']['github_id']
-                    )
-                    staff.add_field(
-                        name="GitHub Username",
-                        value=f"[{response['details']['github_username']}](https://github.com/{response['details']['github_username']})"
-                    )
-
-                    if github_code == 200:
-
-                        github_response = await github_r.json()
-
-                        if github_response['twitter_username'] is not None: twitter = github_response['twitter_username']
-                        else: twitter = "No Twitter on GitHub!"
+                        staff = em(
+                            title=f"Showing info for {response['details']['name'].capitalize()}",
+                            description=f"Processed file: **``{response['details']['name']}.yml``**",
+                            colour=discord.Colour.green(),
+                            timestamp=datetime.utcnow()
+                        )
+                        staff.set_thumbnail(
+                            url=self.bot.get_user(response['details']['discord_id']).avatar_url
+                        )
+                        staff.add_field(
+                            name="VPN IP",
+                            value=response['details']['ip']
+                        )
                         staff.add_field(
                             name="Twitter",
                             value=twitter
