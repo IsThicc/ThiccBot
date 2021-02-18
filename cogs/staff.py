@@ -93,8 +93,8 @@ class staff_cog(commands.Cog):
                     if code == 200:
 
                         response = await request.json()
-                        github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
-                        github_code = github_r.status
+                        # github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
+                        # github_code = github_r.status
                         await asyncio.sleep(2)
 
                         positions = []
@@ -122,37 +122,37 @@ class staff_cog(commands.Cog):
                             name="VPN IP",
                             value=response['details']['ip']
                         )
-                        staff.add_field(
-                            name="Twitter",
-                            value=twitter
-                        )
-
-                        if github_response['hireable'] == True: hire = "Yes!"
-                        else: hire = "Not currently!"
-                        staff.add_field(
-                            name="Open to commissions?",
-                            value=hire
-                        )
-
-                        if github_response['blog'] is None or len(github_response['blog']) == 0 or github_response['blog'] == "":
-                            site = "No Website on GitHub!"
-                        else: site = github_response['blog']
-                        staff.add_field(
-                            name="Website",
-                            value=site
-                        )
-
-                        if github_response['company'] is not None:
-                            if github_response['company'].startswith("@"):
-                                try: company = f'[{github_response["company"].replace("@", "")}](https://github.com/{github_response["company"].replace("@", "")})'
-                                except: company = github_response['company']
-                            else:
-                                company = github_response['company']
-                        else: company = "No Company on GitHub!"
-                        staff.add_field(
-                            name="Company",
-                            value=company
-                        )
+                        # staff.add_field(
+                        #     name="Twitter",
+                        #     value=twitter
+                        # )
+                        #
+                        # if github_response['hireable'] == True: hire = "Yes!"
+                        # else: hire = "Not currently!"
+                        # staff.add_field(
+                        #     name="Open to commissions?",
+                        #     value=hire
+                        # )
+                        #
+                        # if github_response['blog'] is None or len(github_response['blog']) == 0 or github_response['blog'] == "":
+                        #     site = "No Website on GitHub!"
+                        # else: site = github_response['blog']
+                        # staff.add_field(
+                        #     name="Website",
+                        #     value=site
+                        # )
+                        #
+                        # if github_response['company'] is not None:
+                        #     if github_response['company'].startswith("@"):
+                        #         try: company = f'[{github_response["company"].replace("@", "")}](https://github.com/{github_response["company"].replace("@", "")})'
+                        #         except: company = github_response['company']
+                        #     else:
+                        #         company = github_response['company']
+                        # else: company = "No Company on GitHub!"
+                        # staff.add_field(
+                        #     name="Company",
+                        #     value=company
+                        # )
 
                         staff.add_field(
                             name="Position",
@@ -168,7 +168,7 @@ class staff_cog(commands.Cog):
                             text="IsThicc Staff"
                         )
                         request.close()
-                        github_r.close()
+                        # github_r.close()
 
                         return await msg.edit(embed=staff)
 
