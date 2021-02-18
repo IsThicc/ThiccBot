@@ -45,7 +45,7 @@ class todo_cog(commands.Cog):
 
             option = option.lower()
 
-            elif option == "view":
+            if option == "view":
 
                 if extra is not None:
                     return await ctx.send(embed=em(
