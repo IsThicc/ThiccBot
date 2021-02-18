@@ -70,7 +70,7 @@ for cog_dir in os.listdir(os.getcwd()):
         dir_lmao = f"{os.getcwd()}\{cog_dir}"
     else:
         dir_lmao = f"{os.getcwd()}/{cog_dir}"
-    if os.path.isdir(dir_lmao) and cog_dir.startswith("cogs_"):
+    if os.path.isdir(dir_lmao) and cog_dir.startswith("cogs"):
         for cogs in os.listdir(cog_dir):
             if cogs.endswith('.py'):
                 bot.load_extension(f"{cog_dir}.{cogs[:-3]}")
