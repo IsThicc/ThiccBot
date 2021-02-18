@@ -32,8 +32,6 @@ class todo_cog(commands.Cog):
     async def todo(self, ctx, option=None, extra: str = None):
         try:
 
-            option = option.lower()
-
             if option == None:
                 return await ctx.send(embed=em(
                     title="Uh Oh!",
@@ -44,6 +42,8 @@ class todo_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
+
+            option = option.lower()
 
             elif option == "view":
 

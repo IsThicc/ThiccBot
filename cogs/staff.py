@@ -32,8 +32,6 @@ class staff_cog(commands.Cog):
     async def staff(self, ctx, option=None, member: str = None):
         try:
 
-            option = option.lower()
-
             # if type(member) == str:
             #     member = discord.utils.get(ctx.guild.members, name=member)
 
@@ -47,6 +45,8 @@ class staff_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
                 ))
+
+            option = option.lower()
 
             if option == "view":
                 if member is None:
