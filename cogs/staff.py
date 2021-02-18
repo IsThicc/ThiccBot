@@ -72,11 +72,12 @@ class staff_cog(commands.Cog):
                             icon_url=self.bot.user.avatar_url,
                             text="IsThicc Staff"
                         ))
-                        # return
+                        member = discord_member.id
+
                     if member.startswith("<@"):
                         member = member.replace("<@", "").replace("!", "").replace(">", "")  # ! isnt always there
-                    else:
-                        member = str(discord_member.id)
+                    # else:
+                    #     member = str(discord_member.id)
 
                     msg = await ctx.send(embed=em(
                         title=f"Attempting to view: {member}",
@@ -161,6 +162,10 @@ class staff_cog(commands.Cog):
                         staff.add_field(
                             name="System Access",
                             value="\n".join(sysaccess)
+                        )
+                        staff.add_field(
+                            name="GitHub Access",
+                            value="\n".join(github)
                         )
 
                         staff.set_footer(
