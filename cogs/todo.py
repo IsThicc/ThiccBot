@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, re
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -180,8 +180,129 @@ class todo_cog(commands.Cog):
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+            elif option == 'finish' or option == 'complete':
+                
+                if extra is None:
+                    return await ctx.send(embed=em(
+                        title="Yikes! You forgot to supply a TODO id!",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
+                if re.match("\D+", extra)!=None:
+                    return await ctx.send(embed=em(
+                        title="Oopsi! Your provided TODO contains chars that are not numbers!",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
+                    
+                # Send Messages #
+                msg = await ctx.send(embed=em(
+                        title="Please supply your password!",
+                        description="We need to confirm it's really you before we can mark your TODO as completed!Please check your dm's!",
+                        colour=discord.Colour.dark_red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    )
+                )
+                passReqMsg = await ctx.author.send(embed=em(
+                        title="Please send your password below!",
+                        colour=discord.Colour.green(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    )
+                )
+                timeout = em(
+                    title="Timed out!",
+                    description="Next time please respond within the timout time!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                )
+                
+                # Try to get password #
+                try:
+                    def pass_check(m):
+                        return m.author == ctx.author and m.channel == ctx.author.dm_channel
+                    passMsg = await self.bot.wait_for("on_message", check=pass_check, timeout=60)
+                except asyncio.TimeoutError:
+                    await msg.edit(embed=timeout)
+                    return await passReqMsg.edit(embed=timeout)
+                except:
+                    return await msg.edit(embed=em(
+                            title="An unknown error occurred!",
+                            colour=discord.Colour.red(),
+                            timestamp=datetime.utcnow()
+                        ).set_footer(
+                            icon_url=self.bot.user.avatar_url,
+                            text="IsThicc Staff"
+                        )
+                    )
+                
+                # Edit Message
+                await passMsg.reply(ping=False, embed=em(
+                        title="Please delete your password!",
+                        colour=discord.Colour.green(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    )
+                )
 
+                # Execute Request
+                headers = {
+                    "Authorization" : passMsg.content,
+                    "id" : extra
+                }
+                r = await self.session.get(f"http://10.42.10.4:5000/staff/todo/complete/{ctx.author.id}", headers=headers)
+                code = r.status
+                await asyncio.sleep(2)
 
+                # Handle Output
+                if code == 200:
+                    await msg.edit(embed=em(
+                        title=f"Marked {ctx.author.display_name}'s TODO as completed!",
+                        colour=discord.Colour.green(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
+                elif code == 403:
+                    return await ctx.author.send(
+                        embed=em(
+                            title="Uh oh!",
+                            description="Oh no, your provided password is not valid!",
+                            colour=discord.Colour.red(),
+                            timestamp=datetime.utcnow()
+                        ).set_footer(
+                            icon_url=self.bot.user.avatar_url,
+                            text="IsThicc Staff"
+                        )
+                    )
+                elif code == 500:
+                    return await ctx.author.send(embed=em(
+                            title="Uh oh!",
+                            description="Oh no, the Backend API has responded with 500! Please tell IsThicc Management!",
+                            colour=discord.Colour.red(),
+                            timestamp=datetime.utcnow()
+                        ).set_footer(
+                            icon_url=self.bot.user.avatar_url,
+                            text="IsThicc Management"
+                        )
+                    )
         except Exception as e:
             print(e)
 
