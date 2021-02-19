@@ -25,6 +25,8 @@ class members(commands.Cog):
 #
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        
+        await member.add_roles(self.guild.get_role(744001626922287114))
 
         await asyncio.sleep(2)
         channel = self.bot.get_channel(796955089628954666)
