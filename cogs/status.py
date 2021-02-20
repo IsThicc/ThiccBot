@@ -9,6 +9,7 @@ from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
 from datetime import datetime
+from aiohttp import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -21,9 +22,10 @@ urls = {
     'IsThicc / Services' : 'https://isthicc.xyz/services/'
 }
 
-class status(commands.Cog):
+class status_cog(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot     = bot
+        self.session = ClientSession()
 
 #
 #
@@ -61,8 +63,8 @@ class status(commands.Cog):
             status_em.add_field(
                 name=f"{sym} {title} ({url})",
                 value=f"*{title} {val}. `{code}`*")
-        
-        ctx.send(embed=status_em)
+            r.close()
+        await ctx.send(embed=status_em)
 
 
 #
@@ -71,4 +73,4 @@ class status(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(status(bot))
+    bot.add_cog(status_cog(bot))
