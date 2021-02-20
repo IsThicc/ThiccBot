@@ -33,9 +33,22 @@ class status_cog(commands.Cog):
 #
 #
     @commands.command()
-    @commands.cooldown(1, 1, BucketType.user)
+    @commands.cooldown(5, 1, BucketType.user)
     async def status(self, ctx):
+        # Progress Bar Settings
+        length = len(urls)
+        bars = 25
 
+        pending = await ctx.send(embed=em(
+            title="Fetching URL's",
+            description=f"Please wait while IsThicc writes a status report...",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+                )
+            )
         status_em = em(
             title="Global Status Report",
             description="IsThicc Software management status report.",
@@ -46,7 +59,24 @@ class status_cog(commands.Cog):
                 text="IsThicc Management"
             ).set_thumbnail(url='https://rebin.ch/wp-content/uploads/2015/09/icon-2.png')
 
+        i = 0
         for title, url in urls.items():
+            # Progress Bar
+            i+=1
+            p = int(bars*i/length)
+            p_bar = f"┤{(p*'█ ')}{((bars-p)*'─')}├ **({i}/{length})**"
+            await pending.edit(embed=em(
+                title="Fetching URL's",
+                description=f"Please wait while IsThicc writes a status report...\n{p_bar}",
+                colour=discord.Colour.green(),
+                timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Management"
+                    )
+                )
+            
+            # Getting Status
             r = await self.session.get(url)
             code = r.status
             await asyncio.sleep(2)
@@ -64,7 +94,9 @@ class status_cog(commands.Cog):
                 name=f"{sym} {title} ({url})",
                 value=f"*{title} {val}. `{code}`*")
             r.close()
+        
         await ctx.send(embed=status_em)
+        await pending.delete()
 
 
 #
