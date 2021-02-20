@@ -212,7 +212,7 @@ class todo_cog(commands.Cog):
                         text="IsThicc Staff"
                     )
                 )
-                passReqMsg = await ctx.author.send(embed=em(
+                pass_r_msg = await ctx.author.send(embed=em(
                         title="Please send your password below!",
                         colour=discord.Colour.green(),
                         timestamp=datetime.utcnow()
@@ -235,10 +235,10 @@ class todo_cog(commands.Cog):
                 try:
                     def pass_check(m):
                         return m.author == ctx.author and m.channel == ctx.author.dm_channel
-                    passMsg = await self.bot.wait_for("on_message", check=pass_check, timeout=60)
+                    pass_msg = await self.bot.wait_for("on_message", check=pass_check, timeout=60)
                 except asyncio.TimeoutError:
                     await msg.edit(embed=timeout)
-                    return await passReqMsg.edit(embed=timeout)
+                    return await pass_r_msg.edit(embed=timeout)
                 except:
                     return await msg.edit(embed=em(
                             title="An unknown error occurred!",
@@ -251,7 +251,7 @@ class todo_cog(commands.Cog):
                     )
                 
                 # Edit Message
-                await passMsg.reply(ping=False, embed=em(
+                await pass_msg.reply(ping=False, embed=em(
                         title="Please delete your password!",
                         colour=discord.Colour.green(),
                         timestamp=datetime.utcnow()
@@ -263,7 +263,7 @@ class todo_cog(commands.Cog):
 
                 # Execute Request
                 headers = {
-                    "Authorization" : passMsg.content,
+                    "Authorization" : pass_msg.content,
                     "id" : extra
                 }
                 r = await self.session.get(f"http://10.42.10.4:5000/staff/todo/complete/{ctx.author.id}", headers=headers)
