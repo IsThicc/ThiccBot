@@ -17,9 +17,8 @@ from aiohttp import ClientSession
 #
 
 urls = {
-    'IsThicc' : 'https://isthicc.xyz/',
-    'IsThicc / Privacy Policy' : 'https://isthicc.xyz/privacy-policy/',
-    'IsThicc / Services' : 'https://isthicc.xyz/services/'
+    'IsThicc': 'https://isthicc.dev/',
+    'IsThicc API': 'https://api.isthicc.dev/'
 }
 
 class status_cog(commands.Cog):
@@ -62,7 +61,7 @@ class status_cog(commands.Cog):
         i = 0
         for title, url in urls.items():
             # Progress Bar
-            i+=1
+            i += 1
             p = int(bars*i/length)
             p_bar = f"┤{(p*'█ ')}{((bars-p)*'─')}├ **({i}/{length})**"
             await pending.edit(embed=em(
@@ -95,8 +94,8 @@ class status_cog(commands.Cog):
                 value=f"*{title} {val}. `{code}`*")
             r.close()
         
-        await ctx.send(embed=status_em)
-        await pending.delete()
+        await pending.edit(embed=status_em)
+        # await pending.delete()
 
 
 #
