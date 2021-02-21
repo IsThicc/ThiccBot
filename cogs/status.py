@@ -45,7 +45,7 @@ class status_cog(commands.Cog):
             timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
-                text="IsThicc Management"
+                text="IsThicc Status"
                 )
             )
         status_em = em(
@@ -55,7 +55,7 @@ class status_cog(commands.Cog):
             timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
-                text="IsThicc Management"
+                text="IsThicc Status"
             ).set_thumbnail(url='https://rebin.ch/wp-content/uploads/2015/09/icon-2.png')
 
         i = 0
@@ -71,7 +71,7 @@ class status_cog(commands.Cog):
                 timestamp=datetime.utcnow()
                 ).set_footer(
                     icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Management"
+                    text="IsThicc Status"
                     )
                 )
             
@@ -82,7 +82,7 @@ class status_cog(commands.Cog):
 
             val = "unspecified"
 
-            if code == 200: val = "is working"
+            if code == 200  : val = "is working"
             elif code == 401: val = "bad request"
             elif code == 403: val = "forbidden"
             elif code == 404: val = "not found"
@@ -90,8 +90,8 @@ class status_cog(commands.Cog):
 
             sym = "✓" if code == 200 else "✗"
             status_em.add_field(
-                name=f"{sym} {title} ({url})",
-                value=f"*{title} {val}. `{code}`*")
+                name=f"{sym} {title}",
+                value=f"*[{title}]({url}) {val}. `{code}`*")
             r.close()
         
         await pending.edit(embed=status_em)
