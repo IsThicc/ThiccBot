@@ -46,7 +46,7 @@ class snipe(commands.Cog):
             return await ctx.send(embed=em(
                 title='IsThicc | Error',
                 description='Nothing to snipe!',
-                colour=discord.Colour.red()
+                colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ))
         msg = self.snipe_cache[ctx.channel.id]
