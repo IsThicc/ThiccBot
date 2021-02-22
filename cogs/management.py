@@ -302,7 +302,9 @@ class staff_cog(commands.Cog):
             title="IsThicc Management will be archiving this channel shortly!",
             colour=discord.Colour.blue(),
             timestamp=datetime.utcnow()
-        ).set_thumbnail(url=ctx.guild.icon_url).set_footer(
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
         ))
@@ -316,16 +318,75 @@ class staff_cog(commands.Cog):
     @commands.has_role(744012353808498808)
     async def accept(self, ctx, member: discord.Member):
 
+        if member == None:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
         await ctx.message.delete()
         await ctx.send(content=member.mention, embed=em(
             title="Welcome to the team!",
             description="Welcome to the IsThicc team! You will be on a one week trial period. During this one week period you will have almost all the same permissions as a normal staff member. At the end of the 1 week, the board will decide if your position will become permanent.\n_ _\nThank you for applying!\n**IsThicc Management**\n_ _",
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
-        ).set_thumbnail(url=ctx.guild.icon_url).set_footer(
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
         ))
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    @commands.command()
+    @commands.has_role(744012353808498808)
+    async def remind(self, ctx, option="development", member: discord.Member=None):
+
+        if option == None or member == None:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member and option.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).add_field(
+                name="Options:",
+                value="```css\ndevelopment\n```"
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        if option.lower() == "development":
+
+            await ctx.message.delete()
+            return await ctx.send(content=member.mention, embed=em(
+                title="IsThicc Management",
+                description=f"Hey {member.mention}, we noticed you haven't been making any progress. Please let us know how we can help you! If you cannot make any progress for any reason, make sure to let us know!",
+                colour=discord.Colour.dark_red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
 
 #
 #
