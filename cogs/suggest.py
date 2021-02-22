@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, re
 from discord import Embed as em
 from discord.ext import commands
 #
@@ -25,18 +25,22 @@ class Suggestions(commands.Cog):
     async def on_message(self, message):
 
         if message.channel.id != 801929449124790353 or message.author.bot: return
-        content = ""
+
+        # Remove Markdown Using Regex
+        # **, ||, __, ~~ and `
+        content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
 
         # Remove Markdown
-        msg = message.content
-        for letter in msg:
-            if letter == "`":
-                continue
-            elif letter in ['~', '_', "*", "|"]:
-                if msg[msg.index(letter) + 1] == letter:  # check if **, __, or ~~
-                    continue
-            else:
-                content += letter
+        # content = ""
+        # msg = message.content
+        # for letter in msg:
+        #     if letter == "`":
+        #         continue
+        #     elif letter in ['~', '_', "*", "|"]:
+        #         if msg[msg.index(letter) + 1] == letter:  # check if **, __, or ~~
+        #             continue
+        #     else:
+        #         content += letter
 
         msg = await self.bot.get_channel(801929480875802624).send(
             embed=em(
