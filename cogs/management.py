@@ -319,7 +319,7 @@ class staff_cog(commands.Cog):
         await ctx.message.delete()
         await ctx.send(content=member.mention, embed=em(
             title="Welcome to the team!",
-            description="Welcome to the IsThicc team! You will be on a one week Trial period. During this one week period you will have almost all the same permissions as a normal staff member. At the end of the 1 week, the board will decide if your position will become permanent.\n_ _\nThank you for applying!\n**IsThicc Management**\n_ _",
+            description="Welcome to the IsThicc team! You will be on a one week trial period. During this one week period you will have almost all the same permissions as a normal staff member. At the end of the 1 week, the board will decide if your position will become permanent.\n_ _\nThank you for applying!\n**IsThicc Management**\n_ _",
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
         ).set_footer(
