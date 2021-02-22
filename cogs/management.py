@@ -293,5 +293,44 @@ class staff_cog(commands.Cog):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+    @commands.command()
+    @commands.has_role(744012353808498808)
+    async def archive(self, ctx):
+
+        await ctx.message.delete()
+        await ctx.send(embed=em(
+            title="IsThicc Management will be archiving this channel shortly!",
+            colour=discord.Colour.blue(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    @commands.command()
+    @commands.has_role(744012353808498808)
+    async def accept(self, ctx, member: discord.Member):
+
+        await ctx.message.delete()
+        await ctx.send(content=member.mention, embed=em(
+            title="Welcome to the team!",
+            description="Welcome to the IsThicc team! You will be on a one week Trial period. During this one week period you will have almost all the same permissions as a normal staff member. At the end of the 1 week, the board will decide if your position will become permanent.\n_ _\nThank you for applying!\n**IsThicc Management**\n_ _",
+            colour=discord.Colour.gold(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 def setup(bot):
     bot.add_cog(staff_cog(bot))
