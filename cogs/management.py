@@ -378,11 +378,33 @@ class staff_cog(commands.Cog):
             await ctx.message.delete()
             return await ctx.send(content=member.mention, embed=em(
                 title="IsThicc Management",
-                description=f"Hey {member.mention}, we noticed you haven't been making any progress. Please let us know how we can help you! If you cannot make any progress for any reason, make sure to let us know!",
+                description=f"""
+Hey {member.mention}, we noticed you haven't been making any progress. Please let us know how we can help you! If you cannot make any progress for any reason, make sure to let us know!
+
+**This message has been sent based on Git commits.** - <#794454957440892930>
+                """,
                 colour=discord.Colour.dark_red(),
                 timestamp=datetime.utcnow()
             ).set_thumbnail(
                 url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        else:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you gave an undefined argument! Please make sure to supply a valid member and option.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).add_field(
+                name="Options:",
+                value="```css\ndevelopment\n```"
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
