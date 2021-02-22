@@ -302,7 +302,7 @@ class staff_cog(commands.Cog):
             title="IsThicc Management will be archiving this channel shortly!",
             colour=discord.Colour.blue(),
             timestamp=datetime.utcnow()
-        ).set_footer(
+        ).set_thumbnail(url=ctx.guild.icon_url).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
         ))
@@ -322,7 +322,7 @@ class staff_cog(commands.Cog):
             description="Welcome to the IsThicc team! You will be on a one week trial period. During this one week period you will have almost all the same permissions as a normal staff member. At the end of the 1 week, the board will decide if your position will become permanent.\n_ _\nThank you for applying!\n**IsThicc Management**\n_ _",
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
-        ).set_footer(
+        ).set_thumbnail(url=ctx.guild.icon_url).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
         ))
