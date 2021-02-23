@@ -17,6 +17,7 @@ from datetime import datetime
 class members(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.guild = bot.get_guild(739510335949635736)
 
 #
 #
