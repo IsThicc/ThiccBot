@@ -381,7 +381,8 @@ class staff_cog(commands.Cog):
                 description=f"""
 Hey {member.mention}, we noticed you haven't been making any progress. Please let us know how we can help you! If you cannot make any progress for any reason, make sure to let us know!
 
-**This message has been sent based on Git commits.** - <#794454957440892930>
+**This message has been sent based on Git commits.**
+<#794454957440892930>
                 """,
                 colour=discord.Colour.dark_red(),
                 timestamp=datetime.utcnow()
@@ -410,6 +411,53 @@ Hey {member.mention}, we noticed you haven't been making any progress. Please le
                 text="IsThicc Management"
             ))
 
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    @commands.command()
+    @commands.has_role(744012353808498808)
+    async def strike(self, ctx, member: discord.Member=None, *, reason="Lack of development."):
+
+        if member == None:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member *and maybe a reason*.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        await ctx.message.delete()
+        return await ctx.send(content=member.mention, embed=em(
+            title="IsThicc Management",
+            description=f"""
+Hello {member.mention},
+We're sorry to say it but you have received a strike! 
+
+A strike is a mark on your staff record. 3 strikes will result in disciplinary action or loosing your position! This has been sent on behalf of the IsThicc Board of Operations. 
+
+**Approved by the IsThicc Board of Operations on {datetime.now().strftime("%b %d, %Y")}**
+            """,
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).add_field(
+            name="Reason:",
+            value=reason
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+    
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
