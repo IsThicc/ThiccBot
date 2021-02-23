@@ -20,8 +20,10 @@ from aiohttp import ClientSession
 
 class staff_cog(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
-        self.session = ClientSession()
+        self.bot      =  bot
+        self.session  =  ClientSession()
+
+    role = 739510850079162530
 
 #
 #
@@ -30,7 +32,7 @@ class staff_cog(commands.Cog):
 #
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
-    @commands.has_role(744012353808498808)
+    @commands.has_role(role)
     async def announce(self, ctx, option=None):
 
         msg = await ctx.send(embed=em(
@@ -294,7 +296,7 @@ class staff_cog(commands.Cog):
 #
 #
     @commands.command()
-    @commands.has_role(744012353808498808)
+    @commands.has_role(role)
     async def archive(self, ctx):
 
         await ctx.message.delete()
@@ -315,7 +317,7 @@ class staff_cog(commands.Cog):
 #
 #
     @commands.command()
-    @commands.has_role(744012353808498808)
+    @commands.has_role(role)
     async def accept(self, ctx, member: discord.Member):
 
         if member == None:
@@ -352,7 +354,7 @@ class staff_cog(commands.Cog):
 #
 #
     @commands.command()
-    @commands.has_role(744012353808498808)
+    @commands.has_role(role)
     async def remind(self, ctx, option="development", member: discord.Member=None):
 
         if option == None or member == None:
@@ -417,7 +419,7 @@ Hey {member.mention}, we noticed you haven't been making any progress. Please le
 #
 #
     @commands.command()
-    @commands.has_role(744012353808498808)
+    @commands.has_role(role)
     async def strike(self, ctx, member: discord.Member=None, *, reason="Lack of development."):
 
         if member == None:
