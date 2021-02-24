@@ -205,7 +205,7 @@ class staff_cog(commands.Cog):
                         request.close()
                         return await msg.edit(embed=em(
                             title="U h",
-                            description="You ran into an unknown response code! Make sure to report this to the developers!",
+                            description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `${code}`",
                             colour=discord.Colour.dark_red(),
                             timestamp=datetime.utcnow()
                         ).set_footer(
@@ -214,7 +214,7 @@ class staff_cog(commands.Cog):
                         ))
 
             elif option == "edit":
-                return await ctx.send(embed=em(
+                return ctx.send(embed=em(
                     title="This option is under development!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
@@ -235,7 +235,19 @@ class staff_cog(commands.Cog):
                 ))
 
         except Exception as e:
-            print(e)
+            err_em = em(
+                title="Staff command error!",
+                description=f"```\n{e}```",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                )
+            if 'msg' in locals():
+                return await locals()["msg"].edit(embed=err_em)
+            else:
+                return await ctx.send(embed=err_em)
 
 #
 #
