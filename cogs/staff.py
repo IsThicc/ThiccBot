@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, re
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -62,7 +62,7 @@ class staff_cog(commands.Cog):
                 else:
 
                     discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
-
+                    
                     if discord_member is not None:
                         msg = await ctx.send(embed=em(
                             title=f"Attempting to view: {discord_member.display_name}",
@@ -72,12 +72,10 @@ class staff_cog(commands.Cog):
                             icon_url=self.bot.user.avatar_url,
                             text="IsThicc Staff"
                         ))
-                        member = discord_member.id
+                        member = str(discord_member.id)
 
                     if member.startswith("<@"):
-                        member = member.replace("<@", "").replace("!", "").replace(">", "")  # ! isnt always there
-                    # else:
-                    #     member = str(discord_member.id)
+                        member = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', member)[0]
 
                     msg = await ctx.send(embed=em(
                         title=f"Attempting to view: {member}",
@@ -237,13 +235,13 @@ class staff_cog(commands.Cog):
         except Exception as e:
             err_em = em(
                 title="Staff command error!",
-                description=f"```\n{e}```",
+                description=f"```py\n{e}```",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
-                ).set_footer(
+            ).set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
-                )
+            )
             if 'msg' in locals():
                 return await locals()["msg"].edit(embed=err_em)
             else:
