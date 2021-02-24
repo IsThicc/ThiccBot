@@ -203,7 +203,7 @@ class staff_cog(commands.Cog):
                         request.close()
                         return await msg.edit(embed=em(
                             title="U h",
-                            description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `${code}`",
+                            description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{code}`",
                             colour=discord.Colour.dark_red(),
                             timestamp=datetime.utcnow()
                         ).set_footer(
