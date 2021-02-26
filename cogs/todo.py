@@ -66,13 +66,13 @@ class todo_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
 
-                r = await self.session.get(f"http://10.42.10.4:5000/staff/todo/{ctx.author.id}")
-                code = r.status
+                request = await self.session.get(f"http://10.42.10.4:5000/staff/todo/{ctx.author.id}")
+                code = request.status
                 await asyncio.sleep(2)
 
                 if code == 200:
 
-                    json = await r.json()
+                    json = await request.json()
 
                     # {
                     #   "name": str
@@ -135,7 +135,7 @@ class todo_cog(commands.Cog):
                     ))
 
                 elif code == 204:
-                    r.close()
+                    request.close()
                     return await msg.edit(embed=em(
                         title="You have no TODO's!",
                         colour=discord.Colour.red(),
@@ -146,7 +146,7 @@ class todo_cog(commands.Cog):
                     ))
 
                 elif code == 403:
-                    r.close()
+                    request.close()
                     return await msg.edit(embed=em(
                         title="Oh no!",
                         description="You requested a staff member you're not allowed to access!",
@@ -158,7 +158,7 @@ class todo_cog(commands.Cog):
                     ))
 
                 elif code == 404:
-                    r.close()
+                    request.close()
                     return await msg.edit(embed=em(
                         title="Unknown Staff Member!",
                         description="Your requested Staff Member does not exist!",
@@ -170,16 +170,17 @@ class todo_cog(commands.Cog):
                     ))
 
                 else:
-                    r.close()
+                    request.close()
                     return await msg.edit(embed=em(
                         title="U h",
-                        description="You ran into an unknown response code! Make sure to report this to the developers!",
+                        description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{code}`",
                         colour=discord.Colour.dark_red(),
                         timestamp=datetime.utcnow()
                     ).set_footer(
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+                    
             elif option == 'finish' or option == 'complete':
                 
                 if extra is None:
@@ -231,7 +232,7 @@ class todo_cog(commands.Cog):
                     text="IsThicc Staff"
                 )
                 
-                # Try to get password #
+                # Try to get password
                 try:
                     def pass_check(m):
                         return m.author == ctx.author and m.channel == ctx.author.dm_channel
@@ -250,7 +251,6 @@ class todo_cog(commands.Cog):
                         )
                     )
                 
-                # Edit Message
                 await pass_msg.reply(ping=False, embed=em(
                         title="Please delete your password!",
                         colour=discord.Colour.green(),
@@ -266,11 +266,12 @@ class todo_cog(commands.Cog):
                     "Authorization" : pass_msg.content,
                     "id" : extra
                 }
-                r = await self.session.get(f"http://10.42.10.4:5000/staff/todo/complete/{ctx.author.id}", headers=headers)
-                code = r.status
+                request = await self.session.get(f"http://10.42.10.4:5000/staff/todo/complete/{ctx.author.id}", headers=headers)
+                code = request.status
                 await asyncio.sleep(2)
 
                 # Handle Output
+                request.close()
                 if code == 200:
                     await msg.edit(embed=em(
                         title=f"Marked {ctx.author.display_name}'s TODO as completed!",
@@ -280,6 +281,7 @@ class todo_cog(commands.Cog):
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+                
                 elif code == 403:
                     return await ctx.author.send(
                         embed=em(
@@ -292,6 +294,7 @@ class todo_cog(commands.Cog):
                             text="IsThicc Staff"
                         )
                     )
+                
                 elif code == 500:
                     return await ctx.author.send(embed=em(
                             title="Uh oh!",
@@ -303,6 +306,17 @@ class todo_cog(commands.Cog):
                             text="IsThicc Management"
                         )
                     )
+                
+                else:
+                    return await msg.edit(embed=em(
+                        title="U h",
+                        description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{code}`",
+                        colour=discord.Colour.dark_red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Staff"
+                    ))
         except Exception as e:
             print(e)
 

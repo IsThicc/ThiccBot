@@ -76,8 +76,8 @@ class status_cog(commands.Cog):
                 )
             
             # Getting Status
-            r = await self.session.get(url)
-            code = r.status
+            request = await self.session.get(url)
+            code = request.status
             await asyncio.sleep(2)
 
             val = "unspecified"
@@ -87,12 +87,13 @@ class status_cog(commands.Cog):
             elif code == 403: val = "forbidden"
             elif code == 404: val = "not found"
             elif code == 500: val = "server internal error"
-
+              
             sym = "✓" if code == 200 else "✗"
             status_em.add_field(
                 name=f"{sym} {title}",
                 value=f"*[{title}]({url}) {val}. `{code}`*")
-            r.close()
+
+            request.close()
         
         await pending.edit(embed=status_em)
         # await pending.delete()
