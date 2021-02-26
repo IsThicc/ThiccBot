@@ -117,7 +117,7 @@ class todo_cog(commands.Cog):
                             )
 
                     staff.set_thumbnail(
-                        url=self.bot.get_user(json['details']['discord_id'])
+                        url=self.bot.get_user(json['details']['discord_id']).avatar_url
                     )
                     staff.set_footer(
                         icon_url=self.bot.user.avatar_url,
