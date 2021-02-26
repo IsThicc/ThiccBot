@@ -85,6 +85,7 @@ class todo_cog(commands.Cog):
                     #               "name": str
                     #               "id": int
                     #               "description": str/None
+                    #               "deadline": str
                     #       }
                     #   "details":
                     #       {
@@ -113,7 +114,7 @@ class todo_cog(commands.Cog):
 
                             staff.add_field(
                                 name=f"TODO #{TODO['id']}",
-                                value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}"
+                                value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}\n**Deadline:** {TODO['deadline']}"
                             )
 
                     staff.set_thumbnail(

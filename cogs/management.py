@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Staff.py | 2020-2021 (c) IsThicc
+#                       IsThicc-bot Management.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -10,8 +10,6 @@ from discord.ext.commands import BucketType
 from discord import Embed as em
 from datetime import datetime
 from aiohttp import ClientSession
-
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -43,8 +41,7 @@ class staff_cog(commands.Cog):
         ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
-        )
-        )
+        ))
 
         timeout = em(
             title="Timed out!",
