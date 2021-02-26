@@ -318,7 +318,19 @@ class todo_cog(commands.Cog):
                         text="IsThicc Staff"
                     ))
         except Exception as e:
-            print(e)
+            err_em = em(
+                title="Staff command error!",
+                description=f"```py\n{e}```",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+            )
+            if 'msg' in locals():
+                return await locals()["msg"].edit(embed=err_em)
+            else:
+                return await ctx.send(embed=err_em)
 
 
 #
