@@ -100,7 +100,7 @@ class todo_cog(commands.Cog):
                         timestamp=datetime.utcnow()
                     )
                     for count, todo in enumerate(json['todo']):
-                        TODO = json[todo]
+                        TODO = json['todo'][todo]
                         if count == 24:
                             staff.add_field(
                                 name="Uh oh!",
