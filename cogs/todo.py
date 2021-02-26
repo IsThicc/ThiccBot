@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, re
+import discord, asyncio, re, traceback
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -318,6 +318,7 @@ class todo_cog(commands.Cog):
                         text="IsThicc Staff"
                     ))
         except Exception as e:
+            print(traceback.format_exc())
             err_em = em(
                 title="Staff command error!",
                 description=f"```py\n{e}```",
