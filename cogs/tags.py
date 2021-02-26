@@ -4,12 +4,16 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+import asyncio
 from datetime import datetime
+
 import discord
-from discord.ext import commands
-from discord_slash import SlashContext, utils
-from discord_slash import cog_ext as cmd
 from discord import Embed
+from discord.ext import commands
+from discord_slash import SlashContext
+from discord_slash import cog_ext as cmd
+from discord_slash import utils
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -20,6 +24,9 @@ class Tags(commands.Cog):
     def __init__(self, bot):
         self.bot   = bot
         self.slash = self.bot.slash
+
+    def cog_unload(self):
+        self.slash.remove_cog_commands(self)
 
 #
 #
@@ -77,9 +84,10 @@ class Tags(commands.Cog):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-    async def template(self, ctx: commands.Context, reply_id: int = None):
-        r = await self.bot.db.execute('SELECT tag, content, owner, date FROM tag WHERE command_id = ?', (ctx.command_id,))
-        content = Embed(title=r[0][0], description=r[0][1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[0][3], "%Y-%m-%d")).set_footer(text=f'Tag created by {r[0][2]}, Created At')
+    async def template(self, ctx, reply_id: int = None):
+        await asyncio.sleep(3)
+        r = await self.bot.db.execute("SELECT tag, content, owner, date FROM tag WHERE command_id = '" + str(ctx.command_id) + "'")
+        content = Embed(title=r[0], description=r[1], colour=discord.Colour.teal(), timestamp=datetime.strptime(r[3], "%Y-%m-%d")).set_footer(text=f'Tag created by {r[2]}, Created At')
         if reply_id:
             try:
                 msg = await ctx.channel.fetch_message(reply_id)
@@ -100,8 +108,11 @@ class Tags(commands.Cog):
     async def on_ready(self):
         tags = await self.bot.db.execute('SELECT * FROM tags')
         for tag in tags:
-            owner = str(self.bot.get_user(int(tag[0][2]))) if owner else "Unknown"
-            self.slash.add_slash_command(self.template, tag[0][1], guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {owner}')
+            owner = str(self.bot.get_user(int(tag[2]))) if str(self.bot.get_user(int(tag[2]))) else "Unknown"
+            self.slash.add_slash_command(self.template, tag[0], guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {owner}')
+            cmd.cog_slash(name=tag[0], description=f"IsThicc support command created by: {owner}", guild_ids=self.ids, options=self.tagopts)(self.template)
+            print(f'Registered tag: {tag[0]}')
+        self.slash.get_cog_commands(self)
 
 #
 #
@@ -116,8 +127,9 @@ class Tags(commands.Cog):
         if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
         
-        if name in self.bot.slash.commands.keys():
-            return await ctx.send(content='Tag already exists with that name!', complete_hidden = True)
+        r = await self.bot.db.execute('SELECT name FROM tags')
+        if name in r:
+            return await ctx.send(content=f'A tag with the name `{name}` already exists!', complete_hidden=True)
 
         self.slash.add_slash_command(self.template, name, guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {ctx.author}')
         await self.bot.db.add_tag(name, content, ctx.author.id, ctx.command_id)
@@ -144,7 +156,7 @@ class Tags(commands.Cog):
         
         cmdid = self.bot.db.remove_tag(tag)
 
-        utils.manage_commands.remove_slash_command(self.bot.user.id, self.bot.http.token, ctx.guild.id, cmdid)
+        await utils.manage_commands.remove_slash_command(self.bot.user.id, self.bot.http.token, ctx.guild.id, cmdid)
 
 #
 #

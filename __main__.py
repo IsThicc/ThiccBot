@@ -23,7 +23,8 @@ async def get_prefix(bot, message):
     :return: Returns available prefix's.
     """
     prefixes = ["i!", "isthicc ", "thicc "]
-    return commands.when_mentioned_or(*prefixes)(bot, message)
+    #return commands.when_mentioned_or(*prefixes)(bot, message)
+    return "b "
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -102,7 +103,7 @@ async def on_ready() -> None:
                                                         type=ActivityType.watching))
 
     await asyncio.sleep(10)
-    await bot.change_presence(status=Status.dnd, activity=Activity(name="IsThicc.xyz!", type=ActivityType.playing))
+    await bot.change_presence(status=Status.dnd, activity=Activity(name="IsThicc.dev!", type=ActivityType.playing))
 
 #
 #

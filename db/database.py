@@ -51,15 +51,15 @@ class Pool:
         :return: returns None
         """
         fmt = datetime.now().strftime('%Y-%m-%d')
-        await self.execute('INSERT INTO tags IF NOT EXISTS VALUES(?, ?, ?, ?, ?)', (tag, content, owner, command_id, fmt))
+        await self.execute("INSERT INTO tags VALUES('" + tag + "','" + content + "','" + str(owner) + "','" + str(command_id) + "','" + str(fmt) + "')") # it dosent like the ? eeee
 
     async def remove_tag(self, tag: str) -> int:
         """
         :param tag: tag name to delete
         :return: returns the command id
         """
-        r = await self.execute('SELECT command_id FROM tags WHERE tag = ?', (tag))
-        await self.execute('DELETE FROM tags WHERE tag = ?', (tag,))
+        r = await self.execute("SELECT command_id FROM tags WHERE tag = '" + tag + "'")
+        await self.execute("DELETE FROM tags WHERE tag = '" + tag + "'")
 
         return r
     
