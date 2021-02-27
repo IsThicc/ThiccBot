@@ -63,6 +63,8 @@ class application_cog(commands.Cog):
             category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
             channel = await ctx.guild.create_text_channel(f"application-{member.display_name}",category=category)
             await channel.set_permissions(member, send_messages=True, read_messages=True)
+            henbomb = await ctx.guild.fetch_member(348547981253017610)
+            await channel.set_permissions(henbomb, send_messages=True, read_messages=True)
 
             intro = await channel.send(embed=em(
                     title="Thicc -Developer / Staff Support- Appliaction",
@@ -95,7 +97,7 @@ class application_cog(commands.Cog):
             try:
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
-                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[reaction.member.id]["message_id"] == reaction.message_id
+                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id
                 reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
