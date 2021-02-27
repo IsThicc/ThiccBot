@@ -96,7 +96,7 @@ class application_cog(commands.Cog):
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
                     return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[reaction.member.id]["message_id"] == reaction.message_id
-                reaction = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
+                reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
                     return
@@ -114,7 +114,7 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Management"
                 ))
-                asyncio.sleep(3)
+                await asyncio.sleep(3)
                 return await channel.delete()
             
             # if not accepted then delete the channel
@@ -131,7 +131,7 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Management"
                 ))
-                asyncio.sleep(3)
+                await asyncio.sleep(3)
                 return await channel.delete()
 
             # if accepted then proceed with the questions
@@ -184,7 +184,7 @@ class application_cog(commands.Cog):
 
                 if code == 1 or code == 2:
                     del open_apps[member.id]
-                    asyncio.sleep(3)
+                    await asyncio.sleep(3)
                     return await channel.delete()
 
             # when all the questions are answered
@@ -272,7 +272,7 @@ class application_cog(commands.Cog):
         try:
             def on_reaction(reaction, user):
                 return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and app["message_id"] == reaction.message_id
-            reaction = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
+            reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
         except asyncio.TimeoutError:
             return 2
         
