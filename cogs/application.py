@@ -43,30 +43,33 @@ class application_cog(commands.Cog):
             if member.id in open_apps: del open_apps[member.id]
 
             # create channel and send message
-            channel = await self.bot.create_text_channel(f"application-{member.display_name}",category='806012160198705183')
+            # 806012160198705183
+            
+            category = discord.utils.get(ctx.guild.categories, id='812422468102520863')
+            channel = await ctx.guild.create_text_channel(f"application-{member.display_name}",category=category)
             
             intro = await channel.send(embed=em(
-                title="Thicc -Developer / Staff Support- Appliaction",
-                url="https://isthicc.dev",
-                description=f"Hello {member.mention}, welcome to your app!\nWhen you're ready, react with ✅ to start or ❌ to cancel, note: it will auto close in 1 minute.",
-                colour=discord.Colour.gold(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
+                    title="Thicc -Developer / Staff Support- Appliaction",
+                    url="https://isthicc.dev",
+                    description=f"Hello {member.mention}, welcome to your app!\nWhen you're ready, react with ✅ to start or ❌ to cancel, note: it will auto close in 1 minute.",
+                    colour=discord.Colour.gold(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Management"
-            ).set_thumbnail(
-                url="https://isthicc.dev/assets/img/logo.png"
-            ).set_author(
-                name=username,
-                url="https://isthicc.dev",
-                icon_url=member.default_avatar_url
-            ).add_field(
-                name="Notes", 
-                value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute."
-            ).add_field(
-                name="-", 
-                value="Good luck!"
-            ))
+                ).set_thumbnail(
+                    url="https://isthicc.dev/assets/img/logo.png"
+                ).set_author(
+                    name=member.display_name,
+                    url="https://isthicc.dev",
+                    icon_url=member.default_avatar_url
+                ).add_field(
+                    name="Notes", 
+                    value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute."
+                ).add_field(
+                    name="-", 
+                    value="Good luck!"
+                ))
             await intro.add_reaction('✅')
             await intro.add_reaction('❌')
 
@@ -88,9 +91,12 @@ class application_cog(commands.Cog):
                     return True
                 payload = await self.bot.wait_for("on_raw_reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
-                if member.id in open_apps:
-                    del open_apps[member.id]
+                if member.id not in open_apps:
+                    return
+                if len(open_apps[member.id]["answers"])>0:
+                    return
 
+                del open_apps[member.id]
                 await channel.send(embed=em(
                     title="Closing Application",
                     url="https://isthicc.dev",
