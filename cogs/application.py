@@ -27,17 +27,27 @@ class application_cog(commands.Cog):
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
-    async def application(self, ctx, member: str = None):
+    async def application(self, ctx, option=None):
         try:
+            if option == None:
+                return await ctx.send(embed=em(
+                    title="Uh Oh!",
+                    description="You forgot to mention a user.",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
 
             # check for member
-            if ctx.args[0].startswith("<@"):
-                mid = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', ctx.args[0])[0]
+            if option.startswith("<@"):
+                mid = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', option)[0]
                 member = discord.utils.get(ctx.guild.members, id=mid)
             else:
-                member = discord.utils.get(ctx.guild.members, id=ctx.args[0].split("#")[0])
+                member = discord.utils.get(ctx.guild.members, id=option.split("#")[0])
             if member == None:
-                raise LookupError(f"No user with id/name `{ctx.args[0]}` found!")
+                raise LookupError(f"No user with id/name `{option}` found!")
             
             if member.id in open_apps: del open_apps[member]
 
