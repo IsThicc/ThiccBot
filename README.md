@@ -7,6 +7,7 @@ The IsThicc-Bot is a small bot to help IsThicc staff with everyday tasks.
 - [Fxcilities](https://github.com/Fxcilities)
 - [Shuana](https://github.com/shuanaongithub)
 - [Mrmagicpie](https://github.com/Mrmagicpie)
+- [HenBOMB](https://github.com/HenBOMB)
 
 ## Contributing 
 

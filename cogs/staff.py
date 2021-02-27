@@ -234,7 +234,7 @@ class staff_cog(commands.Cog):
 
         except Exception as e:
             err_em = em(
-                title="Staff command error!",
+                title="Command Error!",
                 description=f"```py\n{e}```",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()

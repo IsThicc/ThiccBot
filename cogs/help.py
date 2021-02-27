@@ -1,5 +1,5 @@
 #
-#                              IsThicc-bot Help.py | 2020 (c) IsThicc
+#                          IsThicc-bot Help.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -17,7 +17,6 @@ from datetime import datetime
 class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

@@ -1,5 +1,5 @@
 #
-#                              IsThicc-bot Status.py | 2020 (c) IsThicc
+#                          IsThicc-bot Status.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -49,8 +49,8 @@ class status_cog(commands.Cog):
                 )
             )
         status_em = em(
-            title="Global Status Report",
-            description="IsThicc Software management status report.",
+            title="Status Report",
+            description="IsThicc software status report.",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
             ).set_footer(

@@ -1,5 +1,5 @@
 #
-#                       IsThicc-bot Management.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot Management.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

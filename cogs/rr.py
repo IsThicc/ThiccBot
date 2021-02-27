@@ -1,5 +1,5 @@
 #
-#                             IsThicc-bot RR.py | 2020 (c) IsThicc
+#                          IsThicc-bot RR.py | 2020 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

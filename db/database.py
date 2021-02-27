@@ -1,5 +1,5 @@
 #
-#                       IsThicc-bot Database.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot Database.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

@@ -318,6 +318,7 @@ class todo_cog(commands.Cog):
                         icon_url=self.bot.user.avatar_url,
                         text="IsThicc Staff"
                     ))
+        
         except Exception as e:
             print(traceback.format_exc())
             err_em = em(
