@@ -93,10 +93,10 @@ class application_cog(commands.Cog):
 
             # wait for confirmation
             try:
-                def on_reaction(payload):
+                def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
-                    return (str(payload.emoji) == "✅" or str(payload.emoji) == "❌") and open_apps[payload.member.id]["message_id"] == payload.message_id
-                payload = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
+                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[reaction.member.id]["message_id"] == reaction.message_id
+                reaction = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
                     return
@@ -118,7 +118,7 @@ class application_cog(commands.Cog):
                 return await channel.delete()
             
             # if not accepted then delete the channel
-            if str(payload.emoji) == '❌':
+            if str(reaction.emoji) == '❌':
                 if member.id in open_apps:
                     del open_apps[member.id]
                 await channel.send(embed=em(
@@ -270,13 +270,13 @@ class application_cog(commands.Cog):
         app = open_apps[id]
 
         try:
-            def on_reaction(payload):
-                return (str(payload.emoji) == "✅" or str(payload.emoji) == "❌") and app["message_id"] == payload.message_id
-            payload = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
+            def on_reaction(reaction, user):
+                return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and app["message_id"] == reaction.message_id
+            reaction = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
         except asyncio.TimeoutError:
             return 2
         
-        if str(payload.emoji) == '❌': return 1
+        if str(reaction.emoji) == '❌': return 1
         
         if len(question["required"]) == 0: return 0
 
@@ -300,15 +300,6 @@ class application_cog(commands.Cog):
 
     # async def sub_question(self, vars, index):
     #     pass
-    
-    # have to use this cause if we used bot.wait_for it would override 
-    # the message/answer collection
-    # @commands.Cog.listener()
-    # async def on_raw_reaction_add(self, payload):
-    #     if payload.user_id not in open_apps: return
-    #     if open_apps[payload.user_id]["message_id"] != payload.message_id: return
-    #     # is valid reaction
-    #     emoji = str(payload.emoji) 
 
     @commands.Cog.listener()
     async def on_message(self, message):
