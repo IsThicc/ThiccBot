@@ -14,11 +14,11 @@ from datetime import datetime
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+open_apps = {}
+questions = []
 class application_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-open_apps = {}
-questions = []
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
