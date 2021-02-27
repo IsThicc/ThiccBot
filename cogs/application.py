@@ -27,12 +27,12 @@ class application_cog(commands.Cog):
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
-    async def application(self, ctx, option=None):
+    async def application(self, ctx, member: discord.Member):
         try:
-            if option == None:
+            if member == None:
                 return await ctx.send(embed=em(
                     title="Uh Oh!",
-                    description="You forgot to mention a user.",
+                    description="You forgot to mention a user.\nUsage: `i!apply/app` `[ping/name]`",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
@@ -40,20 +40,10 @@ class application_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
 
-            # check for member
-            if option.startswith("<@"):
-                mid = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', option)[0]
-                member = discord.utils.get(ctx.guild.members, id=mid)
-            else:
-                member = discord.utils.get(ctx.guild.members, id=option.split("#")[0])
-            if member == None:
-                raise LookupError(f"No user with id/name `{option}` found!")
-            
-            if member.id in open_apps: del open_apps[member]
+            if member.id in open_apps: del open_apps[member.id]
 
             # create channel and send message
-            username = member.split("#")[0]
-            channel = await self.bot.create_text_channel(f"application-{username}",category='806012160198705183')
+            channel = await self.bot.create_text_channel(f"application-{member.display_name}",category='806012160198705183')
             
             intro = await channel.send(embed=em(
                 title="Thicc -Developer / Staff Support- Appliaction",
@@ -152,26 +142,6 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
             ))
-
-    @commands.Cog.listener()
-    async def on_message(message):
-
-        pass
-
-    @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
-        return
-        if payload.member.id not in open_apps: return
-        if open_apps[payload.member.id]["message_id"] != payload.message_id: return
-        channel = self.bot.get_channel(806012160198705183)
-
-        if str(payload.emoji) == "✅":
-
-            pass
-        elif str(payload.emoji) == "❌":
-
-            pass
-            
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
