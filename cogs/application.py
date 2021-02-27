@@ -15,7 +15,24 @@ from datetime import datetime
 #
 #
 open_apps = {}
-questions = []
+
+# write dis shet
+# time is in minutes
+questions = {
+    1 : {
+        "time" : 5,
+        "title" : "What are you applying for?",
+        "description" : "Available positions:\n**Developer**: Help work on IsThicc's software and projects. and **Support Staff**.\n",
+        "required": ["dev","developer","support","staff"]
+    },
+    2 : {
+        "time" : 5,
+        "title" : "Hoi",
+        "description" : "You cant proceed unless you type 'uwu'",
+        "required": ["uwu"]
+    }
+}
+
 class application_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -43,11 +60,10 @@ class application_cog(commands.Cog):
             if member.id in open_apps: del open_apps[member.id]
 
             # create channel and send message
-            # 806012160198705183
-            
-            category = discord.utils.get(ctx.guild.categories, id='812422468102520863')
+            category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
             channel = await ctx.guild.create_text_channel(f"application-{member.display_name}",category=category)
-            
+            await channel.set_permissions(member, send_messages=True, read_messages=True)
+
             intro = await channel.send(embed=em(
                     title="Thicc -Developer / Staff Support- Appliaction",
                     url="https://isthicc.dev",
@@ -65,31 +81,22 @@ class application_cog(commands.Cog):
                     icon_url=member.default_avatar_url
                 ).add_field(
                     name="Notes", 
-                    value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute."
+                    value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute.",
+                    inline=False
                 ).add_field(
                     name="-", 
-                    value="Good luck!"
+                    value="Good luck!",
+                    inline=False
                 ))
             await intro.add_reaction('✅')
             await intro.add_reaction('❌')
 
-            # add to queue / list
-            open_apps[member.id] = {
-                "message_id" : intro.id,
-                "channel_id" : channel.id,
-                "answers" : [],
-            }
-            
             # wait for confirmation
             try:
                 def on_reaction(payload):
                     # if payload.member.id not in open_apps: return False
-                    if str(payload.emoji) != '✅' and str(payload.emoji) != '❌':
-                        return False
-                    if open_apps[payload.member.id]["message_id"] != payload.message_id:
-                        return False
-                    return True
-                payload = await self.bot.wait_for("on_raw_reaction_add", check=on_reaction, timeout=60)
+                    return (str(payload.emoji) == "✅" or str(payload.emoji) == "❌") and open_apps[payload.member.id]["message_id"] == payload.message_id
+                payload = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
                     return
@@ -112,6 +119,8 @@ class application_cog(commands.Cog):
             
             # if not accepted then delete the channel
             if str(payload.emoji) == '❌':
+                if member.id in open_apps:
+                    del open_apps[member.id]
                 await channel.send(embed=em(
                     title="Closing Application",
                     url="https://isthicc.dev",
@@ -125,18 +134,80 @@ class application_cog(commands.Cog):
                 asyncio.sleep(3)
                 return await channel.delete()
 
-            # if not then proceed with the app *if not not accepted*
+            # if accepted then proceed with the questions
 
-            return await channel.send(embed=em(
-                    title="UwU",
-                    url="https://isthicc.dev",
-                    description=f"Yay it worked, No errors! 🎉",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Management"
-                ))
+            # add to queue / list
+            open_apps[member.id] = {
+                "message_id" : intro.id,
+                "channel_id" : channel.id,
+                "answers" : {},
+                "index" : 0
+            }
+
+            # loop though questions and get answers
+            for _ in range(len(questions)):
+                open_apps[member.id["index"]] += 1
+                # create array for answers
+                open_apps[member.id]["answers"][open_apps[member.id["index"]]] = []
+                # wait for the question to end
+                code = await self.ask_question((ctx, member, channel))
+
+                # code -> 0 = next question, 1 = quit, 2 = timeout
+                if code == 1:
+                    await channel.send(embed=em(
+                        title="Closing Application",
+                        url="https://isthicc.dev",
+                        description=f"You've decided to close this application, will close in 3 seconds..\nThanks for your interest in IsThicc and goodbye!",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Management"
+                    ))
+                elif code == 2:
+                    await channel.send(embed=em(
+                        title="Closing Application",
+                        url="https://isthicc.dev",
+                        description=f"Your time expired, this app will close in 3 seconds.",
+                        colour=discord.Colour.red(),
+                        timestamp=datetime.utcnow()
+                    ).set_footer(
+                        icon_url=self.bot.user.avatar_url,
+                        text="IsThicc Management"
+                    ))
+                # else:
+                #     await channel.send(embed=em(
+                #         description=f"Onwards!",
+                #         colour=discord.Colour.green(),
+                #         timestamp=datetime.utcnow()
+                #     ))
+
+                if code == 1 or code == 2:
+                    del open_apps[member.id]
+                    asyncio.sleep(3)
+                    return await channel.delete()
+
+            # when all the questions are answered
+            await channel.send(embed=em(
+                title="Thank You!",
+                url="https://isthicc.dev",
+                description="Your app will be reviewed and we'll get back to you!\nThanks for being interested in IsThicc Sofware.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+            
+            ans = member.id["answers"]
+            await channel.send(embed=em(
+                description=f"Just making sure lol:```py\n{ans}```",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
 
         except Exception as e:
             return await ctx.send(embed=em(
@@ -148,6 +219,104 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Staff"
             ))
+
+    # open_apps = {
+    #   message_id:str,
+    #   channel_id:str,
+    #   answers:dict -> {1:[],2:[],...},
+    #   index:int,
+    # }
+    # questions {
+    #   1:{
+    #       time:int,
+    #       title:str, 
+    #       description:str,
+    #       required:list
+    #   }
+    #   2:{...}, ...
+    async def ask_question(self, vars):
+        # setup
+        ctx, member, channel = vars
+        app = open_apps[member.id]
+        index = app["index"]
+        question = questions[index]
+        time = question["time"] * 60
+
+        # send message
+        msg = await channel.send(embed=em(
+            title=question["title"],
+            url="https://isthicc.dev",
+            description=question["description"] + "\nReact with ✅ to proceed with the next question or ❌ to stop the application.",
+            colour=discord.Colour.gold(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text=f"You have {time} minute(s) to answer"
+        ).set_author(
+            name=f"Question {index}",
+            url="https://isthicc.dev",
+            icon_url=member.default_avatar_url
+        ))
+        await msg.add_reaction('✅')
+        await msg.add_reaction('❌')
+
+        # await for reaction
+        # messages are automatically collected
+        # wait_for_answers() returns a 0-3 code
+        return await self.wait_for_answers((time, member.id, question, channel), msg)
+    
+    async def wait_for_answers(self, vars, message):
+        time, id, question, channel = vars
+        app = open_apps[id]
+
+        try:
+            def on_reaction(payload):
+                return (str(payload.emoji) == "✅" or str(payload.emoji) == "❌") and app["message_id"] == payload.message_id
+            payload = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
+        except asyncio.TimeoutError:
+            return 2
+        
+        if str(payload.emoji) == '❌': return 1
+        
+        if len(question["required"]) == 0: return 0
+
+        for answer in app["answers"][app["index"]]:
+            if answer in question["required"]:
+                return 0
+        
+        await message.remove_reaction('✅', id)
+        await channel.send(embed=em(
+            title="Invalid Answers",
+            url="https://isthicc.dev",
+            description="No valid answers were detected, please answer the question and try again.",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text=f"IsThicc Management"
+        ))
+        
+        return self.wait_for_answers(vars, message)
+
+    # async def sub_question(self, vars, index):
+    #     pass
+    
+    # have to use this cause if we used bot.wait_for it would override 
+    # the message/answer collection
+    # @commands.Cog.listener()
+    # async def on_raw_reaction_add(self, payload):
+    #     if payload.user_id not in open_apps: return
+    #     if open_apps[payload.user_id]["message_id"] != payload.message_id: return
+    #     # is valid reaction
+    #     emoji = str(payload.emoji) 
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.id not in open_apps: return
+        if open_apps[message.author.id]["message_id"] != message.id: return
+        # is valid message
+
+        open_apps[message.author.id]["answers"].append(message.clean_content)
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
