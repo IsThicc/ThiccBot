@@ -63,8 +63,7 @@ class application_cog(commands.Cog):
             category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
             channel = await ctx.guild.create_text_channel(f"application-{member.display_name}",category=category)
             await channel.set_permissions(member, send_messages=True, read_messages=True)
-            henbomb = await ctx.guild.fetch_member(348547981253017610)
-            await channel.set_permissions(henbomb, send_messages=True, read_messages=True)
+            await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
 
             intro = await channel.send(embed=em(
                     title="Thicc -Developer / Staff Support- Appliaction",
@@ -80,7 +79,7 @@ class application_cog(commands.Cog):
                 ).set_author(
                     name=member.display_name,
                     url="https://isthicc.dev",
-                    icon_url=member.default_avatar_url
+                    icon_url=member.avatar_url
                 ).add_field(
                     name="Notes", 
                     value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute.",
@@ -97,7 +96,7 @@ class application_cog(commands.Cog):
             try:
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
-                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id
+                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id and not user.bot
                 reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
@@ -233,7 +232,7 @@ class application_cog(commands.Cog):
     #       time:int,
     #       title:str, 
     #       description:str,
-    #       required:list
+    #       required:list[str]
     #   }
     #   2:{...}, ...
     async def ask_question(self, vars):
@@ -273,7 +272,7 @@ class application_cog(commands.Cog):
 
         try:
             def on_reaction(reaction, user):
-                return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and app["message_id"] == reaction.message_id
+                return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and app["message_id"] == reaction.message_id and not user.bot
             reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
         except asyncio.TimeoutError:
             return 2
@@ -283,8 +282,9 @@ class application_cog(commands.Cog):
         if len(question["required"]) == 0: return 0
 
         for answer in app["answers"][app["index"]]:
-            if answer in question["required"]:
-                return 0
+            for required in question["required"]:
+                if answer.Contains(required):
+                    return 0
         
         await message.remove_reaction('✅', id)
         await channel.send(embed=em(
