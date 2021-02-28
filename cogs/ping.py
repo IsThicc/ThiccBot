@@ -1,0 +1,34 @@
+#
+#                          IsThicc-bot RR.py | 2020 (c) IsThicc
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+from discord.ext import commands
+from discord import Embed, Color
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+class ping_cog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command()
+    async def ping(self, ctx):
+        ping = len(self.bot.Latency * 1000)
+        em = Embed(title="IsThicc", color=Color.gold())
+        if ping <=20:
+            em.description = (f":green_circle: Latency: {ping}")
+        elif ping <=50:
+            em.description = (f":orange_circle: Latency: {ping}")
+        else:
+            em.description = {f":red_circle: Latency: {ping}"}
+        
+        return await ctx.send(embed=em)
+
+
+
+def setup(bot):
+    bot.add_cog(ping_cog(bot))
