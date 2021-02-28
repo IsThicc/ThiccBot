@@ -290,7 +290,7 @@ class application_cog(commands.Cog):
 
         for answer in app["answers"][app["index"]]:
             for required in question["required"]:
-                if answer.lower().Contains(required):
+                if required in answer.lower():
                     await message.clear_reactions()
                     return 0
         
