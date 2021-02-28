@@ -305,6 +305,7 @@ class application_cog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        if message.author.bot: return
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["message_id"] != message.id: return
         # is valid message
