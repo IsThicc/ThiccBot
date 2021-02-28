@@ -32,20 +32,20 @@ class todo_cog(commands.Cog):
     async def todo(self, ctx, option=None, extra: str = None):
         try:
 
-            if option == None:
-                return await ctx.send(embed=em(
-                    title="Uh Oh!",
-                    description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+            # if option == None:
+            #     return await ctx.send(embed=em(
+            #         title="Uh Oh!",
+            #         description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
+            #         colour=discord.Colour.red(),
+            #         timestamp=datetime.utcnow()
+            #     ).set_footer(
+            #         icon_url=self.bot.user.avatar_url,
+            #         text="IsThicc Staff"
+            #     ))
 
-            option = option.lower()
+            # option = option.lower()
 
-            if option == "view":
+            if option == "view" or option == None:
 
                 if extra is not None:
                     return await ctx.send(embed=em(
@@ -125,15 +125,16 @@ class todo_cog(commands.Cog):
                         text="IsThicc Staff"
                     )
 
-                    await self.bot.get_user(json['details']['discord_id']).send(embed=staff)
-                    return await msg.edit(embed=em(
-                        title="Data received - check your dms!",
-                        colour=discord.Colour.green(),
-                        timestamp=datetime.utcnow()
-                    ).set_footer(
-                        icon_url=self.bot.user.avatar_url,
-                        text="IsThicc Staff"
-                    ))
+                    return await ctx.edit(embed=staff)
+                    # await self.bot.get_user(json['details']['discord_id']).send(embed=staff)
+                    # return await msg.edit(embed=em(
+                    #     title="Data received - check your dms!",
+                    #     colour=discord.Colour.green(),
+                    #     timestamp=datetime.utcnow()
+                    # ).set_footer(
+                    #     icon_url=self.bot.user.avatar_url,
+                    #     text="IsThicc Staff"
+                    # ))
 
                 elif code == 204:
                     request.close()
