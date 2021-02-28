@@ -92,15 +92,21 @@ class application_cog(commands.Cog):
             await intro.add_reaction('✅')
             await intro.add_reaction('❌')
 
+            # add to open apps
+            open_apps[member.id] = {
+                "message_id" : intro.id,
+                "channel_id" : channel.id,
+                "answers" : {},
+                "index" : 0
+            }
+
             # wait for confirmation
             try:
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
                     return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id and not user.bot
-                reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction)
+                reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
-                if member.id not in open_apps:
-                    return
                 if len(open_apps[member.id]["answers"])>0:
                     return
 
@@ -137,14 +143,7 @@ class application_cog(commands.Cog):
 
             # if accepted then proceed with the questions
 
-            # add to queue / list
-            open_apps[member.id] = {
-                "message_id" : intro.id,
-                "channel_id" : channel.id,
-                "answers" : {},
-                "index" : 0
-            }
-
+            
             # loop though questions and get answers
             for _ in range(len(questions)):
                 open_apps[member.id["index"]] += 1
