@@ -22,7 +22,7 @@ class github_cog(commands.Cog):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-    @commands.cog.listener()
+    @commands.Cog.listener()
     async def on_guild_role_update(self, before, after):
         if after.name != "project":
             return
