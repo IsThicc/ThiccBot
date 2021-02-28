@@ -17,7 +17,7 @@ class ping_cog(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        ping = len(self.bot.Latency * 1000)
+        ping = len(self.bot.latency * 1000)
         em = Embed(title="IsThicc", color=Color.gold())
         if ping <=20:
             em.description = (f":green_circle: Latency: {ping}")
