@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, traceback
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -200,7 +200,8 @@ class application_cog(commands.Cog):
                 text="IsThicc Management"
             ))
             
-            ans = member.id["answers"]
+            ans = member.id["answers"] #error
+            ans = open_apps[member.id]["answers"] #fixed
             await channel.send(embed=em(
                 description=f"Just making sure lol:```py\n{ans}```",
                 colour=discord.Colour.red(),
@@ -211,9 +212,10 @@ class application_cog(commands.Cog):
             ))
 
         except Exception as e:
+            print(traceback.format_exc())
             return await ctx.send(embed=em(
                 title="Ou u dumbass HenBOMB there's an error!",
-                description=f"```py\n{repr(e)}```",
+                description=f"```py\n{traceback.format_exc()}```",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ).set_footer(
