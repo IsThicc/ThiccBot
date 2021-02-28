@@ -154,6 +154,7 @@ class application_cog(commands.Cog):
 
                 # code -> 0 = next question, 1 = quit, 2 = timeout
                 if code == 1:
+                    await intro.clear_reactions()
                     await channel.send(embed=em(
                         title="Closing Application",
                         url="https://isthicc.dev",
@@ -165,6 +166,7 @@ class application_cog(commands.Cog):
                         text="IsThicc Management"
                     ))
                 elif code == 2:
+                    await intro.clear_reactions()
                     await channel.send(embed=em(
                         title="Closing Application",
                         url="https://isthicc.dev",
@@ -197,8 +199,7 @@ class application_cog(commands.Cog):
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
-            ))
-            
+            ))   
             ans = open_apps[member.id]["answers"]
             await channel.send(embed=em(
                 description=f"Just making sure lol:```py\n{ans}```",
@@ -278,7 +279,8 @@ class application_cog(commands.Cog):
         except asyncio.TimeoutError:
             return 2
         
-        if str(reaction.emoji) == '❌': return 1
+        if str(reaction.emoji) == '❌':
+            return 1
         
         # if reacted with ✅
         if len(question["required"]) == 0:
@@ -292,6 +294,8 @@ class application_cog(commands.Cog):
                     return 0
         
         # await message.remove_reaction('✅', id)
+
+        # message.channel.send(content=f"No required messages found in answers:\n```{}```\n```{question["required"]}```")
 
         await channel.send(embed=em(
             title="Invalid Answers",
@@ -315,8 +319,10 @@ class application_cog(commands.Cog):
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["message_id"] != message.id: return
         if open_apps[message.author.id]["channel_id"] != message.channel.id: return
-        if open_apps[message.author.id]["index"] == 0: return
-        open_apps[message.author.id]["answers"].append(message.clean_content)
+        i = open_apps[message.author.id]["index"]
+        if i == 0: return
+        # message.channel.send(content=f"Saved `{message.clean_content}` to {message.author.id}")
+        open_apps[message.author.id]["answers"][i].append(message.clean_content)
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
