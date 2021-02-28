@@ -304,7 +304,7 @@ class application_cog(commands.Cog):
             text=f"IsThicc Management"
         ))
         
-        return self.wait_for_answers(vars, message)
+        return await self.wait_for_answers(vars, message)
 
     # async def sub_question(self, vars, index):
     #     pass
@@ -315,8 +315,7 @@ class application_cog(commands.Cog):
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["message_id"] != message.id: return
         if open_apps[message.author.id]["channel_id"] != message.channel.id: return
-        # is valid message
-
+        if open_apps[message.author.id]["index"] == 0: return
         open_apps[message.author.id]["answers"].append(message.clean_content)
 #
 #
