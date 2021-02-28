@@ -104,7 +104,7 @@ class application_cog(commands.Cog):
             try:
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
-                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id and not user.bot
+                    return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and not user.bot and open_apps[user.id] and open_apps[user.id]["message_id"] == reaction.message_id
                 reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
             except asyncio.TimeoutError:
                 if len(open_apps[member.id]["answers"])>0:
@@ -273,7 +273,7 @@ class application_cog(commands.Cog):
 
         try:
             def on_reaction(reaction, user):
-                return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and app["message_id"] == reaction.message_id and not user.bot
+                return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and not user.bot and app["message_id"] == reaction.message_id
             reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
         except asyncio.TimeoutError:
             return 2
