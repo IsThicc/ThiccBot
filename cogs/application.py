@@ -146,9 +146,9 @@ class application_cog(commands.Cog):
             
             # loop though questions and get answers
             for _ in range(len(questions)):
-                open_apps[member.id["index"]] += 1
+                open_apps[member.id]["index"] += 1
                 # create array for answers
-                open_apps[member.id]["answers"][open_apps[member.id["index"]]] = []
+                open_apps[member.id]["answers"][open_apps[member.id]["index"]] = []
                 # wait for the question to end
                 code = await self.ask_question((ctx, member, channel))
 
@@ -199,8 +199,7 @@ class application_cog(commands.Cog):
                 text="IsThicc Management"
             ))
             
-            ans = member.id["answers"] #error
-            ans = open_apps[member.id]["answers"] #fixed
+            ans = open_apps[member.id]["answers"]
             await channel.send(embed=em(
                 description=f"Just making sure lol:```py\n{ans}```",
                 colour=discord.Colour.red(),
