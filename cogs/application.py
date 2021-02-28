@@ -142,9 +142,7 @@ class application_cog(commands.Cog):
                 return await channel.delete()
 
             # if accepted then proceed with the questions
-            await intro.remove_reaction('❌', member.id)
-            await intro.remove_reaction('✅', member.id)
-            await intro.remove_reaction('✅', self.bot.id)
+            await intro.clear_reactions()
             
             # loop though questions and get answers
             for _ in range(len(questions)):
@@ -284,17 +282,13 @@ class application_cog(commands.Cog):
         
         # if reacted with ✅
         if len(question["required"]) == 0:
-            # await message.remove_reaction('❌', id)
-            # await message.remove_reaction('✅', id)
-            # await message.remove_reaction('✅', self.bot.id)
+            await message.clear_reactions()
             return 0
 
         for answer in app["answers"][app["index"]]:
             for required in question["required"]:
                 if answer.Contains(required):
-                    # await message.remove_reaction('❌', id)
-                    # await message.remove_reaction('✅', id)
-                    # await message.remove_reaction('✅', self.bot.id)
+                    await message.clear_reactions()
                     return 0
         
         # await message.remove_reaction('✅', id)
