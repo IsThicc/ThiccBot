@@ -261,8 +261,7 @@ class application_cog(commands.Cog):
         ))
         await msg.add_reaction('✅')
         await msg.add_reaction('❌')
-        mid=open_apps[member.id]["message_id"]
-        await channel.send(content=f"Updated message_id from `{mid}` to `{msg.id}`")
+        
         open_apps[member.id]["message_id"] = msg.id
 
         # await for reaction
@@ -291,25 +290,22 @@ class application_cog(commands.Cog):
 
         for answer in app["answers"][app["index"]]:
             for required in question["required"]:
-                if answer.Contains(required):
+                if answer.lower().Contains(required):
                     await message.clear_reactions()
                     return 0
         
         # await message.remove_reaction('✅', id)
-        r = question["required"]
-        a = app["answers"][app["index"]]
-        await channel.send(content=f"```{a}```\n```{r}```")
 
-        # await channel.send(embed=em(
-        #     title="Invalid Answers",
-        #     url="https://isthicc.dev",
-        #     description="No valid answers were detected, please answer the question and try again.",
-        #     colour=discord.Colour.red(),
-        #     timestamp=datetime.utcnow()
-        # ).set_footer(
-        #     icon_url=self.bot.user.avatar_url,
-        #     text=f"IsThicc Management"
-        # ))
+        await channel.send(embed=em(
+            title="Invalid Answers",
+            url="https://isthicc.dev",
+            description="No valid answers were detected, please answer the question and try again.",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text=f"IsThicc Management"
+        ))
         
         return await self.wait_for_answers(vars, message)
 
@@ -320,13 +316,10 @@ class application_cog(commands.Cog):
     async def on_message(self, message):
         if message.author.bot: return
         if message.author.id not in open_apps: return
-        if open_apps[message.author.id]["message_id"] != message.id: return
         if open_apps[message.author.id]["channel_id"] != message.channel.id: return
         i = open_apps[message.author.id]["index"]
         if i == 0: return
         open_apps[message.author.id]["answers"][i].append(message.clean_content)
-        l = open_apps[message.author.id]["answers"][i]
-        await message.channel.send(content=f"Saved:\n```py\n{l}```")
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
