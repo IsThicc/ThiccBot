@@ -125,7 +125,7 @@ class todo_cog(commands.Cog):
                         text="IsThicc Staff"
                     )
 
-                    return await ctx.edit(embed=staff)
+                    return await msg.edit(embed=staff)
                     # await self.bot.get_user(json['details']['discord_id']).send(embed=staff)
                     # return await msg.edit(embed=em(
                     #     title="Data received - check your dms!",
