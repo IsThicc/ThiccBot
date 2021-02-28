@@ -487,7 +487,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
             description=f"""
 Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{ctx.prefix}todo view``
             """,
-            colour=discord.Colour.red(),
+            colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
         ).set_thumbnail(
             url=ctx.guild.icon_url
