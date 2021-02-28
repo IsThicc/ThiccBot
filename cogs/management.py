@@ -456,7 +456,46 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
         ))
-    
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+    @commands.command()
+    @commands.has_role(role)
+    async def newtodo(self, ctx, member: discord.Member=None):
+
+        if member == None:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        await ctx.message.delete()
+        return await ctx.send(content=member.mention, embed=em(
+            title="IsThicc Management",
+            description=f"""
+Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{ctx.prefix}todo view``
+            """,
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
