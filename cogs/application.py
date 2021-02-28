@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, re
+import discord, asyncio
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -97,7 +97,7 @@ class application_cog(commands.Cog):
                 def on_reaction(reaction, user):
                     # if payload.member.id not in open_apps: return False
                     return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and open_apps[user.id]["message_id"] == reaction.message_id and not user.bot
-                reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=60)
+                reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction)
             except asyncio.TimeoutError:
                 if member.id not in open_apps:
                     return
@@ -213,7 +213,7 @@ class application_cog(commands.Cog):
         except Exception as e:
             return await ctx.send(embed=em(
                 title="Ou u dumbass HenBOMB there's an error!",
-                description=f"```py\n{e}```",
+                description=f"```py\n{repr(e)}```",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ).set_footer(
