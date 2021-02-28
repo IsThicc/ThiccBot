@@ -43,7 +43,7 @@ class application_cog(commands.Cog):
 #
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
-    @commands.has_role(739510850079162530)
+    # @commands.has_role(739510850079162530)
     async def application(self, ctx, member: discord.Member):
         try:
             if member == None:
@@ -142,7 +142,9 @@ class application_cog(commands.Cog):
                 return await channel.delete()
 
             # if accepted then proceed with the questions
-
+            await intro.remove_reaction('❌', member.id)
+            await intro.remove_reaction('✅', member.id)
+            await intro.remove_reaction('✅', self.bot.id)
             
             # loop though questions and get answers
             for _ in range(len(questions)):
@@ -241,7 +243,7 @@ class application_cog(commands.Cog):
         app = open_apps[member.id]
         index = app["index"]
         question = questions[index]
-        time = question["time"] * 60
+        time = question["time"]
 
         # send message
         msg = await channel.send(embed=em(
@@ -260,6 +262,7 @@ class application_cog(commands.Cog):
         ))
         await msg.add_reaction('✅')
         await msg.add_reaction('❌')
+        open_apps[member.id]["message_id"] = msg.id
 
         # await for reaction
         # messages are automatically collected
@@ -273,20 +276,29 @@ class application_cog(commands.Cog):
         try:
             def on_reaction(reaction, user):
                 return (str(reaction.emoji) == "✅" or str(reaction.emoji) == "❌") and not user.bot and app["message_id"] == reaction.message.id
-            reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time)
+            reaction, user = await self.bot.wait_for("reaction_add", check=on_reaction, timeout=time*60)
         except asyncio.TimeoutError:
             return 2
         
         if str(reaction.emoji) == '❌': return 1
         
-        if len(question["required"]) == 0: return 0
+        # if reacted with ✅
+        if len(question["required"]) == 0:
+            # await message.remove_reaction('❌', id)
+            # await message.remove_reaction('✅', id)
+            # await message.remove_reaction('✅', self.bot.id)
+            return 0
 
         for answer in app["answers"][app["index"]]:
             for required in question["required"]:
                 if answer.Contains(required):
+                    # await message.remove_reaction('❌', id)
+                    # await message.remove_reaction('✅', id)
+                    # await message.remove_reaction('✅', self.bot.id)
                     return 0
         
-        await message.remove_reaction('✅', id)
+        # await message.remove_reaction('✅', id)
+
         await channel.send(embed=em(
             title="Invalid Answers",
             url="https://isthicc.dev",
@@ -308,6 +320,7 @@ class application_cog(commands.Cog):
         if message.author.bot: return
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["message_id"] != message.id: return
+        if open_apps[message.author.id]["channel_id"] != message.channel.id: return
         # is valid message
 
         open_apps[message.author.id]["answers"].append(message.clean_content)
