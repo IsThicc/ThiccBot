@@ -358,7 +358,7 @@ class application_cog(commands.Cog):
         for s in app["answers"][999]: answer+=f"{s}\n"
         app_em["description"] += f'Why should they be accepted at IsThicc?\n⬦ {answer}'
 
-        await channel.send(embed=em.fom_dict(app_em))
+        await channel.send(embed=em.from_dict(app_em))
         del open_apps[member.id]
 
     async def ask_question(self, id, channel, question, change_title=True):
