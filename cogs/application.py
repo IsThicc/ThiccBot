@@ -310,11 +310,13 @@ class application_cog(commands.Cog):
         ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text=f"IsThicc Management")
-
+        
+        app = open_apps[member.id]
+        
         # add errythin to da embed
         for index in range(1,len(questions)+1):
             field = questions[index]["embed_field"]
-            answerL = open_apps[member.id]["answers"][index]
+            answerL = app["answers"][index]
             answer = ""
             for s in answerL: answer+=f"{s}\n"
 
@@ -339,7 +341,7 @@ class application_cog(commands.Cog):
                     text=f"IsThicc Management")
 
         # add the languages and their ratings
-        answers = open_apps[member.id]["answers"]
+        answers = app["answers"]
         languages = answers[2][0].split(',')
         ratings = []
         for i in range(len(answers[2])):
