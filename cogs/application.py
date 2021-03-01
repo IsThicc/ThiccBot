@@ -29,13 +29,14 @@ questions = {
         "time" : 5,
         "title" : "What coding languages do you have experience in?",
         "description" : "Name them separated by a comma.\nExample: `c#, python, css, ...`",
-        "required": [
-            "c#","c++","c","lua","js","node",
-            "ada","basic","cobol","css","f#","python",
-            "hackshell","html","java","javascript","js",
-            "flutter","clojure","kotlin","lisp","matlab",
-            "pascal","perl","php","prolog","ruby",
-            "rust","sql","sqift","tcl","julia",]
+        "required": []
+        # "required": [
+        #     "c#","c++","c","lua","js","node",
+        #     "ada","basic","cobol","css","f#","python",
+        #     "hackshell","html","java","javascript","js",
+        #     "flutter","clojure","kotlin","lisp","matlab",
+        #     "pascal","perl","php","prolog","ruby",
+        #     "rust","sql","sqift","tcl","julia",]
     },
     # Do you have any experience in Web Development?
     3:{
@@ -64,14 +65,15 @@ questions = {
         "time" : 5,
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
-        "required": r'\d+' # check for digits
+        "required": ['0','1','2','3','4','5','6','7','8','9']
     }
     ,
     # What is your timezone?
     7:{
         "time" : 5,
         "title" : "What is your timezone?",
-        "description" : "Check your current timezone [here](https://whatismytimezone.com/) and copy paste the first line ",
+        "description" : "-Missing description-",
+        # "description" : "Check your current timezone [here](https://whatismytimezone.com/) and copy paste the first line ",
         "required": [""]
     }
 }
@@ -242,8 +244,8 @@ class application_cog(commands.Cog):
             # when all the questions are answered
 
             # this needs debug work
-            langs = open_apps[member.id]["answers"][2].split(',')
-            for i in range(len(langs)):
+            langs = open_apps[member.id]["answers"][2]
+            for language in langs:
                 i = open_apps[member.id]["index"]+1
                 open_apps[member.id]["index"] = i
                 open_apps[member.id]["can_proceed"] = False
@@ -251,8 +253,8 @@ class application_cog(commands.Cog):
                 question = {
                     "time" : 5,
                     "title":"",
-                    "description":f"Rate yourself 1-10 based on your experience/skill in {langs[i]}",
-                    "required": r'\d+'
+                    "description":f"Rate yourself 1-10 based on your experience/skill in {language}",
+                    "required": ['0','1','2','3','4','5','6','7','8','9']
                 }
                 await self.ask_question(member, channel, question)
 
@@ -363,16 +365,11 @@ class application_cog(commands.Cog):
         if open_apps[message.author.id]["can_proceed"]: return
 
         req = questions[i]["required"]
-        if type(req == list) and len(req) != 0:
-            for required in questions[i]["required"]:
-                if required in message.clean_content.lower():
-                    open_apps[message.author.id]["can_proceed"] = True
-                    await message.add_reaction('📌')
-                    return
-        elif type(req) == str and re.search(req, message.clear_content):
-            open_apps[message.author.id]["can_proceed"] = True
-            await message.add_reaction('📌')
-            return
+        for required in questions[i]["required"]:
+            if required in message.clean_content.lower():
+                open_apps[message.author.id]["can_proceed"] = True
+                await message.add_reaction('📌')
+                return
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
