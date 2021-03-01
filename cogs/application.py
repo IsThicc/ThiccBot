@@ -15,23 +15,76 @@ from datetime import datetime
 #
 #
 open_apps = {}
-
-# write dis shet
 # time is in minutes
 questions = {
+    # What are you applying for?
     1 : {
         "time" : 5,
         "title" : "What are you applying for?",
         "description" : "Available positions:\n**Developer**: Help work on IsThicc's software and projects. and **Support Staff**.\n",
         "required": ["dev","developer","support","staff"]
     },
+    # What coding languages do you have experience in?
     2 : {
         "time" : 5,
-        "title" : "Hoi",
-        "description" : "You cant proceed unless you type 'uwu'",
-        "required": ["uwu"]
+        "title" : "What coding languages do you have experience in?",
+        "description" : "Name them separated by a comma.\nExample: `c#, python, css, ...`",
+        "required": [
+            "c#","c++","c","lua","js","node",
+            "ada","basic","cobol","css","f#","python",
+            "hackshell","html","java","javascript","js",
+            "flutter","clojure","kotlin","lisp","matlab",
+            "pascal","perl","php","prolog","ruby",
+            "rust","sql","sqift","tcl","julia",]
+    },
+    # Do you have any experience in Web Development?
+    3:{
+        "time" : 5,
+        "title" : "Do you have any experience in Web Development?",
+        "description" : "This includes knowing JS, CSS and HTML.",
+        "required": ["y","no","i do","don"]
+    },
+    # What do you like to be called? 
+    4:{
+        "time" : 5,
+        "title" : "What do you like to be called? ",
+        "description" : "Can be your username, or any nickname you prefer and are comfortable saying.",
+        "required": [""]
+    },
+    # Who brought you to IsThicc?
+    5:{
+        "time" : 5,
+        "title" : "What led you to applying?",
+        "description" : "Did someone tell you to? If someone did, state their name, and if no one did, say why you think you applied here.",
+        "required": [""]
+    },
+    # Rate yourself 1-10 in working with a team.
+    6:{
+        "time" : 5,
+        "title" : "",
+        "description" : "-Missing description-",
+        "required": [""]
+    }
+    ,
+    # What is your timezone?
+    6:{
+        "time" : 5,
+        "title" : "What is your timezone?",
+        "description" : "Check your current timezone [here](https://whatismytimezone.com/) and copy paste the first line ",
+        "required": [""]
     }
 }
+'''
+
+Rate yourself 1-10 based on experience/skill in C#
+Rate yourself 1-10 based on experience/skill in C++
+
+Explain in one paragraph why you think you should be a developer here. (Final Question.)
+
+
+do you have github(if so whats your username)
+
+'''
 
 class application_cog(commands.Cog):
     def __init__(self, bot):
@@ -73,7 +126,7 @@ class application_cog(commands.Cog):
                     timestamp=datetime.utcnow()
                 ).set_footer(
                     icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Management"
+                    text="This app will auto close in 1 minute."
                 ).set_thumbnail(
                     url="https://isthicc.dev/assets/img/logo.png"
                 ).set_author(
@@ -82,11 +135,11 @@ class application_cog(commands.Cog):
                     icon_url=member.avatar_url
                 ).add_field(
                     name="Notes", 
-                    value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have. This will auto close in 1 minute.",
+                    value="You will have limited time to reaspond to each question, make sure to check the footer of each embed question, there will be the time limit you'll have.",
                     inline=False
                 ).add_field(
                     name="-", 
-                    value="Good luck!",
+                    value="The bot will react with ✔️ when you've provided a valid answer.\nGood luck!",
                     inline=False
                 ))
             await intro.add_reaction('✅')
@@ -97,7 +150,8 @@ class application_cog(commands.Cog):
                 "message_id" : intro.id,
                 "channel_id" : channel.id,
                 "answers" : {},
-                "index" : 0
+                "index" : 0,
+                "can_proceed" : False
             }
 
             # wait for confirmation
@@ -147,7 +201,8 @@ class application_cog(commands.Cog):
             # loop though questions and get answers
             for _ in range(len(questions)):
                 open_apps[member.id]["index"] += 1
-                # create array for answers
+                open_apps[member.id]["can_proceed"] = False
+                # create a list for answers
                 open_apps[member.id]["answers"][open_apps[member.id]["index"]] = []
                 # wait for the question to end
                 code = await self.ask_question((ctx, member, channel))
@@ -194,16 +249,15 @@ class application_cog(commands.Cog):
                 title="Thank You!",
                 url="https://isthicc.dev",
                 description="Your app will be reviewed and we'll get back to you!\nThanks for being interested in IsThicc Sofware.",
-                colour=discord.Colour.red(),
+                colour=discord.Colour.green(),
                 timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
             ))   
-            ans = open_apps[member.id]["answers"]
             await channel.send(embed=em(
-                description=f"Just making sure lol:```py\n{ans}```",
-                colour=discord.Colour.red(),
+                description=f"Just making sure:```py\n{open_apps[member.id]}```",
+                colour=discord.Colour.gold(),
                 timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
@@ -222,20 +276,6 @@ class application_cog(commands.Cog):
                     text="IsThicc Staff"
             ))
 
-    # open_apps = {
-    #   message_id:str,
-    #   channel_id:str,
-    #   answers:dict -> {1:[],2:[],...},
-    #   index:int,
-    # }
-    # questions {
-    #   1:{
-    #       time:int,
-    #       title:str, 
-    #       description:str,
-    #       required:list[str]
-    #   }
-    #   2:{...}, ...
     async def ask_question(self, vars):
         # setup
         ctx, member, channel = vars
@@ -257,7 +297,7 @@ class application_cog(commands.Cog):
         ).set_author(
             name=f"Question {index}",
             url="https://isthicc.dev",
-            icon_url=member.default_avatar_url
+            icon_url=member.avatar_url
         ))
         await msg.add_reaction('✅')
         await msg.add_reaction('❌')
@@ -288,14 +328,10 @@ class application_cog(commands.Cog):
             await message.clear_reactions()
             return 0
 
-        for answer in app["answers"][app["index"]]:
-            for required in question["required"]:
-                if required in answer.lower():
-                    await message.clear_reactions()
-                    return 0
+        if app["can_proceed"]:
+            await message.clear_reactions()
+            return 0
         
-        # await message.remove_reaction('✅', id)
-
         await channel.send(embed=em(
             title="Invalid Answers",
             url="https://isthicc.dev",
@@ -320,6 +356,13 @@ class application_cog(commands.Cog):
         i = open_apps[message.author.id]["index"]
         if i == 0: return
         open_apps[message.author.id]["answers"][i].append(message.clean_content)
+
+        if open_apps[message.author.id]["can_proceed"]: return
+        for required in questions[i]["required"]:
+            if required in message.clean_content.lower():
+                open_apps[message.author.id]["can_proceed"] = True
+                await message.add_reaction('✔️')
+                return
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
