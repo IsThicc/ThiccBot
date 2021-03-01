@@ -41,7 +41,8 @@ questions = {
     3:{
         "time" : 5,
         "title" : "Do you have any experience in Web Development?",
-        "description" : "This includes knowing JS, CSS and HTML.",
+        "description" : "-Missing description-",
+        # "description" : "This includes knowing JS, CSS and HTML.",
         "required": ["y","no","i do","don"]
     },
     # What do you like to be called? 
@@ -63,7 +64,7 @@ questions = {
         "time" : 5,
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
-        "required": r'\d+'
+        "required": r'\d+' # check for digits
     }
     ,
     # What is your timezone?
@@ -75,15 +76,8 @@ questions = {
     }
 }
 '''
-
-Rate yourself 1-10 based on experience/skill in C#
-Rate yourself 1-10 based on experience/skill in C++
-
 Explain in one paragraph why you think you should be a developer here. (Final Question.)
-
-
 do you have github(if so whats your username)
-
 '''
 
 class application_cog(commands.Cog):
@@ -121,7 +115,7 @@ class application_cog(commands.Cog):
             intro = await channel.send(embed=em(
                     title="Thicc -Developer / Staff Support- Appliaction",
                     url="https://isthicc.dev",
-                    description=f"Hello {member.mention}, welcome to your app!\nWhen you're ready, react with ✅ to start or ❌ to cancel, note: it will auto close in 1 minute.",
+                    description=f"Hello {member.mention}, welcome to your app!\nWhen you're ready, react with ✅ to start or ❌ to cancel.",
                     colour=discord.Colour.gold(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
@@ -139,7 +133,7 @@ class application_cog(commands.Cog):
                     inline=False
                 ).add_field(
                     name="-", 
-                    value="The bot will react with ✔️ when you've provided a valid answer.\nGood luck!",
+                    value="The bot will react with 📌 when you've provided a valid answer.\nGood luck!",
                     inline=False
                 ))
             await intro.add_reaction('✅')
@@ -303,7 +297,7 @@ class application_cog(commands.Cog):
         msg = await channel.send(embed=em(
             title=question["title"],
             url="https://isthicc.dev",
-            description=question["description"] + "\nReact with ✅ to proceed with the next question or ❌ to stop the application.",
+            description=question["description"],
             colour=discord.Colour.gold(),
             timestamp=datetime.utcnow()
         ).set_footer(
@@ -337,22 +331,12 @@ class application_cog(commands.Cog):
         
         if str(reaction.emoji) == '❌':
             return 1
-        
-        # if reacted with ✅
+        # else: reacted with ✅
 
         if app["can_proceed"]:
             await message.clear_reactions()
             return 0
             
-        req = question["required"]
-        if type(req == list) and len(req) == 0:
-            await message.clear_reactions()
-            return 0
-        elif type(req) == str and re.search(req):
-            await message.clear_reactions()
-            return 0
-
-        
         await channel.send(embed=em(
             title="Invalid Answers",
             url="https://isthicc.dev",
@@ -383,11 +367,11 @@ class application_cog(commands.Cog):
             for required in questions[i]["required"]:
                 if required in message.clean_content.lower():
                     open_apps[message.author.id]["can_proceed"] = True
-                    await message.add_reaction('✔️')
+                    await message.add_reaction('📌')
                     return
-        elif type(req) == str and re.search(req):
+        elif type(req) == str and re.search(req, message.clear_content):
             open_apps[message.author.id]["can_proceed"] = True
-            await message.add_reaction('✔️')
+            await message.add_reaction('📌')
             return
 #
 #
