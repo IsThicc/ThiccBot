@@ -301,19 +301,15 @@ class application_cog(commands.Cog):
         await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
         
         app = open_apps[member.id]
-        app_em = {
-            "title" : f"{member.name}#{member.discriminator} - Application" ,
-            "url" : "https://isthicc.dev",
-            "description" : "",
-            "colour" : 173058,
-            "timestamp" : datetime.utcnow(),
-            "footer": {
-                "icon_url": self.bot.user.avatar_url,
-                "text": "IsThicc Management"
-            },
-            "fields": []
-        }
-        
+        app_em = em(
+            title=f"{member.name}#{member.discriminator} - Application",
+            url="https://isthicc.dev",
+            description="",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management")
         
         # add errythin to da embed
         for index in range(0,len(questions)):
@@ -325,13 +321,13 @@ class application_cog(commands.Cog):
 
             if field == '': continue
             elif field[0] == '-':
-                app_em["fields"].append({
-                    "name":field[1:], 
-                    "value":answer,
-                    "inline":True
-                })
+                app_em["fields"].append(
+                    name = field[1:], 
+                    value = answer,
+                    inline = True
+                )
             else:
-                app_em["description"] += f"⬦ {field}\n{answer}\n" 
+                app_em.description += f"⬦ {field}\n{answer}\n" 
 
         # add the languages and their ratings to the embed
         answers = app["answers"]
@@ -347,18 +343,18 @@ class application_cog(commands.Cog):
             if letter: language = language.replace(letter[0], letter[0].upper())
             lang_value += f"{language} {ratings[i][0]}/10\n"
         
-        app_em["fields"].append({
-            "name":"Languages", 
-            "value":lang_value,
-            "inline":True
-        })
+        app_em["fields"].append(
+            name = "Languages", 
+            value = lang_value,
+            inline = True
+        )
         
         # add final answer to the embed
         answer = ""
         for s in app["answers"][999]: answer+=f"{s}\n"
-        app_em["description"] += f'Why should they be accepted at IsThicc?\n⬦ {answer}'
+        app_em.description+= f'Why should they be accepted at IsThicc?\n⬦ {answer}'
 
-        await channel.send(embed=em.from_dict(app_em))
+        await channel.send(embed=app_em)
         del open_apps[member.id]
 
     async def ask_question(self, id, channel, question, change_title=True):
