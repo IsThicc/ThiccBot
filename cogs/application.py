@@ -261,7 +261,7 @@ class application_cog(commands.Cog):
                 "title":"Final question",
                 "description":"Explain in one paragraph why you think you should be accepted at IsThicc.",
             }
-            code = await self.ask_question(member.id, channel, question)
+            code = await self.ask_question(member.id, channel, question, False)
             # code -> 0 = next question, 1 = quit, 2 = timeout
             if code == 1: await channel.send(embed=close_em)
             elif code == 2: await channel.send(embed=timeout_em)
@@ -298,6 +298,8 @@ class application_cog(commands.Cog):
 
     async def write_aplication(self, ctx, member, category):
         channel = await ctx.guild.create_text_channel(f"app-result-{member.display_name}",category=category)
+        await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
+        
         desc = ""
         app_em = em(
             title= f"{discord.Member} - Application" ,
@@ -311,7 +313,7 @@ class application_cog(commands.Cog):
 
         # add errythin to da embed
         for index in range(1,len(questions)+1):
-            field = questions[index["embed_field"]]
+            field = questions[index]["embed_field"]
             answer = open_apps[member.id]["answers"][index]
             if field == '': continue
             elif field[0] == '-':
@@ -334,8 +336,12 @@ class application_cog(commands.Cog):
                     text=f"IsThicc Management")
 
         # add the languages and their ratings
-        languages = open_apps[member.id]["answers"][2][0].split(',')
-        ratings = open_apps[member.id]["answers"][len(questions)+1]
+        answers = open_apps[member.id]["answers"]
+        languages = answers[2][0].split(',')
+        ratings = []
+        for i in range(len(answers[2])):
+            ratings.append(answers[len(questions)+i+1])
+
         lang_value = ""
 
         for (i,language) in enumerate(languages):
@@ -352,16 +358,16 @@ class application_cog(commands.Cog):
         await channel.send(embed=app_em)
         del open_apps[member.id]
 
-    async def ask_question(self, id, channel, question):
+    async def ask_question(self, id, channel, question, change_title=True):
         # setup
         app = open_apps[id]
         index = app["index"]
         time = question["time"]
-        title = question["title"]
+        title = f"{index}. " + question["title"]
 
         # send message
         msg = await channel.send(embed=em(
-            title= f"{index}. {title}" ,
+            title = (title if change_title else question["title"]),
             url="https://isthicc.dev",
             description=question["description"],
             colour=discord.Colour.gold(),
