@@ -44,7 +44,7 @@ questions = {
         "title" : "Do you have any experience in Web Development?",
         "description" : "-Missing description-",
         # "description" : "This includes knowing JS, CSS and HTML.",
-        "required": ["y","no","i do","don"]
+        "required": []
     },
     # What do you like to be called? 
     4:{
@@ -340,7 +340,7 @@ class application_cog(commands.Cog):
             return 0
             
         await channel.send(embed=em(
-            title="Invalid Answers",
+            title="Invalid Answer",
             url="https://isthicc.dev",
             description="No valid answers were detected, please answer the question and try again.",
             colour=discord.Colour.red(),
