@@ -314,7 +314,10 @@ class application_cog(commands.Cog):
         # add errythin to da embed
         for index in range(1,len(questions)+1):
             field = questions[index]["embed_field"]
-            answer = open_apps[member.id]["answers"][index]
+            answerL = open_apps[member.id]["answers"][index]
+            answer = ""
+            for s in answerL: answer+=f"{s}\n"
+
             if field == '': continue
             elif field[0] == '-':
                 app_em.add_field(
@@ -324,7 +327,7 @@ class application_cog(commands.Cog):
                 )
             else:
                 desc += f"⬦ **{field}**\n"
-                desc += answer+'\n'
+                desc += answer
                 app_em = em(
                     title= f"{member.discriminator} - Application" ,
                     url="https://isthicc.dev",
