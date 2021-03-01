@@ -66,8 +66,7 @@ questions = {
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
         "required": ['0','1','2','3','4','5','6','7','8','9']
-    }
-    ,
+    },
     # What is your timezone?
     7:{
         "time" : 5,
@@ -252,7 +251,7 @@ class application_cog(commands.Cog):
                 open_apps[member.id]["answers"][i] = []
                 question = {
                     "time" : 5,
-                    "title":"",
+                    "title":"Skill rating",
                     "description":f"Rate yourself 1-10 based on your experience/skill in {language}",
                     "required": ['0','1','2','3','4','5','6','7','8','9']
                 }
@@ -294,10 +293,11 @@ class application_cog(commands.Cog):
         app = open_apps[member.id]
         index = app["index"]
         time = question["time"]
+        title = question["title"]
 
         # send message
         msg = await channel.send(embed=em(
-            title=question["title"],
+            title= f"{index}. {title}" ,
             url="https://isthicc.dev",
             description=question["description"],
             colour=discord.Colour.gold(),
@@ -305,10 +305,6 @@ class application_cog(commands.Cog):
         ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text=f"You have {time} minute(s) to answer"
-        ).set_author(
-            name=f"Question {index}",
-            url="https://isthicc.dev",
-            icon_url=member.avatar_url
         ))
         await msg.add_reaction('✅')
         await msg.add_reaction('❌')
