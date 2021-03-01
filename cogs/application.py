@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, traceback
+import discord, asyncio, traceback, re
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -61,13 +61,13 @@ questions = {
     # Rate yourself 1-10 in working with a team.
     6:{
         "time" : 5,
-        "title" : "",
+        "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
-        "required": [""]
+        "required": r'\d+'
     }
     ,
     # What is your timezone?
-    6:{
+    7:{
         "time" : 5,
         "title" : "What is your timezone?",
         "description" : "Check your current timezone [here](https://whatismytimezone.com/) and copy paste the first line ",
@@ -200,12 +200,13 @@ class application_cog(commands.Cog):
             
             # loop though questions and get answers
             for _ in range(len(questions)):
-                open_apps[member.id]["index"] += 1
+                i = open_apps[member.id]["index"]+1
+                open_apps[member.id]["index"] = i
                 open_apps[member.id]["can_proceed"] = False
                 # create a list for answers
-                open_apps[member.id]["answers"][open_apps[member.id]["index"]] = []
+                open_apps[member.id]["answers"][i] = []
                 # wait for the question to end
-                code = await self.ask_question((ctx, member, channel))
+                code = await self.ask_question(member, channel, questions[i])
 
                 # code -> 0 = next question, 1 = quit, 2 = timeout
                 if code == 1:
@@ -245,6 +246,22 @@ class application_cog(commands.Cog):
                     return await channel.delete()
 
             # when all the questions are answered
+
+            # this needs debug work
+            langs = open_apps[member.id]["answers"][2].split(',')
+            for i in range(len(langs)):
+                i = open_apps[member.id]["index"]+1
+                open_apps[member.id]["index"] = i
+                open_apps[member.id]["can_proceed"] = False
+                open_apps[member.id]["answers"][i] = []
+                question = {
+                    "time" : 5,
+                    "title":"",
+                    "description":f"Rate yourself 1-10 based on your experience/skill in {langs[i]}",
+                    "required": r'\d+'
+                }
+                await self.ask_question(member, channel, question)
+
             await channel.send(embed=em(
                 title="Thank You!",
                 url="https://isthicc.dev",
@@ -276,12 +293,10 @@ class application_cog(commands.Cog):
                     text="IsThicc Staff"
             ))
 
-    async def ask_question(self, vars):
+    async def ask_question(self, member, channel, question):
         # setup
-        ctx, member, channel = vars
         app = open_apps[member.id]
         index = app["index"]
-        question = questions[index]
         time = question["time"]
 
         # send message
@@ -324,13 +339,19 @@ class application_cog(commands.Cog):
             return 1
         
         # if reacted with ✅
-        if len(question["required"]) == 0:
-            await message.clear_reactions()
-            return 0
 
         if app["can_proceed"]:
             await message.clear_reactions()
             return 0
+            
+        req = question["required"]
+        if type(req == list) and len(req) == 0:
+            await message.clear_reactions()
+            return 0
+        elif type(req) == str and re.search(req):
+            await message.clear_reactions()
+            return 0
+
         
         await channel.send(embed=em(
             title="Invalid Answers",
@@ -345,24 +366,29 @@ class application_cog(commands.Cog):
         
         return await self.wait_for_answers(vars, message)
 
-    # async def sub_question(self, vars, index):
-    #     pass
-
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot: return
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["channel_id"] != message.channel.id: return
+
         i = open_apps[message.author.id]["index"]
         if i == 0: return
         open_apps[message.author.id]["answers"][i].append(message.clean_content)
 
         if open_apps[message.author.id]["can_proceed"]: return
-        for required in questions[i]["required"]:
-            if required in message.clean_content.lower():
-                open_apps[message.author.id]["can_proceed"] = True
-                await message.add_reaction('✔️')
-                return
+
+        req = questions[i]["required"]
+        if type(req == list) and len(req) != 0:
+            for required in questions[i]["required"]:
+                if required in message.clean_content.lower():
+                    open_apps[message.author.id]["can_proceed"] = True
+                    await message.add_reaction('✔️')
+                    return
+        elif type(req) == str and re.search(req):
+            open_apps[message.author.id]["can_proceed"] = True
+            await message.add_reaction('✔️')
+            return
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
