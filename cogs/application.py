@@ -321,7 +321,7 @@ class application_cog(commands.Cog):
 
             if field == '': continue
             elif field[0] == '-':
-                app_em["fields"].append(
+                app_em.add_field(
                     name = field[1:], 
                     value = answer,
                     inline = True
@@ -343,7 +343,7 @@ class application_cog(commands.Cog):
             if letter: language = language.replace(letter[0], letter[0].upper())
             lang_value += f"{language} {ratings[i][0]}/10\n"
         
-        app_em["fields"].append(
+        app_em.add_field(
             name = "Languages", 
             value = lang_value,
             inline = True
