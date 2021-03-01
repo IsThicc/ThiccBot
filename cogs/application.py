@@ -243,7 +243,7 @@ class application_cog(commands.Cog):
             # when all the questions are answered
 
             # this needs debug work
-            langs = open_apps[member.id]["answers"][2]
+            langs = open_apps[member.id]["answers"][2][0].split(',')
             for language in langs:
                 i = open_apps[member.id]["index"]+1
                 open_apps[member.id]["index"] = i
