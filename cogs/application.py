@@ -51,14 +51,14 @@ questions = {
         "time" : 5,
         "title" : "What do you like to be called? ",
         "description" : "Can be your username, or any nickname you prefer and are comfortable saying.",
-        "required": [""]
+        "required": []
     },
     # Who brought you to IsThicc?
     5:{
         "time" : 5,
         "title" : "What led you to applying?",
         "description" : "Did someone tell you to? If someone did, state their name, and if no one did, say why you think you applied here.",
-        "required": [""]
+        "required": []
     },
     # Rate yourself 1-10 in working with a team.
     6:{
@@ -73,7 +73,7 @@ questions = {
         "title" : "What is your timezone?",
         "description" : "-Missing description-",
         # "description" : "Check your current timezone [here](https://whatismytimezone.com/) and copy paste the first line ",
-        "required": [""]
+        "required": []
     }
 }
 '''
@@ -361,6 +361,10 @@ class application_cog(commands.Cog):
         if open_apps[message.author.id]["can_proceed"]: return
 
         req = questions[i]["required"]
+        if len(req) == 0: 
+            open_apps[message.author.id]["can_proceed"] = True
+            await message.add_reaction('📌')
+            return
         for required in questions[i]["required"]:
             if required in message.clean_content.lower():
                 open_apps[message.author.id]["can_proceed"] = True
