@@ -302,7 +302,7 @@ class application_cog(commands.Cog):
         
         desc = ""
         app_em = em(
-            title= f"{discord.Member} - Application" ,
+            title= f"{member.name}#{member.discriminator} - Application" ,
             url="https://isthicc.dev",
             description=desc,
             colour=discord.Colour.gold(),
@@ -314,7 +314,8 @@ class application_cog(commands.Cog):
         app = open_apps[member.id]
         
         # add errythin to da embed
-        for index in range(1,len(questions)+1):
+        for index in range(0,len(questions)):
+            index+=1
             field = questions[index]["embed_field"]
             answerL = app["answers"][index]
             answer = ""
@@ -323,15 +324,14 @@ class application_cog(commands.Cog):
             if field == '': continue
             elif field[0] == '-':
                 app_em.add_field(
-                    name=field, 
+                    name=field[1:], 
                     value=answer,
                     inline=True
                 )
             else:
-                desc += f"⬦ **{field}**\n"
-                desc += answer
+                desc += f"⬦ {field}\n{answer}\n" 
                 app_em = em(
-                    title= f"{member.discriminator} - Application" ,
+                    title= f"{member.name}#{member.discriminator} - Application" ,
                     url="https://isthicc.dev",
                     description=desc,
                     colour=discord.Colour.gold(),
@@ -340,7 +340,7 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text=f"IsThicc Management")
 
-        # add the languages and their ratings
+        # add the languages and their ratings to the embed
         answers = app["answers"]
         languages = answers[2][0].split(',')
         ratings = []
@@ -352,13 +352,28 @@ class application_cog(commands.Cog):
         for (i,language) in enumerate(languages):
             letter = re.search(r'\w',language)
             if letter: language = language.replace(letter[0], letter[0].upper())
-            lang_value += f"{language} {ratings[i]}/10\n"
+            lang_value += f"{language} {ratings[i][0]}/10\n"
         
         app_em.add_field(
             name="Languages", 
             value=lang_value,
             inline=True
         )
+        
+        # add final answer to the embed
+        answer = ""
+        for s in app["answers"][999]: answer+=f"{s}\n"
+        desc += 'Why should they be accepted at IsThicc\n'
+        desc += f"⬦ {answer}" 
+        app_em = em(
+            title= f"{member.name}#{member.discriminator} - Application" ,
+            url="https://isthicc.dev",
+            description=desc,
+            colour=discord.Colour.gold(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text=f"IsThicc Management")
 
         await channel.send(embed=app_em)
         del open_apps[member.id]
