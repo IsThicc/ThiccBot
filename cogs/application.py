@@ -354,18 +354,31 @@ class application_cog(commands.Cog):
         if message.author.id not in open_apps: return
         if open_apps[message.author.id]["channel_id"] != message.channel.id: return
 
-        i = open_apps[message.author.id]["index"]
-        if i == 0: return
-        open_apps[message.author.id]["answers"][i].append(message.clean_content)
+        index = open_apps[message.author.id]["index"]
+        if index == 0: return
+
+        # if is in language rating
+        if index > len(questions):
+            if open_apps[message.author.id]["can_proceed"]: return
+            for num in ['0','1','2','3','4','5','6','7','8','9']:
+                if num in message.clean_content.lower():
+                    open_apps[message.author.id]["can_proceed"] = True
+                    await message.add_reaction('📌')
+                    open_apps[message.author.id]["answers"][index].append(message.clean_content)
+                    return
+            return
+
+        # if is in a normal question
+        open_apps[message.author.id]["answers"][index].append(message.clean_content)
 
         if open_apps[message.author.id]["can_proceed"]: return
 
-        req = questions[i]["required"]
+        req = questions[index]["required"]
         if len(req) == 0: 
             open_apps[message.author.id]["can_proceed"] = True
             await message.add_reaction('📌')
             return
-        for required in questions[i]["required"]:
+        for required in questions[index]["required"]:
             if required in message.clean_content.lower():
                 open_apps[message.author.id]["can_proceed"] = True
                 await message.add_reaction('📌')
