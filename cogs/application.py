@@ -145,7 +145,7 @@ class application_cog(commands.Cog):
                     text="IsThicc Management"
                 )
             intro = await channel.send(embed=em(
-                    title="Thicc -Developer / Staff Support- Appliaction",
+                    title="Thicc -Developer / Staff Support- Application",
                     url="https://isthicc.dev",
                     description=f"Hello {member.mention}, welcome to your app!\nWhen you're ready, react with ✅ to start or ❌ to cancel.",
                     colour=discord.Colour.gold(),
@@ -327,7 +327,7 @@ class application_cog(commands.Cog):
                     inline = True
                 )
             else:
-                app_em.description += f"⬦ {field}\n{answer}\n" 
+                app_em.description += f"{field}\n⬦ {answer}\n" 
 
         # add the languages and their ratings to the embed
         answers = app["answers"]
