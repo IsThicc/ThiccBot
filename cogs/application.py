@@ -282,7 +282,7 @@ class application_cog(commands.Cog):
                 text="IsThicc Management"
             ).set_thumbnail(url='https://rebin.ch/wp-content/uploads/2015/09/icon-2.png'))   
 
-            self.write_aplication(ctx, member, category)
+            await self.write_aplication(ctx, member, category)
 
         except Exception as e:
             print(traceback.format_exc())
