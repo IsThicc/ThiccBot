@@ -77,6 +77,7 @@ class Starboard(commands.Cog):
                 if reactions >= 1:
                     return await self.__update_starboard(reactions, payload)
 
+        await channel.send("-=-=-=-=-=-=-rerewgtrey65ruh6rtghy")
         message = await self.__get_message(payload)
         return await message.delete()
 def setup(bot):
