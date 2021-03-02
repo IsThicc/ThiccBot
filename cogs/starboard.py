@@ -62,25 +62,24 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         channel = self.bot.get_channel(payload.channel_id)
-        try:
-            user = self.bot.get_user(payload.user_id)
+        user = self.bot.get_user(payload.user_id)
 
-            if user.bot is None: return
+        if user.bot is None: return
 
-            if str(payload.emoji) != '⭐': return
+        if str(payload.emoji) != '⭐': return
 
-            msg = await channel.fetch_message(payload.message_id)
+        msg = await channel.fetch_message(payload.message_id)
 
-            for react in msg.reactions:
-                if str(react) == '⭐':
-                    reactions = len(await react.users().flatten())
+        reactions = None
+
+        for react in msg.reactions:
+            if str(react) == '⭐':
+                reactions = len(await react.users().flatten())
                 
-            if reactions >= 1:
-                await self.__update_starboard(reactions, payload)
-            else:
-                message = await self.__get_message(payload)
-                await message.delete()
-        except Exception as e:
-            await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
+        if reactions >= 1:
+            await self.__update_starboard(reactions, payload)
+        else:
+            message = await self.__get_message(payload)
+            await message.delete()
 def setup(bot):
     bot.add_cog(Starboard(bot))
