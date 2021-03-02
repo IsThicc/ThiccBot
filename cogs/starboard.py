@@ -81,7 +81,7 @@ class Starboard(commands.Cog):
                     message = await self.__get_message(payload)
                     if message != None: # Probably impossible for it to be none but /shrug
                         await message.delete()
-        except:
+        except Exception as e:
             await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
 def setup(bot):
     bot.add_cog(Starboard(bot))
