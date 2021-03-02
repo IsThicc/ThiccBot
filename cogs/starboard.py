@@ -75,14 +75,12 @@ class Starboard(commands.Cog):
                 if str(react) == '⭐':
                     reactions = len(await react.users().flatten())
                 
-                try:
-                    await self.__update_starboard(reactions, payload)
-                except UnboundLocalError:
-                    message = await self.__get_message(payload)
-                    if message != None: # Probably impossible for it to be none but /shrug
-                        await message.delete()
+            if reactions >= 1:
+                await self.__update_starboard(reactions, payload)
+            else:
+                message = await self.__get_message(payload)
+                await message.delete()
         except Exception as e:
             await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
-        await channel.send('ohfuck')
 def setup(bot):
     bot.add_cog(Starboard(bot))
