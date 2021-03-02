@@ -45,8 +45,8 @@ class Starboard(commands.Cog):
             if str(reaction) == '⭐':
                 reactions = len(await reaction.users().flatten())
 
-            if reactions != 1:
-                return await self.__update_starboard(reactions, payload)
+                if reactions != 1:
+                    return await self.__update_starboard(reactions, payload)
 
                 embed = discord.Embed(colour=discord.Colour.gold(), description=f"{msg.content}\n[Jump!]({msg.jump_url})", timestamp=d.utcnow())
                 embed.set_footer(text="IsThicc Starboard", icon_url=self.bot.user.avatar_url)
