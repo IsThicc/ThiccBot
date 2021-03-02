@@ -25,7 +25,7 @@ class Starboard(commands.Cog):
 
         async for message in starboard.history():
             if str(msg.id) in message.content:
-                await message.edit(content=f"{'⭐' if count < 10 else '🌟'}")
+                await message.edit(content=f"{'⭐' if count < 10 else '🌟'} **{count}** {channel.mention} ID: {msg.id}")
                 if count > 10:
                     await message.pin(reason='Starboard message over 10 reactions.')
                 break
