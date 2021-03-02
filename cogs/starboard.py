@@ -78,6 +78,7 @@ class Starboard(commands.Cog):
                     await self.__update_starboard(reactions, payload)
                 else:
                     message = await self.__get_message(payload)
+                    await channel.send(type(message))
                     await message.delete()
 def setup(bot):
     bot.add_cog(Starboard(bot))
