@@ -71,11 +71,9 @@ class Starboard(commands.Cog):
 
             msg = await channel.fetch_message(payload.message_id)
 
-            reactions = None
-
-            for react in msg.reactions:
-                if str(react) == '⭐':
-                    reactions = len(await react.users().flatten())
+            for reaction in msg.reactions:
+                if str(reaction) == '⭐':
+                    reactions = len(await reaction.users().flatten())
                 
             if reactions >= 1:
                 await self.__update_starboard(reactions, payload)
