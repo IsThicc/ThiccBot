@@ -62,7 +62,6 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         channel = self.bot.get_channel(payload.channel_id)
-        await channel.send('test?')
         try:
             user = self.bot.get_user(payload.user_id)
 
@@ -84,5 +83,6 @@ class Starboard(commands.Cog):
                         await message.delete()
         except Exception as e:
             await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
+        await channel.send('ohfuck')
 def setup(bot):
     bot.add_cog(Starboard(bot))
