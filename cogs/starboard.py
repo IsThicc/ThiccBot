@@ -62,6 +62,7 @@ class Starboard(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         channel = self.bot.get_channel(payload.channel_id)
+        await channel.send('test?')
         try:
             user = self.bot.get_user(payload.user_id)
 
