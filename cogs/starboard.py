@@ -61,24 +61,27 @@ class Starboard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
-        user = self.bot.get_user(payload.user_id)
-
-        if user.bot or payload.guild_id is None: return # so no screech
-
-        if str(payload.emoji) != '⭐': return
-
         channel = self.bot.get_channel(payload.channel_id)
-        msg = await channel.fetch_message(payload.message_id)
+        try:
+            user = self.bot.get_user(payload.user_id)
 
-        for react in msg.reactions:
-            if str(react) == '⭐':
-                reactions = len(await react.users().flatten())
-            
-            try:
-                await self.__update_starboard(reactions, payload)
-            except UnboundLocalError:
-                message = await self.__get_message(payload)
-                if message != None: # Probably impossible for it to be none but /shrug
-                    await message.delete()
+            if user.bot or payload.guild_id is None: return # so no screech
+
+            if str(payload.emoji) != '⭐': return
+
+            msg = await channel.fetch_message(payload.message_id)
+
+            for react in msg.reactions:
+                if str(react) == '⭐':
+                    reactions = len(await react.users().flatten())
+                
+                try:
+                    await self.__update_starboard(reactions, payload)
+                except UnboundLocalError:
+                    message = await self.__get_message(payload)
+                    if message != None: # Probably impossible for it to be none but /shrug
+                        await message.delete()
+        except:
+            await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
 def setup(bot):
     bot.add_cog(Starboard(bot))
