@@ -45,42 +45,39 @@ class Starboard(commands.Cog):
             if str(reaction) == '⭐':
                 reactions = len(await reaction.users().flatten())
 
-        if reactions != 1:
-            return await self.__update_starboard(reactions, payload)
+            if reactions != 1:
+                return await self.__update_starboard(reactions, payload)
 
-        embed = discord.Embed(colour=discord.Colour.gold(), description=f"{msg.content}\n[Jump!]({msg.jump_url})", timestamp=d.utcnow())
-        embed.set_footer(text="IsThicc Starboard", icon_url=self.bot.user.avatar_url)
+                embed = discord.Embed(colour=discord.Colour.gold(), description=f"{msg.content}\n[Jump!]({msg.jump_url})", timestamp=d.utcnow())
+                embed.set_footer(text="IsThicc Starboard", icon_url=self.bot.user.avatar_url)
 
-        if msg.attachments:
-                embed.set_image(url=msg.attachments[0].url)
-        if len(msg.attachments) >= 1:
-            attachmenturls = [att.url for att in msg.attachments]
-            embed.add_field(name="Attachments", value="\n".join(attachmenturls))
+                if msg.attachments:
+                        embed.set_image(url=msg.attachments[0].url)
+                if len(msg.attachments) >= 1:
+                    attachmenturls = [att.url for att in msg.attachments]
+                    embed.add_field(name="Attachments", value="\n".join(attachmenturls))
 
-        await starboard.send(f"⭐ **{reactions}** {channel.mention} ID: {msg.id}", embed=embed)
+                await starboard.send(f"⭐ **{reactions}** {channel.mention} ID: {msg.id}", embed=embed)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         channel = self.bot.get_channel(payload.channel_id)
-        try:
-            user = self.bot.get_user(payload.user_id)
+        user = self.bot.get_user(payload.user_id)
 
-            if user.bot is None: return
+        if user.bot is None: return
 
-            if str(payload.emoji) != '⭐': return
+        if str(payload.emoji) != '⭐': return
 
-            msg = await channel.fetch_message(payload.message_id)
+        msg = await channel.fetch_message(payload.message_id)
 
-            for reaction in msg.reactions:
-                if str(reaction) == '⭐':
-                    reactions = len(await reaction.users().flatten())
+        for reaction in msg.reactions:
+            if str(reaction) == '⭐':
+                reactions = len(await reaction.users().flatten())
                 
-            if reactions >= 1:
-                await self.__update_starboard(reactions, payload)
-            else:
-                message = await self.__get_message(payload)
-                await message.delete()
-        except Exception as e:
-            await channel.send(f'hey its isthicc bot, just here to remind you that you fucked up the code :D ```{e}\n```')
+                if reactions >= 1:
+                    await self.__update_starboard(reactions, payload)
+                else:
+                    message = await self.__get_message(payload)
+                    await message.delete()
 def setup(bot):
     bot.add_cog(Starboard(bot))
