@@ -65,7 +65,7 @@ class Starboard(commands.Cog):
         try:
             user = self.bot.get_user(payload.user_id)
 
-            if user.bot or payload.guild_id is None: return # so no screech
+            if user.bot is None: return
 
             if str(payload.emoji) != '⭐': return
 
