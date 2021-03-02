@@ -75,10 +75,9 @@ class Starboard(commands.Cog):
                 reactions = len(await reaction.users().flatten())
                 
                 if reactions >= 1:
-                    await self.__update_starboard(reactions, payload)
-                else:
-                    await channel.send('/\\/\\/\\/\\/\\/\\/\\/\\/\\fersgte5ryhrtyhrth')
-                    message = await self.__get_message(payload)
-                    await message.delete()
+                    return await self.__update_starboard(reactions, payload)
+
+                message = await self.__get_message(payload)
+                await message.delete()
 def setup(bot):
     bot.add_cog(Starboard(bot))
