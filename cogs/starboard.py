@@ -76,6 +76,7 @@ class Starboard(commands.Cog):
                 
                 if reactions >= 1:
                     await self.__update_starboard(reactions, payload)
+                    await channel.send('smth happend')
                 else:
                     message = await self.__get_message(payload)
                     await channel.send(type(message))
