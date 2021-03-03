@@ -36,7 +36,7 @@ class snipe(commands.Cog):
     async def on_message_edit(self, before, after):
         if after.channel.id in self.editsnipe_cache.keys():
             del self.editsnipe_cache[after.channel.id]
-        self.editsnipe_cache[after.channel.id]: (before, after)
+        self.editsnipe_cache[after.channel.id] = (before, after)
     
     
     @commands.command()
