@@ -17,8 +17,10 @@ from aiohttp import ClientSession
 #
 
 urls = {
-    'IsThicc': 'https://isthicc.dev/',
-    'IsThicc API': 'https://api.isthicc.dev/'
+    'IsThicc'       : 'https://isthicc.dev/',
+    'IsThicc API'   : 'https://api.isthicc.dev/',
+    'IsThicc Paste' : 'https://paste.isthicc.dev/',
+    'IsThicc GitHub': 'https://github.com/IsThicc'
 }
 
 class status_cog(commands.Cog):
