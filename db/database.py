@@ -58,10 +58,10 @@ class Pool:
         :param tag: tag name to delete
         :return: returns the command id
         """
-        r = await self.execute("SELECT command_id FROM tags WHERE tag = '" + tag + "'")
-        await self.execute("DELETE FROM tags WHERE tag = '" + tag + "'")
+        r = await self.execute("SELECT command_id FROM tags WHERE name = '" + tag + "'")
+        await self.execute("DELETE FROM tags WHERE name = '" + tag + "'")
 
-        return r
+        return r[0]
     
     # Mod
     

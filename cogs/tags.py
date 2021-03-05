@@ -35,10 +35,10 @@ class Tags(commands.Cog):
 #
     async def perm_error(self, ctx: commands.Context):
         await ctx.send(
-            embed=Embed(
+            embeds=[Embed(
                     description='Invalid Permissions! Only IsThicc staff can run this command!',
                     colour=discord.Colour.red()
-                ))
+                )])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -97,7 +97,7 @@ class Tags(commands.Cog):
             
             await ctx.send(content=content)
 
-    ids = [739510335949635736]
+    ids = [734172221978968136]
 
 #
 #
@@ -112,7 +112,6 @@ class Tags(commands.Cog):
             self.slash.add_slash_command(self.template, tag[0], guild_ids=self.ids, options=self.tagopts, description=f'IsThicc Support Tag By {owner}')
             cmd.cog_slash(name=tag[0], description=f"IsThicc support command created by: {owner}", guild_ids=self.ids, options=self.tagopts)(self.template)
             print(f'Registered tag: {tag[0]}')
-        self.slash.get_cog_commands(self)
 
 #
 #
@@ -121,8 +120,8 @@ class Tags(commands.Cog):
 #
     @cmd.cog_subcommand(base='tag', name='create', guild_ids=ids, options=createopts)
     async def tag_create(self, ctx: SlashContext, name: str, content: str):
-        staff = await self.bot.fetch_guild(739510335949635736)
-        staff = staff.get_role(744012353808498808)
+        staff = await self.bot.fetch_guild(734172221978968136)
+        staff = staff.get_role(758451679481036800)
 
         if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
@@ -145,8 +144,8 @@ class Tags(commands.Cog):
 #
     @cmd.cog_subcommand(base='tag', name='delete', guild_ids=ids, options=delopts)
     async def tag_delete(self, ctx: SlashContext, tag: str):
-        staff = await self.bot.fetch_guild(739510335949635736)
-        staff = staff.get_role(744012353808498808)
+        staff = await self.bot.fetch_guild(734172221978968136)
+        staff = staff.get_role(758451679481036800)
 
         if staff not in ctx.author.roles:
             return await self.perm_error(ctx)
@@ -154,7 +153,7 @@ class Tags(commands.Cog):
         if tag not in self.bot.slash.commands.keys():
             return await ctx.send(content=f'Tag with the name {tag} does not exist!', complete_hidden = True)
         
-        cmdid = self.bot.db.remove_tag(tag)
+        cmdid = await self.bot.db.remove_tag(tag)
 
         await utils.manage_commands.remove_slash_command(self.bot.user.id, self.bot.http.token, ctx.guild.id, cmdid)
 

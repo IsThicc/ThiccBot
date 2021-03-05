@@ -23,15 +23,15 @@ async def get_prefix(bot, message):
     :return: Returns available prefix's.
     """
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
-    return commands.when_mentioned_or(*prefixes)(bot, message)
-    # return "b "
+    #return commands.when_mentioned_or(*prefixes)(bot, message)
+    return "b "
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all())
-bot.slash = SlashCommand(bot, auto_register=True, auto_delete=False)
+bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
 #
