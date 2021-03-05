@@ -5,10 +5,10 @@
 #
 #
 import discord, asyncio, traceback, re
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
+from discord              import Embed as em
+from datetime             import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -45,7 +45,7 @@ questions = {
         #     "rust","sql","sqift","tcl","julia",]
     },
     # Do you have any experience in Web Development?
-    3:{
+    3: {
         "time" : 5,
         "title" : "Do you have any experience in Web Development?",
         "description" : "-Missing description-",
@@ -54,7 +54,7 @@ questions = {
         "embed_field" : "-Web dev experience?"
     },
     # What do you like to be called? 
-    4:{
+    4: {
         "time" : 5,
         "title" : "What do you like to be called? ",
         "description" : "Can be your username, or any nickname you prefer and are comfortable saying.",
@@ -62,7 +62,7 @@ questions = {
         "embed_field" : "-Nick/Name"
     },
     # Who brought you to IsThicc?
-    5:{
+    5: {
         "time" : 5,
         "title" : "Who brought you to IsThicc?",
         "description" : "Did someone tell you to? If someone did, state their name, and if no one did, say why you think you applied here.",
@@ -70,7 +70,7 @@ questions = {
         "embed_field" : "Who brought you to IsThicc?"
     },
     # Rate yourself 1-10 in working with a team.
-    6:{
+    6:  {
         "time" : 5,
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
@@ -78,7 +78,7 @@ questions = {
         "embed_field" : "-Working team rating"
     },
     # What is your timezone?
-    7:{
+    7: {
         "time" : 5,
         "title" : "What is your timezone?",
         "description" : "-Missing description-",
@@ -101,30 +101,31 @@ class application_cog(commands.Cog):
 #
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
-    @commands.has_role(739510850079162530)
-    async def application(self, ctx, member: discord.Member):
+    # @commands.has_role(739510850079162530)
+    async def application(self, ctx, member): # : discord.Member):
         try:
             if member == None:
-                return await ctx.send(embed=em(
-                    title="Uh Oh!",
-                    description="You forgot to mention a user.\nUsage: `i!apply/app` `[ping/name]`",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+                member = ctx.author
+                # return await ctx.send(embed=em(
+                #     title="Uh Oh!",
+                #     description="You forgot to mention a user.\nUsage: `i!apply/app` `[ping/name]`",
+                #     colour=discord.Colour.red(),
+                #     timestamp=datetime.utcnow()
+                # ).set_footer(
+                #     icon_url=self.bot.user.avatar_url,
+                #     text="IsThicc Staff"
+                # ))
 
             if member.id in open_apps: del open_apps[member.id]
 
             # create channel and send message
-            category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
+            category = discord.utils.get(ctx.guild.categories, name='『 Tickets 』')
             channel = await ctx.guild.create_text_channel(f"app-{member.display_name}",category=category)
             await channel.set_permissions(member, send_messages=True, read_messages=True)
-            await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
+            # await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
             
             # set some shortcut variables
-            close_em=em(
+            close_em = em(
                 title="Closing Application",
                 url="https://isthicc.dev",
                 description=f"You've decided to close this application, will close in 3 seconds..\nThanks for your interest in IsThicc and goodbye!",
@@ -134,7 +135,7 @@ class application_cog(commands.Cog):
                     icon_url=self.bot.user.avatar_url,
                     text="IsThicc Management"
                 )
-            timeout_em=em(
+            timeout_em = em(
                 title="Closing Application",
                 url="https://isthicc.dev",
                 description=f"Your time expired, this app will close in 3 seconds.",
@@ -191,16 +192,16 @@ class application_cog(commands.Cog):
                     return
 
                 del open_apps[member.id]
-                await channel.send(embed=timeout_em)
-                await asyncio.sleep(3)
-                return await channel.delete()
+                return await channel.send(embed=timeout_em)
+                # await asyncio.sleep(3)
+                # return await channel.delete()
             
             # if the user declined, delete the channel
             if str(reaction.emoji) == '❌':
                 del open_apps[member.id]
-                await channel.send(embed=close_em)
-                await asyncio.sleep(3)
-                return await channel.delete()
+                return await channel.send(embed=close_em)
+                # await asyncio.sleep(3)
+                # return await channel.delete()
 
             # if accepted then proceed with the questions
             await intro.clear_reactions()
@@ -220,8 +221,8 @@ class application_cog(commands.Cog):
                 elif code == 2: await channel.send(embed=timeout_em)
                 if code == 1 or code == 2:
                     del open_apps[member.id]
-                    await asyncio.sleep(3)
-                    return await channel.delete()
+                    return await asyncio.sleep(3)
+                    # return await channel.delete()
 
             # when all the questions are answered #
 
@@ -249,8 +250,8 @@ class application_cog(commands.Cog):
                 elif code == 2: await channel.send(embed=timeout_em)
                 if code == 1 or code == 2:
                     del open_apps[member.id]
-                    await asyncio.sleep(3)
-                    return await channel.delete()
+                    return await asyncio.sleep(3)
+                    # return await channel.delete()
             
             # final question
             open_apps[member.id]["index"] = 999
@@ -267,8 +268,8 @@ class application_cog(commands.Cog):
             elif code == 2: await channel.send(embed=timeout_em)
             if code == 1 or code == 2:
                 del open_apps[member.id]
-                await asyncio.sleep(3)
-                return await channel.delete()
+                return await asyncio.sleep(3)
+                # return await channel.delete()
 
             # finished taking the application!
             await channel.send(embed=em(
@@ -286,8 +287,8 @@ class application_cog(commands.Cog):
 
         except Exception as e:
             print(traceback.format_exc())
-            return await ctx.send(embed=em(
-                title="Ou u dumbass HenBOMB there's an error!",
+            return await ctx.send(content="<@348547981253017610>", embed=em(
+                title="Uh oh, there's an error!",
                 description=f"```py\n{traceback.format_exc()}```",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
@@ -441,8 +442,7 @@ class application_cog(commands.Cog):
                     if not open_apps[message.author.id]["can_proceed"]:
                         await message.add_reaction('📌')
                     open_apps[message.author.id]["can_proceed"] = True
-                    open_apps[message.author.id]["answers"][index].append(message.clean_content)
-                    return
+                    return open_apps[message.author.id]["answers"][index].append(message.clean_content)
             return
 
         # if is in a normal question
@@ -453,13 +453,13 @@ class application_cog(commands.Cog):
         req = questions[index]["required"]
         if len(req) == 0: 
             open_apps[message.author.id]["can_proceed"] = True
-            await message.add_reaction('📌')
-            return
+            return await message.add_reaction('📌')
+
         for required in questions[index]["required"]:
             if required in message.clean_content.lower():
                 open_apps[message.author.id]["can_proceed"] = True
-                await message.add_reaction('📌')
-                return
+                return await message.add_reaction('📌')
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
