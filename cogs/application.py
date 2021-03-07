@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, traceback, re
+import discord, asyncio, traceback, re, json, requests
 from discord.ext          import commands
 from discord.ext.commands import BucketType
 from discord              import Embed as em
@@ -27,7 +27,8 @@ questions = {
         "title" : "What are you applying for?",
         "description" : "Available positions.\n⬦ **Developer**: Help work on IsThicc's software and projects.\n⬦ **Support Staff**: -Missing description-.\n",
         "required": ["dev","developer","support","staff"],
-        "embed_field" : "-Position"
+        "embed_field" : "-Position",
+        "api_name":"applyingfor"
     },
     # What coding languages do you have experience in?
     2 : {
@@ -35,14 +36,8 @@ questions = {
         "title" : "What coding languages do you have experience in?",
         "description" : "Name them separated by a comma.\nExample: `c#, python, css, ...`",
         "required": [],
-        "embed_field" : ""
-        # "required": [
-        #     "c#","c++","c","lua","js","node",
-        #     "ada","basic","cobol","css","f#","python",
-        #     "hackshell","html","java","javascript","js",
-        #     "flutter","clojure","kotlin","lisp","matlab",
-        #     "pascal","perl","php","prolog","ruby",
-        #     "rust","sql","sqift","tcl","julia",]
+        "embed_field" : "",
+        "api_name":"languages"
     },
     # Do you have any experience in Web Development?
     3: {
@@ -51,7 +46,8 @@ questions = {
         "description" : "-Missing description-",
         # "description" : "This includes knowing JS, CSS and HTML.",
         "required": [],
-        "embed_field" : "-Web dev experience?"
+        "embed_field" : "-Web dev experience?",
+        "api_name":"webdev"
     },
     # What do you like to be called? 
     4: {
@@ -59,7 +55,8 @@ questions = {
         "title" : "What do you like to be called? ",
         "description" : "Can be your username, or any nickname you prefer and are comfortable saying.",
         "required": [],
-        "embed_field" : "-Nick/Name"
+        "embed_field" : "-Nick/Name",
+        "api_name":""
     },
     # Who brought you to IsThicc?
     5: {
@@ -67,7 +64,8 @@ questions = {
         "title" : "Who brought you to IsThicc?",
         "description" : "Did someone tell you to? If someone did, state their name, and if no one did, say why you think you applied here.",
         "required": [],
-        "embed_field" : "Who brought you to IsThicc?"
+        "embed_field" : "Who brought you to IsThicc?",
+        "api_name":"whyapply"
     },
     # Rate yourself 1-10 in working with a team.
     6:  {
@@ -75,7 +73,8 @@ questions = {
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
         "required": ['0','1','2','3','4','5','6','7','8','9'],
-        "embed_field" : "-Working team rating"
+        "embed_field" : "-Working team rating",
+        "api_name":"rateteam"
     },
     # What is your timezone?
     7: {
@@ -83,7 +82,8 @@ questions = {
         "title" : "What is your timezone?",
         "description" : "-Missing description-",
         "required": [],
-        "embed_field" : "-Timezone"
+        "embed_field" : "-Timezone",
+        "api_name":""
     }
 }
 '''
@@ -101,7 +101,7 @@ class application_cog(commands.Cog):
 #
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
-    # @commands.has_role(739510850079162530)
+    @commands.has_role(739510850079162530)
     async def application(self, ctx, member): # : discord.Member):
         try:
             if member == None:
@@ -224,7 +224,8 @@ class application_cog(commands.Cog):
                     return await asyncio.sleep(3)
                     # return await channel.delete()
 
-            # when all the questions are answered #
+            # # # # # # # # # # # # # # # # # # # #
+            # when all the questions are answered:
 
             # wait for the member to rate their languages
             langs = open_apps[member.id]["answers"][2][0].split(',')
@@ -356,6 +357,9 @@ class application_cog(commands.Cog):
         app_em.description+= f'Why should they be accepted at IsThicc?\n⬦ {answer}'
 
         await channel.send(embed=app_em)
+
+        await save_data(member)
+
         del open_apps[member.id]
 
     async def ask_question(self, id, channel, question, change_title=True):
@@ -417,6 +421,63 @@ class application_cog(commands.Cog):
         ))
         
         return await self.wait_for_answers(vars, message)
+
+    async def save_data(self, member):
+        return
+        # update this to the real address
+        app = open_apps[member.id]
+        app_uri = f'http://localhost:5000/staff/application/{member.name}'
+        data = {
+            "name" :                member.name,
+            "applyingfor":          "",
+            "languages":            [],
+            "python":               "",
+            "webdev" :              "",
+            "referrer" :            [], # idk what this is
+            "whyapply":             "",
+            "rateteam":             "",
+            "ratelanguage":         [],
+            "whyshouldwepickyou":   "",
+            "accepted":             False
+        }
+
+        # add the final answer
+        for s in app["answers"][999]: data["whyshouldwepickyou"] += f"{s}\n"
+
+        # add the languages and the ratings
+        languages = app["answers"][2][0].split(',')
+        data["languages"] = languages
+        ratings = []
+        for i in range(len(app["answers"][2])):
+            ratings.append(app["answers"][len(questions)+i+1])
+        data["ratelanguage"] = ratings
+
+        # add the python field
+        for (i,lang) in enumerate(languages): languages[i] = lang.lower()
+        data["python"] = "python" in languages
+
+        # add the rest
+        i = 0
+        for dic in questions:
+            n = dic["api_name"]
+            if n == "": continue
+            answers = app["answers"][i]
+            if type(data[n]) == list:
+                for answer in answers:
+                    data[n].append()
+                continue
+            i+=1
+
+
+        data = json.dumps(data, separators=(',',':'))
+        headers = {
+            "application": data
+        }
+        x = requests.post(app_uri, headers=headers)
+        data = x.json()
+        file = data["file"]
+
+        print(f"Saved as file {file}")
 
     @commands.Cog.listener()
     async def on_message(self, message):
