@@ -41,7 +41,7 @@ class Suggestions(commands.Cog):
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
 
-        await message.reply(f'{msg.jump_url}', delete_after=5, mention=False)
+        await message.reply(f'{msg.jump_url}', delete_after=5, mention_author=False)
 
 #
 #
