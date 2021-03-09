@@ -25,22 +25,8 @@ class Suggestions(commands.Cog):
     async def on_message(self, message):
 
         if message.channel.id != 801929449124790353 or message.author.bot: return
-
-        # Remove Markdown Using Regex
-        # **, ||, __, ~~ and `
+        
         content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
-
-        # Remove Markdown
-        # content = ""
-        # msg = message.content
-        # for letter in msg:
-        #     if letter == "`":
-        #         continue
-        #     elif letter in ['~', '_', "*", "|"]:
-        #         if msg[msg.index(letter) + 1] == letter:  # check if **, __, or ~~
-        #             continue
-        #     else:
-        #         content += letter
 
         msg = await self.bot.get_channel(801929480875802624).send(
             embed=em(
@@ -55,7 +41,7 @@ class Suggestions(commands.Cog):
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
 
-        await message.reply(f'{msg.jump_url}', delete_after=5, ping=False)
+        await message.reply(f'{msg.jump_url}', delete_after=5, mention=False)
 
 #
 #
