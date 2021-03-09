@@ -27,16 +27,21 @@ class Suggestions(commands.Cog):
         if message.channel.id != 801929449124790353 or message.author.bot: return
         
         content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
-
-        msg = await self.bot.get_channel(801929480875802624).send(
-            embed=em(
-                colour=discord.Colour.blue(),
-                description=f"```{content}```"
-            ).set_author(
-                name=f"New suggestion from {message.author}",
-                icon_url=message.author.avatar_url
-            )
+            
+        embed = em( 
+            colour=discord.Colour.blue(),
+            description=f"```{content}```"
+        ).set_author(
+            name=f"New suggestion from {message.author}",
+            icon_url=message.author.avatar_url
         )
+        
+        if message.attachments:
+            embed.set_image(url=str(attachment[0].url))
+            if len(message.attachments) != 1:
+                embed.add_field("Attachments", "\n".join(a.url for a in message.attachments))
+ 
+        msg = await self.bot.get_channel(801929480875802624).send(embed=embed)
 
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
