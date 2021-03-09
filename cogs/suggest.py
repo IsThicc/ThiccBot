@@ -37,9 +37,12 @@ class Suggestions(commands.Cog):
         )
         
         if message.attachments:
-            embed.set_image(url=str(attachment[0]))
-            if len(message.attachments) != 1:
-                embed.add_field("Attachments", "\n".join(str(a) for a in message.attachments))
+            try:
+               embed.set_image(url=attachment[0].url)
+               if len(message.attachments) != 1:
+                   embed.add_field("Attachments", "\n".join(a.url for a in message.attachments))
+            except Exception as e:
+                await message.channel.send(e)
  
         msg = await self.bot.get_channel(801929480875802624).send(embed=embed)
 
