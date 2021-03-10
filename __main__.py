@@ -23,8 +23,8 @@ async def get_prefix(bot, message):
     :return: Returns available prefix's.
     """
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
-    #return commands.when_mentioned_or(*prefixes)(bot, message)
-    return "b "
+    return commands.when_mentioned_or(*prefixes)(bot, message)
+    #return "b "
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
