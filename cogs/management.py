@@ -461,7 +461,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-##
+#
             
     @commands.command()
     @commands.is_owner()
