@@ -78,6 +78,7 @@ dont_import = \
 for cog in os.listdir("cogs"):
     if cog.endswith('.py') and cog not in dont_import:
         bot.load_extension(f"cogs.{cog[:-3]}")
+        print(f"Loaded cog: cogs.{cog[:-3]}")
 
 
 #
@@ -113,7 +114,6 @@ async def on_ready() -> None:
     await bot.change_presence(status=Status.dnd,
                               activity=Activity(name="IsThicc.dev!",
                                                 type=ActivityType.playing))
-
 
 #
 #
