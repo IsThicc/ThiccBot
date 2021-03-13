@@ -464,8 +464,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 #
 
     def _pull(self):
-        out = []
-        subprocess.call("git pull https://github.com/IsThicc/IsThicc-Bot", shell=True, stdout=out)
+        out = subprocess.getoutput("git pull https://github.com/IsThicc/IsThicc-Bot")
         return "\n".join(out)
             
     @commands.command()
