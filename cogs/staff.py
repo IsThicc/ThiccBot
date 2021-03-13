@@ -110,7 +110,7 @@ class staff_cog(commands.Cog):
 
                         pronouns = []
                         for pronoun in response['details']['pronouns']:
-                            pronouns.append(f'- {pronouns}')
+                            pronouns.append(f'- {pronoun}')
 
                         staff = em(
                             title=f"Showing info for {response['details']['name'].capitalize()}",
