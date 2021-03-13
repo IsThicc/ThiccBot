@@ -4,6 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 import discord, asyncio, subprocess
 from discord.ext import commands
 from discord.ext.commands import BucketType
@@ -465,7 +466,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
             
     @commands.command()
     @commands.is_owner()
-    async def reload(self, cog: str = None):
+    async def reload(self, ctx, cog: str = None):
         msg = await ctx.send(embed=discord.Embed(description="GitHub Pulling...", colour=discord.Colour.green()))
         await asyncio.sleep(1)
         
