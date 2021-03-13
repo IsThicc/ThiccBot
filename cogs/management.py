@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, subprocess
 from discord.ext import commands
 from discord.ext.commands import BucketType
 from discord import Embed as em
@@ -317,7 +317,7 @@ class staff_cog(commands.Cog):
     @commands.has_role(role)
     async def accept(self, ctx, member: discord.Member):
 
-        if member == None:
+        if member is None:
 
             await ctx.message.delete()
             return await ctx.author.send(embed=em(
@@ -462,11 +462,44 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+
+    def _pull(self):
+        with open("tmp_pull.txt", "w+") as out:
+            subprocess.call("git pull https://github.com/IsThicc/IsThicc-Bot", shell=True, stdout=out)
+        with open("tmp_pull.txt") as res:
+            read = str(res.read())
+            os.remove("tmp_pull.txt")
+            return read
+            
+            
+    @commands.command()
+    @commands.is_owner()
+    async def reload(self, cog: str = None):
+        msg = await ctx.send(embed=discord.Embed(description="GitHub Pulling...", colour=discord.Colour.green()))
+        await asyncio.sleep(1)
+        
+        result = self._pull()
+        await msg.edit(embed=discord.Embed(description=f"Pulled from GitHub...\n```{res}```", colour=discord.Colour.green()))
+        await asyncio.sleep(1)
+        
+        await msg.edit(embed=discord.Embed(description="Reloading cog...", colour=discord.Colour.red()))
+        await asyncio.sleep(1)
+        
+        bot.reload_extension(f'cogs.{cog}')
+        
+        await msg.edit(embed=discord.Embed(description=f"Reloaded cog **{cog}**!", colour=discord.Colour.green())
+        
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+        
     @commands.command()
     @commands.has_role(role)
     async def newtodo(self, ctx, member: discord.Member=None):
 
-        if member == None:
+        if member is None:
 
             await ctx.message.delete()
             return await ctx.author.send(embed=em(
