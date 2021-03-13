@@ -17,7 +17,6 @@ from datetime import datetime
 class members(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.guild = bot.get_guild(739510335949635736)
 
 #
 #
@@ -26,10 +25,10 @@ class members(commands.Cog):
 #
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        guild = self.bot.get_guild(739510335949635736)
+        if member.guild.id != guild.id: return
         
-        if member.guild.id != self.guild.id: return
-        
-        await member.add_roles(self.guild.get_role(744001626922287114))
+        await member.add_roles(guild.get_role(744001626922287114))
 
         await asyncio.sleep(2)
         channel = self.bot.get_channel(796955089628954666)
@@ -56,8 +55,10 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
 #
     @commands.Cog.listener()
     async def on_member_remove(self, member):
+
+        guild = self.bot.get_guild(739510335949635736)
         
-        if member.guild.id != self.guild.id: return
+        if member.guild.id != guild.id: return
 
         await self.bot.get_channel(796955089628954666).send(embed=em(
             title=f"{member} has left IsThicc Software!",
