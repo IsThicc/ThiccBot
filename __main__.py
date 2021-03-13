@@ -5,11 +5,11 @@
 #
 #
 import asyncio, os, aiomysql, discord
-from config import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
-from discord.ext import commands
+from config        import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
+from discord.ext   import commands
 from discord_slash import SlashCommand
-from discord import Activity, ActivityType, Status, Intents
-from db.database import Pool
+from discord       import Activity, ActivityType, Status, Intents
+from db.database   import Pool
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -30,7 +30,7 @@ async def get_prefix(bot, message):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all())
+bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
 bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
