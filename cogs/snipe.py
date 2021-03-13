@@ -21,35 +21,36 @@ class snipe(commands.Cog):
         self.snipe_cache = {}
         self.editsnipe_cache = {}
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_message_delete(self, message):     
-        if message.channel.id in self.editsnipe_cache.keys():
+        if message.channel.id in self.editsnipe_cache:  # .keys():
             del self.snipe_cache[message.channel.id]
         self.snipe_cache[message.channel.id] = message
-        
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if after.channel.id in self.editsnipe_cache.keys():
+        if after.channel.id in self.editsnipe_cache:  # .keys():
             del self.editsnipe_cache[after.channel.id]
         self.editsnipe_cache[after.channel.id] = (before, after)
-    
-    
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_role(744012353808498808)
     async def snipe(self, ctx):
 
-        if ctx.channel.id not in self.snipe_cache.keys():
+        if ctx.channel.id not in self.snipe_cache:  # .keys():
             return await ctx.send(embed=em(
                 title='IsThicc | Error',
                 description='Nothing to snipe!',
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ))
+
         msg = self.snipe_cache[ctx.channel.id]
         e   = em(
             title='IsThicc | Snipe',
@@ -62,18 +63,21 @@ class snipe(commands.Cog):
         )
 
         await ctx.send(embed=e)
-        
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_role(744012353808498808)
     async def editsnipe(self, ctx):
-        
-        if ctx.channel.id not in self.editsnipe_cache.keys():
+
+        if ctx.channel.id not in self.editsnipe_cache:  # .keys():
             return await ctx.send(embed=em(
                 title='IsThicc | Error',
                 description='Nothing to editsnipe!',
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ))
+
         b = self.editsnipe_cache[ctx.channel.id][0]
         a = self.editsnipe_cache[ctx.channel.id][1]
         e = em(
@@ -87,12 +91,11 @@ class snipe(commands.Cog):
         )
         
         await ctx.send(embed=e)
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
-
 def setup(bot):
     bot.add_cog(snipe(bot))
