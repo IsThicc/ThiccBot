@@ -52,5 +52,14 @@ The IsThicc Bot doesn't currently have any public commands! Please check back la
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+    @commands.command(name="test")
+    async def test(self, ctx):
+        await ctx.send("test you hoe")
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 def setup(bot):
     bot.add_cog(help(bot))
