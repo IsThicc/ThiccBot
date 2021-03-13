@@ -479,8 +479,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
         bot.reload_extension(f'cogs.{cog}')
         
         await msg.edit(embed=discord.Embed(description=f"Reloaded cog **{cog}**!", colour=discord.Colour.green()))
- 
-# this line will be removed its for testing
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
