@@ -29,10 +29,12 @@ class staff_cog(commands.Cog):
     @commands.group(name="staff")
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
-    async def staff(self, ctx, option=None, member: str = None):
+    async def staff(self, ctx):
 
         if ctx.invoked_subcommand is not None: return
 
+        option = None
+        member = None
         try:
 
             # if type(member) == str:
