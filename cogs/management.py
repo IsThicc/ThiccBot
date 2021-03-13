@@ -354,7 +354,7 @@ class staff_cog(commands.Cog):
     @commands.has_role(role)
     async def remind(self, ctx, option="development", member: discord.Member=None):
 
-        if option == None or member == None:
+        if option is None or member is None:
 
             await ctx.message.delete()
             return await ctx.author.send(embed=em(
