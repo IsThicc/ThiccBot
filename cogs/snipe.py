@@ -29,7 +29,7 @@ class snipe(commands.Cog):
     @commands.Cog.listener()
     async def on_message_delete(self, message):     
         if message.channel.id in self.editsnipe_cache.keys():
-            del self.snipe_cache[after.channel.id]
+            del self.snipe_cache[message.channel.id]
         self.snipe_cache[message.channel.id] = message
         
     @commands.Cog.listener()
@@ -42,6 +42,7 @@ class snipe(commands.Cog):
     @commands.command()
     @commands.has_role(744012353808498808)
     async def snipe(self, ctx):
+
         if ctx.channel.id not in self.snipe_cache.keys():
             return await ctx.send(embed=em(
                 title='IsThicc | Error',
@@ -50,7 +51,7 @@ class snipe(commands.Cog):
                 timestamp=datetime.utcnow()
             ))
         msg = self.snipe_cache[ctx.channel.id]
-        e = em(
+        e   = em(
             title='IsThicc | Snipe',
             colour=discord.Colour.blue(),
             description=f'{msg.author.mention} ({msg.author}):\n{msg.content}',
@@ -65,6 +66,7 @@ class snipe(commands.Cog):
     @commands.command()
     @commands.has_role(744012353808498808)
     async def editsnipe(self, ctx):
+        
         if ctx.channel.id not in self.editsnipe_cache.keys():
             return await ctx.send(embed=em(
                 title='IsThicc | Error',
