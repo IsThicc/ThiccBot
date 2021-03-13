@@ -31,7 +31,7 @@ class staff_cog(commands.Cog):
     @commands.has_role(744012353808498808)
     async def staff(self, ctx, option=None, member: str = None):
 
-        if ctx.invoked_command is not None: return
+        if ctx.invoked_subcommand is not None: return
 
         try:
 
