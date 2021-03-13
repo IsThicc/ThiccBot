@@ -16,25 +16,25 @@ from datetime import datetime
 
 class snipe(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot             = bot
         
-        self.snipe_cache = {}
+        self.snipe_cache     = {}
         self.editsnipe_cache = {}
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):     
-        if message.channel.id in self.editsnipe_cache:  # .keys():
-            del self.snipe_cache[message.channel.id]
+        # if message.channel.id in self.editsnipe_cache:  # .keys():
+        #     del self.snipe_cache[message.channel.id]
         self.snipe_cache[message.channel.id] = message
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if after.channel.id in self.editsnipe_cache:  # .keys():
-            del self.editsnipe_cache[after.channel.id]
+        # if after.channel.id in self.editsnipe_cache:  # .keys():
+        #     del self.editsnipe_cache[after.channel.id]
         self.editsnipe_cache[after.channel.id] = (before, after)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
