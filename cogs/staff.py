@@ -30,6 +30,9 @@ class staff_cog(commands.Cog):
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
     async def staff(self, ctx, option=None, member: str = None):
+
+        if ctx.invoked_command is not None: return
+
         try:
 
             # if type(member) == str:
@@ -93,6 +96,8 @@ class staff_cog(commands.Cog):
 
     @staff.command(name="view")
     async def view(self, ctx, member: str = None):
+
+        await ctx.send("view func")
 
         if member is None:
             return await ctx.send(embed=em(
