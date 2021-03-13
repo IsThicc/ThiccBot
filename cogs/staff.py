@@ -5,11 +5,11 @@
 #
 #
 import discord, asyncio, re
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
-from aiohttp import ClientSession
+from discord              import Embed as em
+from datetime             import datetime
+from aiohttp              import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -108,6 +108,10 @@ class staff_cog(commands.Cog):
                         for access in response['details']['system_access']:
                             sysaccess.append(f'- {access}')
 
+                        pronouns = []
+                        for pronoun in response['details']['pronouns']:
+                            pronouns.append(f'- {pronouns}')
+
                         staff = em(
                             title=f"Showing info for {response['details']['name'].capitalize()}",
                             description=f"Processed file: **``{response['details']['name']}.yml``**",
@@ -156,6 +160,10 @@ class staff_cog(commands.Cog):
                         staff.add_field(
                             name="Position",
                             value="\n".join(positions)
+                        )
+                        staff.add_field(
+                            name="Pronouns",
+                            value="\n".join(pronouns)
                         )
                         staff.add_field(
                             name="System Access",
