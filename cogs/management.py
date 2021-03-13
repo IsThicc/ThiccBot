@@ -3,7 +3,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-#EEEEEEEEEEEE
+#
 import discord, asyncio, subprocess
 from discord.ext import commands
 from discord.ext.commands import BucketType
