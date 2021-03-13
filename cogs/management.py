@@ -3,7 +3,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-#
+#EEEEEEEEEEEE
 import discord, asyncio, subprocess
 from discord.ext import commands
 from discord.ext.commands import BucketType
@@ -469,7 +469,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
         msg = await ctx.send(embed=discord.Embed(description="GitHub Pulling...", colour=discord.Colour.green()))
         await asyncio.sleep(1)
         
-        result = subprocess.getoutput("git pull https://github.com/IsThicc/IsThicc-Bot")
+        res = subprocess.getoutput("git pull https://github.com/IsThicc/IsThicc-Bot")
         await msg.edit(embed=discord.Embed(description=f"Pulled from GitHub...\n```{res}```", colour=discord.Colour.green()))
         await asyncio.sleep(1)
         
