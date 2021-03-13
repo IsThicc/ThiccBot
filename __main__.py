@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import asyncio, os, aiomysql, discord
+import asyncio, os, aiomysql
 from config        import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
 from discord.ext   import commands
 from discord_slash import SlashCommand
@@ -24,13 +24,13 @@ async def get_prefix(bot, message):
     """
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
-    #return "b "
+    # return "b "
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
+bot       = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
 bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
@@ -41,24 +41,28 @@ bot.load_extension('jishaku')
 #
 async def _init_async():
     _pool = await aiomysql.create_pool(
-        host = mysql_host,
-        port = 3306,
-        db = mysql_db,
-        user = mysql_user,
-        password = mysql_password,
-        autocommit = True,
-        loop = bot.loop
+        host=mysql_host,
+        port=3306,
+        db=mysql_db,
+        user=mysql_user,
+        password=mysql_password,
+        autocommit=True,
+        loop=bot.loop
     )
 
     bot.db = Pool(_pool)
 
     await bot.db.execute('CREATE TABLE IF NOT EXISTS tags(name VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL PRIMARY KEY, content VARCHAR(150) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL, owner BIGINT NOT NULL, command_id BIGINT NOT NULL, createdate DATETIME)')
-    
+
     tickets_query = 'CREATE TABLE IF NOT EXISTS tickets(channel_id THICCINT NOT NULL PRIMARY KEY, user_id EXTREMLY_THICC_INT NOT NULL, open BOOLEAN HAS_TO_EXIST_KEK)'
-    await bot.db.execute(tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT', 'BIGINT').replace('HAS_TO_EXIST_KEK', 'NOT NULL'))
-    
+    await bot.db.execute(
+        tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT',
+                                                            'BIGINT').replace('HAS_TO_EXIST_KEK',
+                                                                              'NOT NULL'))
+
     await bot.db.execute('CREATE TABLE IF NOT EXISTS warnings(warn_id VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL PRIMARY KEY, user_id BIGINT NOT NULL)')
-    
+
+
 bot.loop.run_until_complete(_init_async())
 
 #
@@ -66,15 +70,15 @@ bot.loop.run_until_complete(_init_async())
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-for cog_dir in os.listdir(os.getcwd()):
-    if os.name == "nt":
-        dir_lmao = f"{os.getcwd()}\{cog_dir}"
-    else:
-        dir_lmao = f"{os.getcwd()}/{cog_dir}"
-    if os.path.isdir(dir_lmao) and cog_dir.startswith("cogs"):
-        for cogs in os.listdir(cog_dir):
-            if cogs.endswith('.py'):
-                bot.load_extension(f"{cog_dir}.{cogs[:-3]}")
+dont_import = \
+    [
+        "dontimportme.py"
+    ]
+
+for cog in os.listdir("cogs"):
+    if cog.endswith('.py') and cog not in dont_import:
+        bot.load_extension(f"cogs.{cog[:-3]}")
+
 
 #
 #
@@ -95,15 +99,21 @@ async def on_ready() -> None:
 | Bot ready!         |
 | Signed in as:      |
 |    {bot.user}    |
+|                    |
+|  Too many guilds?  |
+|        {str(True) if len(bot.guilds) <= 2 else str(False)}        |
 |--------------------|
     ''')
 
     await bot.change_presence(status=Status.online,
                               activity=Activity(name="Still waking up 😒, hold on!",
-                                                        type=ActivityType.watching))
+                                                type=ActivityType.watching))
 
     await asyncio.sleep(10)
-    await bot.change_presence(status=Status.dnd, activity=Activity(name="IsThicc.dev!", type=ActivityType.playing))
+    await bot.change_presence(status=Status.dnd,
+                              activity=Activity(name="IsThicc.dev!",
+                                                type=ActivityType.playing))
+
 
 #
 #
