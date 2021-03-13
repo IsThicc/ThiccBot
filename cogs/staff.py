@@ -15,17 +15,13 @@ from aiohttp              import ClientSession
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
-class staff_cog(commands.Cog):
+class Staff(commands.Cog):
     def __init__(self, bot):
-        self.bot     = bot
+        self.bot = bot
         self.session = ClientSession()
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.group(name="staff")
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
@@ -33,73 +29,63 @@ class staff_cog(commands.Cog):
 
         if ctx.invoked_subcommand is not None: return
 
-        option = None
-        member = None
-        try:
+        # option = None
+        # member = None
+        # try:
 
-            # if type(member) == str:
-            #     member = discord.utils.get(ctx.guild.members, name=member)
+        return await ctx.send(embed=em(
+            title="Uh Oh!",
+            description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Staff"
+        ))
 
-            if option == None:
-                return await ctx.send(embed=em(
-                    title="Uh Oh!",
-                    description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+        # return await ctx.send(embed=em(
+        #     title="So uh, yea...",
+        #     description="So you found this command! Good on you, just one issue, I haven't finished coding it! Make sure to yell at Mrmagicpie to finish this!",
+        #     colour=discord.Colour.dark_red(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # ))
 
-            option = option.lower()
+        # except Exception as e:
+        #     err_em = em(
+        #         title="Command Error!",
+        #         description=f"```py\n{e}```",
+        #         colour=discord.Colour.red(),
+        #         timestamp=datetime.utcnow()
+        #     ).set_footer(
+        #             icon_url=self.bot.user.avatar_url,
+        #             text="IsThicc Staff"
+        #     )
+        #     if 'msg' in locals():
+        #         return await locals()["msg"].edit(embed=err_em)
+        #     else:
+        #         return await ctx.send(embed=err_em)
 
-            # if option == "view":
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @staff.command(name="edit")
+    async def edit(self, ctx, member: str = None):
 
-            if option == "edit":
-                return ctx.send(embed=em(
-                    title="This option is under development!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
+        return await ctx.send(embed=em(
+            title="This option is under development!",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Staff"
+        ))
 
-            else:
-                return await ctx.send(embed=em(
-                    title="So uh, yea...",
-                    description="So you found this command! Good on you, just one issue, I haven't finished coding it! Make sure to yell at Mrmagicpie to finish this!",
-                    colour=discord.Colour.dark_red(),
-                    timestamp=datetime.utcnow()
-                ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-                ))
-
-        except Exception as e:
-            err_em = em(
-                title="Command Error!",
-                description=f"```py\n{e}```",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-            )
-            if 'msg' in locals():
-                return await locals()["msg"].edit(embed=err_em)
-            else:
-                return await ctx.send(embed=err_em)
-
-    #
-    #
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @staff.command(name="view")
     async def view(self, ctx, member: str = None):
-
-        await ctx.send("view func")
 
         if member is None:
             return await ctx.send(embed=em(
@@ -267,7 +253,7 @@ class staff_cog(commands.Cog):
                 request.close()
                 return await msg.edit(embed=em(
                     title="U h",
-                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{code}`",
+                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{str(code)}`",
                     colour=discord.Colour.dark_red(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
@@ -275,9 +261,8 @@ class staff_cog(commands.Cog):
                     text="IsThicc Staff"
                 ))
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @staff.error
     async def staff_error(self, ctx, error):
 
@@ -292,7 +277,22 @@ class staff_cog(commands.Cog):
                 text="IsThicc Staff"
             ))
         else:
-            print(str(error))
+            em_err = em(
+                title="An error has occurred!",
+                description=f"```css\n{str(error)}```",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            em_err.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            )
+
+            if "msg" in locals():
+                await locals()["msg"].edit(embed=em_err)
+            else:
+                await ctx.send(embed=em_err)
+
 
 #
 #
@@ -300,4 +300,4 @@ class staff_cog(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(staff_cog(bot))
+    bot.add_cog(Staff(bot))
