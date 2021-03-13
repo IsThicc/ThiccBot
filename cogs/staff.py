@@ -293,7 +293,6 @@ class Staff(commands.Cog):
             else:
                 await ctx.send(embed=em_err)
 
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
