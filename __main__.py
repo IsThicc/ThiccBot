@@ -102,7 +102,7 @@ async def on_ready() -> None:
 |    {bot.user}    |
 |                    |
 |  Too many guilds?  |
-|        {str(True) + " " if len(bot.guilds) <= 2 else str(False)}       |
+|        {str(True) + " " if len(bot.guilds) >= 3 else str(False)}       |
 |--------------------|
     ''')
 
