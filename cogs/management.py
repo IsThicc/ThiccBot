@@ -461,7 +461,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
-#
+##
             
     @commands.command()
     @commands.is_owner()
@@ -476,7 +476,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
         await msg.edit(embed=discord.Embed(description="Reloading cog...", colour=discord.Colour.red()))
         await asyncio.sleep(1)
         
-        bot.reload_extension(f'cogs.{cog}')
+        self.bot.reload_extension(f'cogs.{cog}')
         
         await msg.edit(embed=discord.Embed(description=f"Reloaded cog **{cog}**!", colour=discord.Colour.green()))
 
