@@ -109,6 +109,10 @@ class staff_cog(commands.Cog):
                             sysaccess.append(f'- {access}')
 
                         pronouns = []
+
+                        if len(response['details']['pronouns']) == 0:
+                            pronouns.append("Not specified.")
+
                         for pronoun in response['details']['pronouns']:
                             pronouns.append(f'- {pronoun}')
 
