@@ -20,7 +20,10 @@ urls = {
     'IsThicc'       : 'https://isthicc.dev/',
     'IsThicc API'   : 'https://api.isthicc.dev/',
     'IsThicc Paste' : 'https://paste.isthicc.dev/',
-    'IsThicc GitHub': 'https://github.com/IsThicc'
+    'IsThicc GitHub': 'https://github.com/IsThicc',
+    'Backend 1'     : 'http://10.42.0.1',
+    'Backend 3'     : 'http://10.42.10.3',
+    'Backend 4'     : 'http://10.42.10.4'
 }
 
 class status_cog(commands.Cog):
