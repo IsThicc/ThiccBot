@@ -158,18 +158,17 @@ class project_cog(commands.Cog):
 
     # setup service
     async def service(self, ctx, member):
-        try:
-            id = member.id
-            if id in open_projects: del open_projects[id]
+        id = member.id
+        if id in open_projects: del open_projects[id]
 
-            # create channel and send message
-            category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
-            channel = await ctx.guild.create_text_channel(f"app-{member.display_name}",category=category)
-            await channel.set_permissions(member, send_messages=True, read_messages=True)
-            # await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
+        # create channel and send message
+        category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
+        channel = await ctx.guild.create_text_channel(f"app-{member.display_name}",category=category)
+        await channel.set_permissions(member, send_messages=True, read_messages=True)
+        # await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
             
-            # set some shortcut variables
-            close_em = em(
+        # set some shortcut variables
+        close_em = em(
                 url="https://isthicc.dev",
                 title=f"Setup canceled",
                 colour=discord.Colour.red(),
@@ -179,40 +178,26 @@ class project_cog(commands.Cog):
                     text="IsThicc Management"
                 )
            
-            # add the member to the open_projects
-            open_projects[id] = {
+        # add the member to the open_projects
+        open_projects[id] = {
                 "channel_id" : channel.id,
                 "answers" : {},
                 "index" : 0,
-            }
+        }
 
-            # loop though the service format and get answers
-            for _ in range(len(service_format)):
-                i = open_projects[id]["index"]+1
-                open_projects[id]["index"] = i
+        # loop though the service format and get answers
+        for _ in range(len(service_format)):
+            i = open_projects[id]["index"]+1
+            open_projects[id]["index"] = i
 
-                # create a list for answers
-                open_projects[id]["answers"][i] = []
-                # wait for the question to end
-                timed_out = await self.ask_question(id, ctx, service_format[i])
+            # create a list for answers
+            open_projects[id]["answers"][i] = []
+            # wait for the question to end
+            timed_out = await self.ask_question(id, ctx, service_format[i])
 
-                if timed_out: return await channel.send(embed=close_em)
+            if timed_out: return await channel.send(embed=close_em)
 
-            # finished taking the service!
-            self.save_data(member)
-            # write app
-
-        except Exception as e:
-            print(traceback.format_exc())
-            return await ctx.send(content="<@348547981253017610>", embed=em(
-                title="Uh oh, there's an error!",
-                description=f"```py\n{traceback.format_exc()}```",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                    icon_url=self.bot.user.avatar_url,
-                    text="IsThicc Staff"
-            ))
+        self.save_data(member)
 
     async def ask_question(self, id, ctx, question):
         app = open_projects[id]
