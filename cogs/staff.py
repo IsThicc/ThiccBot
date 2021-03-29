@@ -70,8 +70,26 @@ class Staff(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @staff.command(name="strike")
+    @staff.has_role(739510850079162530)
+    async def strike(self, ctx, member: discord.Member = None, reason: str = "Lack of development."):
+
+        if discord.Member is None:
+            return await ctx.send(embed=em(
+                title="Please provide a staff member!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            ))
+
+        self.bot.get_command(name="strike").__call__(ctx=ctx, member=member, reason=reason)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @staff.command(name="edit")
-    async def edit(self, ctx, member: str = None):
+    async def edit(self, ctx, member: discord.Member = None):
 
         return await ctx.send(embed=em(
             title="This option is under development!",

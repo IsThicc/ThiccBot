@@ -415,11 +415,11 @@ Hey {member.mention}, we noticed you haven't been making any progress. Please le
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-    @commands.command()
+    @commands.command(name="strike")
     @commands.has_role(role)
     async def strike(self, ctx, member: discord.Member=None, *, reason="Lack of development."):
 
-        if member == None:
+        if member is None:
 
             await ctx.message.delete()
             return await ctx.author.send(embed=em(
