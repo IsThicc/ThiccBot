@@ -9,7 +9,11 @@ from discord.ext          import commands
 from discord.ext.commands import BucketType
 from discord              import Embed as em
 from datetime             import datetime
-
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 open_projects = {}
 service_format = {
     1 : {
@@ -29,10 +33,16 @@ service_format = {
         "description" : "Poggers",
     }
 }
-
-class project_cog(commands.Cog):
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+class Project(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command(name="project", aliases=["proj"])
     @commands.cooldown(1, 1, BucketType.user)
@@ -127,7 +137,7 @@ class project_cog(commands.Cog):
                     ))
 
                 # start setup
-                self.service()
+                await self.service()
 
 
         except Exception as e:
@@ -142,6 +152,9 @@ class project_cog(commands.Cog):
                     text="IsThicc Staff"
             ))
 
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def parse_error(self, ctx, data):
         if data["error"]:
             await ctx.send(embed=em(
@@ -155,6 +168,9 @@ class project_cog(commands.Cog):
             ))
             return True
         return False
+
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     # setup service
     async def service(self, ctx, member):
@@ -197,7 +213,10 @@ class project_cog(commands.Cog):
 
             if timed_out: return await channel.send(embed=close_em)
 
-        self.save_data(member)
+        await self.save_data(member)
+
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def ask_question(self, id, ctx, question):
         app = open_projects[id]
@@ -229,7 +248,10 @@ class project_cog(commands.Cog):
         open_projects[message.author.id]["answers"][index].append(message.clean_content)
 
         return False
-    
+
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def save_data(self, member, ctx):
         # update this to the real address
         app = open_projects[member.id]
@@ -270,10 +292,11 @@ class project_cog(commands.Cog):
         file = data["file"]
 
         print(f"Saved as file {file}")
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 def setup(bot):
-    bot.add_cog(project_cog(bot))
+    bot.add_cog(Project(bot))

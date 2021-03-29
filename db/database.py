@@ -15,6 +15,8 @@ class Pool:
     def __init__(self, pool):
         self.pool = pool
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    
     # Base Methods
 
     async def execute(self, query: str, options: tuple = None) -> list:
@@ -28,6 +30,7 @@ class Pool:
                 await cursor.execute(query, options)
                 return await cursor.fetchall()
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def execute_one(self, query: str, options: tuple = None) -> list:
         """
@@ -39,6 +42,8 @@ class Pool:
             async with conn.cursor() as cursor:
                 await cursor.execute(query, options)
                 return await cursor.fetchone()
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     # Helper Methods
     
@@ -53,6 +58,8 @@ class Pool:
         fmt = datetime.now().strftime('%Y-%m-%d')
         await self.execute("INSERT INTO tags VALUES('" + tag + "','" + content + "','" + str(owner) + "','" + str(command_id) + "','" + str(fmt) + "')") # it dosent like the ? eeee
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def remove_tag(self, tag: str) -> int:
         """
         :param tag: tag name to delete
@@ -62,12 +69,16 @@ class Pool:
         await self.execute("DELETE FROM tags WHERE name = '" + tag + "'")
 
         return r[0]
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     
     # Mod
     
     async def warn(self, _id: int, reason: str, datetime: datetime, current: bool, warnid: str) -> None:
         await self.execute("INSERT INTO warnings VALUES('" + str(_id) + "','" + reason + "'," + datetime + "," + current + ",)")
-        
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def unwarn(self, warnid: int):
         await self.execute("UPDATE warnings SET current = false WHERE warn_id = '" + warnid + "'")
 

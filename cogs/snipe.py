@@ -1,23 +1,22 @@
 #
-#                               sThicc-bot Snipe.py | 2020 (c) IsThicc
+#                           Thicc-bot Snipe.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import discord
 from discord.ext import commands
-from discord import Embed as em
-from datetime import datetime
+from discord     import Embed as em
+from datetime    import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 
-class snipe(commands.Cog):
+class Snipe(commands.Cog):
     def __init__(self, bot):
         self.bot             = bot
-        
         self.snipe_cache     = {}
         self.editsnipe_cache = {}
 
@@ -98,4 +97,4 @@ class snipe(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(snipe(bot))
+    bot.add_cog(Snipe(bot))

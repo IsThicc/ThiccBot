@@ -5,27 +5,24 @@
 #
 #
 import discord, asyncio, re, traceback
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
-from aiohttp import ClientSession
+from discord              import Embed as em
+from datetime             import datetime
+from aiohttp              import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 
-class todo_cog(commands.Cog):
+class Todo(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
         self.session = ClientSession()
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="todo", aliases=["t", "td"],)
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
@@ -336,11 +333,10 @@ class todo_cog(commands.Cog):
             else:
                 return await ctx.send(embed=err_em)
 
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 def setup(bot):
-    bot.add_cog(todo_cog(bot))
+    bot.add_cog(Todo(bot))

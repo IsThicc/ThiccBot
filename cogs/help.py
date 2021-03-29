@@ -1,27 +1,25 @@
 #
-#                          IsThicc-bot Help.py | 2020 (c) IsThicc
+#                         IsThicc-bot Help.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import discord
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
+from discord              import Embed as em
+from datetime             import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-class help(commands.Cog):
+class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     async def help(self, ctx):
@@ -31,7 +29,43 @@ class help(commands.Cog):
         :return: Returns Help embed.
         """
 
-        # TODO: Check if person has staff role, then display a different embed
+        # TODO: Put the actual staff channel id here!
+        if ctx.author.permissions_in(self.bot.get_channel(824848581609127998)).send_messages:
+
+            command_list = {}
+
+            help = em(
+                title="Staff Help!",
+                description="",
+                colour=discord.Colour.gold(),
+                timestamp=datetime.utcnow()
+            )
+
+            # I'll probably rewrite this later without so many for's but it's fine for now.
+            for command in self.bot.commands:
+                if command.cog_name not in commands:
+                    command_list[command.cog_name] = []
+                command_list[command.cog_name].append(command.name)
+
+            for cog_num, cog in enumerate(command_list):
+                if cog_num == 24:
+                    help.add_field(
+                        name="And more!",
+                        value="Sorry! I couldn't show all commands because there's more than 25 bot cogs!"
+                    )
+                    break
+
+                help.add_field(
+                    name=f"{cog} Commands!",
+                    value="``" + "`` | ``".join(command_list[cog]) + "``"
+                )
+
+            help.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            )
+
+            return await ctx.send(embed=help)
 
         return await ctx.send(embed=em(
             title="IsThicc Help!",
@@ -47,11 +81,8 @@ The IsThicc Bot doesn't currently have any public commands! Please check back la
             icon_url=self.bot.user.avatar_url
         ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="test")
     async def test(self, ctx):
         await ctx.send("test you hoe")
@@ -62,4 +93,4 @@ The IsThicc Bot doesn't currently have any public commands! Please check back la
 #
 #
 def setup(bot):
-    bot.add_cog(help(bot))
+    bot.add_cog(Help(bot))

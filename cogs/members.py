@@ -1,28 +1,24 @@
 #
-#                          IsThicc-bot Members.py | 2020 (c) IsThicc
+#                          IsThicc-bot Members.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord
-import asyncio
+import discord, asyncio
 from discord.ext import commands
-from discord import Embed as em
-from datetime import datetime
+from discord     import Embed as em
+from datetime    import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-class members(commands.Cog):
+class Members(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = self.bot.get_guild(739510335949635736)
@@ -48,11 +44,8 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
             text="Welcome to IsThicc Software!"
         ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_member_remove(self, member):
 
@@ -78,4 +71,4 @@ Please check out <#739927724700860506> before you continue! And make sure to ask
 #
 #
 def setup(bot):
-    bot.add_cog(members(bot))
+    bot.add_cog(Members(bot))

@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Application.py | 2020-2021 (c) IsThicc
+#                         IsThicc-bot Application.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -90,15 +90,17 @@ questions = {
 missing:
 do you have github(if so whats your username)
 '''
-
-class application_cog(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+class Application(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
@@ -479,6 +481,8 @@ class application_cog(commands.Cog):
 
         print(f"Saved as file {file}")
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot: return
@@ -527,4 +531,4 @@ class application_cog(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(application_cog(bot))
+    bot.add_cog(Application(bot))

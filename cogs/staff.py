@@ -17,14 +17,12 @@ from aiohttp              import ClientSession
 #
 class Staff(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot     = bot
         self.session = ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def remind_staff(self):
-
-        # TODO: Make this into a function and then call it every 24 hours and at bot ready
 
         r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
         json = await r.json()

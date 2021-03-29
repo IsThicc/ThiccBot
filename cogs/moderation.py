@@ -1,31 +1,27 @@
 #
-#                          IsThicc-bot Tickets.py | 2020-2021 (c) IsThicc
+#                          IsThicc-bot Moderation.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
+import discord, asyncio, random, string
 from discord.ext import commands
-from discord import Embed as em
-from discord import Colour
-from datetime import datetime
-import random, string
+from discord     import Embed as em
+from discord     import Colour
+from datetime    import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 
-class mod(commands.Cog):
+class Moderation(commands.Cog):
     def __init__(self, bot):
-        self.bot     = bot
-        self.db      = bot.db
+        self.bot = bot
+        self.db  = bot.db
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.has_guild_permissions(ban_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
@@ -129,13 +125,9 @@ class mod(commands.Cog):
                 icon_url=self.avatar,
                 text="IsThicc Moderation"
             ))
-        
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
-        
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_guild_permissions(manage_roles=True)
     async def warn(self, ctx, m: discord.Member = None, reason: str = 'No reason specified.'):
@@ -150,13 +142,9 @@ class mod(commands.Cog):
 
         e2 = em(description=f'You got warned on **{ctx.guild}** by {ctx.author.mention} for the reason: **{reason}**\nWarn ID: `{_id}`', colour=Colour.red())
         await m.send(embed=e2)
-       
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
-    
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(aliases=('delwarn',))
     @commands.has_guild_permissions(manage_roles=True)
     async def unwarn(self, ctx, m: discord.Member = None, warnid: str = None):
@@ -169,12 +157,8 @@ class mod(commands.Cog):
 
         e2 = em(description=f'Your warning by the id **{warnid}** got removed by {ctx.author.mention}!', colour=Colour.teal())
         await m.send(embed=e2)
-        
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     @commands.has_guild_permissions(manage_roles=True)
@@ -192,11 +176,7 @@ class mod(commands.Cog):
         e.set_thumbnail(url=self.bot.user.avatar_url_as(format='png'))
         await ctx.reply(embed=e)
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.has_guild_permissions(kick_members=True)
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -290,11 +270,8 @@ class mod(commands.Cog):
                 text="IsThicc Moderation"
             ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.has_role(744012353808498808)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
@@ -321,11 +298,8 @@ class mod(commands.Cog):
         warn_id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
         await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True, warn_id)
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.has_role(739510850079162530)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command()
@@ -354,11 +328,8 @@ class mod(commands.Cog):
                 text="IsThicc Moderation"
             ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @ban.error
     @kick.error
     @warn.error
@@ -394,4 +365,4 @@ class mod(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(mod(bot))
+    bot.add_cog(Moderation(bot))

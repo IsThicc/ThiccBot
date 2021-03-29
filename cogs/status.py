@@ -1,15 +1,15 @@
 #
-#                          IsThicc-bot Status.py | 2020 (c) IsThicc
+#                         IsThicc-bot Status.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import discord, asyncio
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
-from aiohttp import ClientSession
+from discord              import Embed as em
+from datetime             import datetime
+from aiohttp              import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -26,16 +26,13 @@ urls = {
     'Backend 4'     : 'http://10.42.10.4'
 }
 
-class status_cog(commands.Cog):
+class Status(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
         self.session = ClientSession()
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.cooldown(5, 1, BucketType.user)
     async def status(self, ctx):
@@ -103,11 +100,10 @@ class status_cog(commands.Cog):
         await pending.edit(embed=status_em)
         # await pending.delete()
 
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 def setup(bot):
-    bot.add_cog(status_cog(bot))
+    bot.add_cog(Status(bot))

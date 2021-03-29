@@ -1,27 +1,24 @@
 #
-#                             IsThicc-bot Github.py | 2020-2021 (c) IsThicc
+#                            IsThicc-bot Github.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 from discord.ext import commands
-from aiohttp import ClientSession
+from aiohttp     import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 
-class github_cog(commands.Cog):
+class GitHub(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
         self.session = ClientSession()
-       
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_guild_role_update(self, before, after):
         if after.name != "project":
@@ -35,4 +32,4 @@ class github_cog(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(github_cog(bot))
+    bot.add_cog(GitHub(bot))

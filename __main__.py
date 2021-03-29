@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot __main__.py | 2020 (c) IsThicc
+#                          IsThicc-bot __main__.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
@@ -24,7 +24,7 @@ async def get_prefix(bot, message):
     """
     prefixes = ["i!", "isthicc ", "thicc "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
-    # return "b "
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -64,7 +64,6 @@ async def _init_async():
 
 
 bot.loop.run_until_complete(_init_async())
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -111,9 +110,13 @@ async def on_ready() -> None:
                                                 type=ActivityType.watching))
 
     await asyncio.sleep(10)
-    await bot.change_presence(status=Status.dnd,
+    await bot.change_presence(status=Status.idle,
                               activity=Activity(name="IsThicc.dev!",
-                                                type=ActivityType.playing))
+                                                type=5))
+
+    # await bot.change_presence(status=Status.dnd,
+    #                           activity=Activity(name="IsThicc.dev!",
+    #                                             type=ActivityType.playing))
 
 #
 #

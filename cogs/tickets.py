@@ -6,24 +6,21 @@
 #
 import discord, asyncio
 from discord.ext import commands
-from discord import Embed as em
-from datetime import datetime
+from discord     import Embed as em
+from datetime    import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 
-class tickets(commands.Cog):
+class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db = bot.db
+        self.db  = bot.db
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
 
@@ -168,11 +165,8 @@ class tickets(commands.Cog):
         #   # Ticket opener id(reaction_user.id):    user_id
         #   # Open or closed(bool: true):            open_close
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     async def close(self, ctx):
 
@@ -235,4 +229,4 @@ class tickets(commands.Cog):
 #
 #
 def setup(bot):
-    bot.add_cog(tickets(bot))
+    bot.add_cog(Tickets(bot))

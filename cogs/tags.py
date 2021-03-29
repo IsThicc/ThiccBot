@@ -4,16 +4,13 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import asyncio
-from datetime import datetime
-
-import discord
-from discord import Embed
-from discord.ext import commands
+import asyncio, discord
+from datetime      import datetime
+from discord       import Embed
+from discord.ext   import commands
 from discord_slash import SlashContext
 from discord_slash import cog_ext as cmd
 from discord_slash import utils
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -25,14 +22,13 @@ class Tags(commands.Cog):
         self.bot   = bot
         self.slash = self.bot.slash
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     def cog_unload(self):
         self.slash.remove_cog_commands(self)
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def perm_error(self, ctx: commands.Context):
         await ctx.send(
             embeds=[Embed(
@@ -79,11 +75,8 @@ class Tags(commands.Cog):
         }
     ]
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def template(self, ctx, reply_id: int = None):
         await asyncio.sleep(3)
         r = await self.bot.db.execute("SELECT tag, content, owner, date FROM tag WHERE command_id = '" + str(ctx.command_id) + "'")
@@ -99,11 +92,8 @@ class Tags(commands.Cog):
 
     ids = [734172221978968136]
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_ready(self):
         tags = await self.bot.db.execute('SELECT * FROM tags')
@@ -113,11 +103,8 @@ class Tags(commands.Cog):
             cmd.cog_slash(name=tag[0], description=f"IsThicc support command created by: {owner}", guild_ids=self.ids, options=self.tagopts)(self.template)
             print(f'Registered tag: {tag[0]}')
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @cmd.cog_subcommand(base='tag', name='create', guild_ids=ids, options=createopts)
     async def tag_create(self, ctx: SlashContext, name: str, content: str):
         staff = await self.bot.fetch_guild(734172221978968136)
@@ -137,11 +124,8 @@ class Tags(commands.Cog):
 
         await ctx.send(embeds=[embed])
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @cmd.cog_subcommand(base='tag', name='delete', guild_ids=ids, options=delopts)
     async def tag_delete(self, ctx: SlashContext, tag: str):
         staff = await self.bot.fetch_guild(734172221978968136)

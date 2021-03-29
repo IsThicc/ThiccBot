@@ -1,6 +1,17 @@
+#
+#                        IsThicc-bot Config.Py.Example | 2020-2021 (c) IsThicc
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
 TOKEN = "change me"
 
 mysql_host = "1.1.1.1"
 mysql_db = "isthicc_bot"
 mysql_user = "root"
 mysql_password = ""
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#

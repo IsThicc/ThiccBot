@@ -1,33 +1,29 @@
 #
-#                          IsThicc-bot Management.py | 2020-2021 (c) IsThicc
+#                         IsThicc-bot Management.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import discord, asyncio, subprocess
-from discord.ext import commands
+from discord.ext          import commands
 from discord.ext.commands import BucketType
-from discord import Embed as em
-from datetime import datetime
-from aiohttp import ClientSession
+from discord              import Embed as em
+from datetime             import datetime
+from aiohttp              import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
-class staff_cog(commands.Cog):
+class Management(commands.Cog):
     def __init__(self, bot):
         self.bot      =  bot
         self.session  =  ClientSession()
 
     role = 739510850079162530
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(role)
@@ -266,11 +262,8 @@ class staff_cog(commands.Cog):
             )
         )
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @announce.error
     async def staff_error(self, ctx, error):
 
@@ -287,11 +280,8 @@ class staff_cog(commands.Cog):
 
         else: print(str(error))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_role(role)
     async def archive(self, ctx):
@@ -308,11 +298,8 @@ class staff_cog(commands.Cog):
             text="IsThicc Management"
         ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_role(role)
     async def accept(self, ctx, member: discord.Member):
@@ -345,11 +332,8 @@ class staff_cog(commands.Cog):
             text="IsThicc Management"
         ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.has_role(role)
     async def remind(self, ctx, option="development", member: discord.Member=None):
@@ -410,11 +394,8 @@ Hey {member.mention}, we noticed you haven't been making any progress. Please le
                 text="IsThicc Management"
             ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="strike")
     @commands.has_role(role)
     async def strike(self, ctx, member: discord.Member=None, *, reason="Lack of development."):
@@ -457,12 +438,8 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
             text="IsThicc Management"
         ))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
-            
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, cog: str = None):
@@ -480,15 +457,11 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
         
         await msg.edit(embed=discord.Embed(description=f"Reloaded cog **{cog}**!", colour=discord.Colour.green()))
 
-#
-#
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
-        
-    @commands.command()
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command(name="newtodo", aliases=["new_todo", "nt", "ntodo"])
     @commands.has_role(role)
-    async def newtodo(self, ctx, member: discord.Member=None):
+    async def newtodo(self, ctx, member: discord.Member = None):
 
         if member is None:
 
@@ -526,4 +499,4 @@ Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{
 #
 #
 def setup(bot):
-    bot.add_cog(staff_cog(bot))
+    bot.add_cog(Management(bot))
