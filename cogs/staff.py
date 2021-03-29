@@ -25,6 +25,8 @@ class Staff(commands.Cog):
     @tasks.loop(hours=24.0)
     async def deadline_route(self):
 
+        # TODO: Make this into a function and then call it every 24 hours and at bot ready
+        
         r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
         json = await r.json()
 
