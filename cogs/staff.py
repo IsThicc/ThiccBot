@@ -22,11 +22,10 @@ class Staff(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @tasks.loop(hours=24.0)
-    async def deadline_route(self):
+    async def remind_staff(self):
 
         # TODO: Make this into a function and then call it every 24 hours and at bot ready
-        
+
         r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
         json = await r.json()
 
@@ -70,6 +69,16 @@ class Staff(commands.Cog):
                 return await self.bot.get_channel(824848581609127998).send(embed=reminder_embed)
 
             return await channel.send(embed=reminder_embed)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @tasks.loop(hours=24.0)
+    async def deadline_24_loop(self):
+        await self.remind_staff()
+
+    @commands.Cog.listener(name="on_ready")
+    async def deadline_on_ready(self):
+        await self.remind_staff()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
