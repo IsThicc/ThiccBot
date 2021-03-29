@@ -47,7 +47,7 @@ class Staff(commands.Cog):
             reminder_embed = em(
                 title="Development Reminders!",
                 colour=discord.Colour.blue(),
-                description=f"Hey {staff.lower()[:-4]}! We noticed you still have a todo marked as incomplete. If you have finished any of these please disregard.\n**Use ``i!todo`` to view your todos!**",
+                description=f"Hey {staff.capitalize()[:-4]}! We noticed you still have a todo marked as incomplete. If you have finished any of these please disregard.\n**Use ``i!todo`` to view your todos!**",
                 timestamp=datetime.utcnow()
             )
 
