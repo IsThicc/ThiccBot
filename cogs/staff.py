@@ -38,7 +38,7 @@ class Staff(commands.Cog):
             for deadline in json['staff'][staff]['deadlines']:
 
                 if deadline[1] is None: continue
-                if datetime.strftime(deadline[1], "%d-%m-%Y") != str(datetime.now().strftime("%d-%m-%Y")): continue
+                if deadline[1] != str(datetime.now().strftime("%d-%m-%Y")): continue
 
                 deadlines.append(deadline)
 
