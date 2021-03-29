@@ -22,7 +22,7 @@ async def get_prefix(bot, message):
     :param message: Discord message.
     :return: Returns available prefix's.
     """
-    prefixes = ["i!", "isthicc ", "thicc "]
+    prefixes = ["I!", "i!", "isthicc ", "thicc "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 #
