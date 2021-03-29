@@ -34,7 +34,7 @@ class project_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="project", aliases=["project", "proj"])
+    @commands.command(name="project", aliases=["proj"])
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
     async def project(self, ctx, member, option=None, extra: str = None):
