@@ -54,7 +54,7 @@ class Staff(commands.Cog):
             for deadline in deadlines:
                 reminder_embed.add_field(
                     name=f"Todo {deadline[0]}",
-                    value=f"Todo #{str(deadline[0])} is due today - {datetime.strftime(deadline[1], '%d-%m-%Y')}!"
+                    value=f"Todo #{str(deadline[0])} is due today - {deadline[1]}!"
                 )
 
             channel = discord.utils.get(self.bot.get_channel(812422468102520863).text_channels,
