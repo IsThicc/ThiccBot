@@ -120,7 +120,7 @@ class Staff(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @staff.command(name="strike")
-    @staff.has_role(739510850079162530)
+    @commands.has_role(739510850079162530)
     async def strike(self, ctx, member: discord.Member = None, reason: str = "Lack of development."):
 
         if discord.Member is None:
