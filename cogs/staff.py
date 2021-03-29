@@ -5,7 +5,7 @@
 #
 #
 import discord, asyncio, re
-from discord.ext          import commands
+from discord.ext          import commands, tasks
 from discord.ext.commands import BucketType
 from discord              import Embed as em
 from datetime             import datetime
@@ -19,6 +19,55 @@ class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession()
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @tasks.loop(hours=24.0)
+    async def deadline_route(self):
+
+        r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
+        json = await r.json()
+
+        for staff in json['staff']:
+
+            if len(json['staff'][staff]['deadlines']) == 0: continue
+
+            deadlines = []
+
+            for deadline in json['staff'][staff]['deadlines']:
+
+                if deadline[1] is None: continue
+                if datetime.strftime(deadline[1], "%d-%m-%Y") != datetime.now().strftime("%d-%m-%Y"): continue
+
+                deadlines.append(deadline)
+
+            if len(deadlines) == 0: continue
+
+            reminder_embed = em(
+                title="Development Reminders!",
+                colour=discord.Colour.blue(),
+                description="Hey! We noticed you still have a todo marked as incomplete. If you have finished any of these please disregard.\n**Use ``i!todo`` to view your todos!**",
+                timestamp=datetime.utcnow()
+            )
+
+            for deadline in deadlines:
+                reminder_embed.add_field(
+                    name=f"Todo {deadline[0]}",
+                    value=f"Todo #{str(deadline[0])} is due today - {datetime.strftime(deadline[1], '%d-%m-%Y')}!"
+                )
+
+            channel = discord.utils.get(self.bot.get_channel(812422468102520863).text_channels,
+                                        name=staff.lower()[:-4])
+
+            reminder_embed.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            )
+
+            if channel is None:
+                return await self.bot.get_channel(824848581609127998).send(embed=reminder_embed)
+
+            return await channel.send(embed=reminder_embed)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
