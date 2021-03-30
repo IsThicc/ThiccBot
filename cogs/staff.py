@@ -20,6 +20,7 @@ class Staff(commands.Cog):
         self.bot     = bot
         self.session = ClientSession()
 
+
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def remind_staff(self):
@@ -76,8 +77,8 @@ class Staff(commands.Cog):
 
     @commands.Cog.listener(name="on_ready")
     async def deadline_on_ready(self):
-        await self.remind_staff()
-
+        self.deadline_24_loop.start
+        
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.group(name="staff")
