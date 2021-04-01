@@ -90,6 +90,24 @@ class Snipe(commands.Cog):
                 timestamp=datetime.utcnow()
             ))
 
+        if num == "all":
+            snipe_all = em(
+                title="IsThicc |Snipe",
+                colour=discord.Colour.blue(),
+                timestamp=datetime.utcnow()
+            )
+            for item_num, item in enumerate(self.snipe_cache[ctx.channel.id]):
+                if item is None: continue
+                snipe_all.add_field(
+                    name=f"Edit Snipe {item_num + 1}",
+                    value=f'{item.author.mention} ({item.author}):\n{item.content}'
+                )
+            snipe_all.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            )
+            return await ctx.send(embed=snipe_all)
+
         try: num = int(num)
         except: return await ctx.send(embed=em(
             title="Error!",
@@ -147,6 +165,26 @@ class Snipe(commands.Cog):
                 timestamp=datetime.utcnow()
             ))
 
+        if num == "all":
+            editsnipe_all = em(
+                title="IsThicc | Edit Snipe",
+                colour=discord.Colour.blue(),
+                timestamp=datetime.utcnow()
+            )
+            for item_num, item in enumerate(self.editsnipe_cache[ctx.channel.id]):
+                if item is None: continue
+                b = item[0]
+                a = item[1]
+                editsnipe_all.add_field(
+                    name=f"Edit Snipe {item_num + 1}",
+                    value=f'{b.author.mention} ({b.author}):\n**Before:** {b.content}\n**After:** {a.content}'
+                )
+            editsnipe_all.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            )
+            return await ctx.send(embed=editsnipe_all)
+
         try: num = int(num)
         except: return await ctx.send(embed=em(
             title="Error!",
@@ -188,7 +226,7 @@ class Snipe(commands.Cog):
             text='Edit snipe message sent at',
             icon_url=self.bot.user.avatar_url
         )
-        
+
         await ctx.send(embed=e)
 
 #
