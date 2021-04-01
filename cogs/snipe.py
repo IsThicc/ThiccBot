@@ -19,14 +19,35 @@ class Snipe(commands.Cog):
         self.bot             = bot
         self.snipe_cache     = {}
         self.editsnipe_cache = {}
+        # self.new_snipe_cache = [None, None, None, None, None, None, None, None, None, None]
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message):     
+    async def on_message_delete(self, message):
+
         # if message.channel.id in self.editsnipe_cache:  # .keys():
         #     del self.snipe_cache[message.channel.id]
-        self.snipe_cache[message.channel.id] = message
+        # self.snipe_cache[message.channel.id] = message
+
+        if message.channel.id not in self.snipe_cache:
+            self.snipe_cache[message.channel.id] = \
+                [None, None, None, None, None, None, None, None, None, None]
+
+        cache         = self.snipe_cache[message.channel.id]
+        temp_cache    = list(self.snipe_cache[message.channel.id])
+        temp_cache[9] = cache[8]
+        temp_cache[8] = cache[7]
+        temp_cache[7] = cache[6]
+        temp_cache[6] = cache[5]
+        temp_cache[5] = cache[4]
+        temp_cache[4] = cache[3]
+        temp_cache[3] = cache[2]
+        temp_cache[2] = cache[1]
+        temp_cache[1] = cache[0]
+        temp_cache[0] = message
+
+        self.snipe_cache[message.channel.id] = temp_cache
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -34,13 +55,32 @@ class Snipe(commands.Cog):
     async def on_message_edit(self, before, after):
         # if after.channel.id in self.editsnipe_cache:  # .keys():
         #     del self.editsnipe_cache[after.channel.id]
-        self.editsnipe_cache[after.channel.id] = (before, after)
+        # self.editsnipe_cache[after.channel.id] = (before, after)
+
+        if after.channel.id not in self.editsnipe_cache:
+            self.editsnipe_cache[after.channel.id] = \
+                [None, None, None, None, None, None, None, None, None, None]
+
+        cache         = self.editsnipe_cache[after.channel.id]
+        temp_cache    = list(self.editsnipe_cache[after.channel.id])
+        temp_cache[9] = cache[8]
+        temp_cache[8] = cache[7]
+        temp_cache[7] = cache[6]
+        temp_cache[6] = cache[5]
+        temp_cache[5] = cache[4]
+        temp_cache[4] = cache[3]
+        temp_cache[3] = cache[2]
+        temp_cache[2] = cache[1]
+        temp_cache[1] = cache[0]
+        temp_cache[0] = (before, after)
+
+        self.editsnipe_cache[after.channel.id] = temp_cache
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     @commands.has_role(744012353808498808)
-    async def snipe(self, ctx):
+    async def snipe(self, ctx, num=1):
 
         if ctx.channel.id not in self.snipe_cache:  # .keys():
             return await ctx.send(embed=em(
@@ -50,7 +90,37 @@ class Snipe(commands.Cog):
                 timestamp=datetime.utcnow()
             ))
 
-        msg = self.snipe_cache[ctx.channel.id]
+        try: num = int(num)
+        except: return await ctx.send(embed=em(
+            title="Error!",
+            description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Software"
+        ))
+
+        if num <= 0 or num >= 11:
+            return await ctx.send(embed=em(
+                title="Error!",
+                description="Not a valid integer between 1 and 10!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            ))
+
+        if self.snipe_cache[ctx.channel.id][num] is None:
+            return await ctx.send(embed=em(
+                title='IsThicc | Error',
+                description='Nothing to snipe!',
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ))
+
+        msg = self.snipe_cache[ctx.channel.id][num]
         e   = em(
             title='IsThicc | Snipe',
             colour=discord.Colour.blue(),
@@ -67,7 +137,7 @@ class Snipe(commands.Cog):
 
     @commands.command()
     @commands.has_role(744012353808498808)
-    async def editsnipe(self, ctx):
+    async def editsnipe(self, ctx, num=1):
 
         if ctx.channel.id not in self.editsnipe_cache:  # .keys():
             return await ctx.send(embed=em(
@@ -77,8 +147,38 @@ class Snipe(commands.Cog):
                 timestamp=datetime.utcnow()
             ))
 
-        b = self.editsnipe_cache[ctx.channel.id][0]
-        a = self.editsnipe_cache[ctx.channel.id][1]
+        try: num = int(num)
+        except: return await ctx.send(embed=em(
+            title="Error!",
+            description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Software"
+        ))
+
+        if num <= 0 or num >= 11:
+            return await ctx.send(embed=em(
+                title="Error!",
+                description="Not a valid integer between 1 and 10!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            ))
+
+        if self.editsnipe_cache[ctx.channel.id][num] is None:
+            return await ctx.send(embed=em(
+                title='IsThicc | Error',
+                description='Nothing to editsnipe!',
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ))
+
+        b = self.editsnipe_cache[ctx.channel.id][num][0]
+        a = self.editsnipe_cache[ctx.channel.id][num][1]
         e = em(
             title='IsThicc | Edit Snipe',
             colour=discord.Colour.blue(),
