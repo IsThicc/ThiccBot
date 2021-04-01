@@ -19,7 +19,6 @@ class Snipe(commands.Cog):
         self.bot             = bot
         self.snipe_cache     = {}
         self.editsnipe_cache = {}
-        # self.new_snipe_cache = [None, None, None, None, None, None, None, None, None, None]
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -34,20 +33,26 @@ class Snipe(commands.Cog):
             self.snipe_cache[message.channel.id] = \
                 [None, None, None, None, None, None, None, None, None, None]
 
-        cache         = self.snipe_cache[message.channel.id]
-        temp_cache    = list(self.snipe_cache[message.channel.id])
-        temp_cache[9] = cache[8]
-        temp_cache[8] = cache[7]
-        temp_cache[7] = cache[6]
-        temp_cache[6] = cache[5]
-        temp_cache[5] = cache[4]
-        temp_cache[4] = cache[3]
-        temp_cache[3] = cache[2]
-        temp_cache[2] = cache[1]
-        temp_cache[1] = cache[0]
-        temp_cache[0] = message
+        # cache         = self.snipe_cache[message.channel.id]
+        # temp_cache    = list(self.snipe_cache[message.channel.id])
+        # temp_cache[9] = cache[8]
+        # temp_cache[8] = cache[7]
+        # temp_cache[7] = cache[6]
+        # temp_cache[6] = cache[5]
+        # temp_cache[5] = cache[4]
+        # temp_cache[4] = cache[3]
+        # temp_cache[3] = cache[2]
+        # temp_cache[2] = cache[1]
+        # temp_cache[1] = cache[0]
+        # temp_cache[0] = message
+        # self.snipe_cache[message.channel.id] = temp_cache
 
-        self.snipe_cache[message.channel.id] = temp_cache
+        cache = self.snipe_cache[message.channel.id]
+        cache = list([message,  cache[0],
+                      cache[1], cache[2],
+                      cache[3], cache[4],
+                      cache[5], cache[6],
+                      cache[7], cache[8]])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -61,20 +66,13 @@ class Snipe(commands.Cog):
             self.editsnipe_cache[after.channel.id] = \
                 [None, None, None, None, None, None, None, None, None, None]
 
-        cache         = self.editsnipe_cache[after.channel.id]
-        temp_cache    = list(self.editsnipe_cache[after.channel.id])
-        temp_cache[9] = cache[8]
-        temp_cache[8] = cache[7]
-        temp_cache[7] = cache[6]
-        temp_cache[6] = cache[5]
-        temp_cache[5] = cache[4]
-        temp_cache[4] = cache[3]
-        temp_cache[3] = cache[2]
-        temp_cache[2] = cache[1]
-        temp_cache[1] = cache[0]
-        temp_cache[0] = (before, after)
-
-        self.editsnipe_cache[after.channel.id] = temp_cache
+        cache = self.editsnipe_cache[after.channel.id]
+        cache = list([(before, after),
+                      cache[0], cache[1],
+                      cache[2], cache[3],
+                      cache[4], cache[5],
+                      cache[6], cache[7],
+                      cache[8]])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
