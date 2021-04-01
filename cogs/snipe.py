@@ -47,32 +47,32 @@ class Snipe(commands.Cog):
         # temp_cache[0] = message
         # self.snipe_cache[message.channel.id] = temp_cache
 
-        cache = self.snipe_cache[message.channel.id]
-        cache = list([message,  cache[0],
-                      cache[1], cache[2],
-                      cache[3], cache[4],
-                      cache[5], cache[6],
-                      cache[7], cache[8]])
+        cache = list(self.snipe_cache[message.channel.id])
+        self.snipe_cache[message.channel.id] = list([message,  cache[0],
+                                                     cache[1], cache[2],
+                                                     cache[3], cache[4],
+                                                     cache[5], cache[6],
+                                                     cache[7], cache[8]])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         # if after.channel.id in self.editsnipe_cache:  # .keys():
-        #     del self.editsnipe_cache[after.channel.id]
+        #     del self.editsnipe_cache[af                                 ter.channel.id]
         # self.editsnipe_cache[after.channel.id] = (before, after)
 
         if after.channel.id not in self.editsnipe_cache:
             self.editsnipe_cache[after.channel.id] = \
                 [None, None, None, None, None, None, None, None, None, None]
 
-        cache = self.editsnipe_cache[after.channel.id]
-        cache = list([(before, after),
-                      cache[0], cache[1],
-                      cache[2], cache[3],
-                      cache[4], cache[5],
-                      cache[6], cache[7],
-                      cache[8]])
+        cache = list(self.editsnipe_cache[after.channel.id])
+        self.editsnipe_cache[after.channel.id] = list([(before, after),
+                                                       cache[0], cache[1],
+                                                       cache[2], cache[3],
+                                                       cache[4], cache[5],
+                                                       cache[6], cache[7],
+                                                       cache[8]])
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
