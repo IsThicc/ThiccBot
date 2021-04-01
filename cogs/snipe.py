@@ -80,7 +80,7 @@ class Snipe(commands.Cog):
 
     @commands.command()
     @commands.has_role(744012353808498808)
-    async def snipe(self, ctx, num=1):
+    async def snipe(self, ctx, num="1"):
 
         if ctx.channel.id not in self.snipe_cache:  # .keys():
             return await ctx.send(embed=em(
@@ -155,7 +155,7 @@ class Snipe(commands.Cog):
 
     @commands.command()
     @commands.has_role(744012353808498808)
-    async def editsnipe(self, ctx, num=1):
+    async def editsnipe(self, ctx, num="1"):
 
         if ctx.channel.id not in self.editsnipe_cache:  # .keys():
             return await ctx.send(embed=em(
