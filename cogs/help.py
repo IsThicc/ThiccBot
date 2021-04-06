@@ -54,7 +54,7 @@ class Help(commands.Cog):
                 #     command_list[command.cog_name].append(f"{command} {subcommand}")
 
             for cog_num, cog in enumerate(command_list):
-                if cog_num == 24:
+                if cog_num == 23:
                     help.add_field(
                         name="And more!",
                         value="Sorry! I couldn't show all commands because there's more than 25 bot cogs!"
