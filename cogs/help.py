@@ -30,7 +30,7 @@ class Help(commands.Cog):
         """
 
         # TODO: Put the actual staff channel id here!
-        if ctx.author.permissions_in(self.bot.get_channel(824848581609127998)).send_messages:
+        if ctx.author.permissions_in(self.bot.get_channel(744010240542113792)).send_messages:
 
             command_list = {}
 
@@ -40,6 +40,7 @@ class Help(commands.Cog):
                 colour=discord.Colour.gold(),
                 timestamp=datetime.utcnow()
             )
+            commands = {}
 
             # I'll probably rewrite this later without so many for's but it's fine for now.
             for command in self.bot.commands:
