@@ -49,7 +49,9 @@ class Help(commands.Cog):
                 command_list[command.cog_name].append(command.name)
                 for alias in command.aliases:
                     command_list[command.cog_name].append(alias)
-                    
+                for subcommand in command.subcommands:
+                    command_list[command.cog_name].append(f"{command} {subcommand}")
+
             for cog_num, cog in enumerate(command_list):
                 if cog_num == 24:
                     help.add_field(
