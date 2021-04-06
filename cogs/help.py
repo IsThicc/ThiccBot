@@ -47,7 +47,9 @@ class Help(commands.Cog):
                 if command.cog_name not in commands:
                     command_list[command.cog_name] = []
                 command_list[command.cog_name].append(command.name)
-
+                for alias in command.aliases:
+                    command_list[command.cog_name].append(alias)
+                    
             for cog_num, cog in enumerate(command_list):
                 if cog_num == 24:
                     help.add_field(
