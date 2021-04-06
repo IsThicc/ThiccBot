@@ -10,6 +10,7 @@ from discord.ext.commands import BucketType
 from discord              import Embed as em
 from datetime             import datetime
 from aiohttp              import ClientSession
+from asyncio              import sleep
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -77,7 +78,9 @@ class Staff(commands.Cog):
 
     @commands.Cog.listener(name="on_ready")
     async def deadline_on_ready(self):
-        self.deadline_24_loop.start
+        await sleep(5)
+        print("Starting Staff Loop!")
+        self.deadline_24_loop.start()
         
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
