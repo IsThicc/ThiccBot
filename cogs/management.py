@@ -10,6 +10,7 @@ from discord.ext.commands import BucketType
 from discord              import Embed as em
 from datetime             import datetime
 from aiohttp              import ClientSession
+from typing               import Union
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -459,9 +460,26 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    async def new_todo_embed(self, member, channel, ctx):
+        return await channel.send(content=member.mention, embed=em(
+            title="IsThicc Management",
+            description=f"""
+Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{ctx.prefix}todo view``
+            """,
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="newtodo", aliases=["new_todo", "nt", "ntodo"])
     @commands.has_role(role)
-    async def newtodo(self, ctx, member: discord.Member = None):
+    async def newtodo(self, ctx, member: Union[discord.Member, str] = None):
 
         if member is None:
 
@@ -478,20 +496,21 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
                 text="IsThicc Management"
             ))
 
+        if type(member) is not discord.Member:
+            if member != "all":
+                return await ctx.author.send("You inputted an incorrect argument! Please yell at Pie to finish this with an embed!")
+
+            staff_dict = {}
+            for staff in ctx.guild.get_role(744012353808498808).members:
+                staff_dict[staff.name.lower()] = staff
+
+            #                               Staff development category
+            for channel in self.bot.get_channel(812422468102520863).channels:
+                if channel.name in staff_dict:
+                    await self.new_todo_embed(staff_dict[channel.name], channel, ctx)
+
         await ctx.message.delete()
-        return await ctx.send(content=member.mention, embed=em(
-            title="IsThicc Management",
-            description=f"""
-Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{ctx.prefix}todo view``
-            """,
-            colour=discord.Colour.green(),
-            timestamp=datetime.utcnow()
-        ).set_thumbnail(
-            url=ctx.guild.icon_url
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Management"
-        ))
+        return await self.new_todo_embed(member, ctx.channel, ctx)
 
 #
 #
