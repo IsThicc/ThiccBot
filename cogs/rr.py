@@ -13,6 +13,10 @@ from discord.ext import commands
 class ReactionRoles(commands.Cog):
     def __init__(self, bot):
         self.bot   = bot
+        self.guild = None
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         self.guild = self.bot.get_guild(739510335949635736)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
