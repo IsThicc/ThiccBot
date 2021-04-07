@@ -58,9 +58,14 @@ class Todo(commands.Cog):
                     if len(TODO['description']) >= 1500:
                         TODO['description'] = "Please contact management! This description is over 1500 characters!"
 
+                    if TODO['deadline'] is not None:
+                        date = datetime.strptime(TODO['deadline'], '%d-%m-%Y').strftime('%A %B %d')
+                    else:
+                        date = "Not specified - Contact management if you need clarification!"
+
                     staff.add_field(
                         name=f"TODO #{TODO['id']}",
-                        value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}\n**Deadline:** {datetime.strptime(TODO['deadline'], '%d-%m-%Y').strftime('%A %B %d')}"
+                        value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}\n**Deadline:** {date}"
                     )
 
             staff.set_thumbnail(
