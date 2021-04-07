@@ -155,9 +155,9 @@ class Todo(commands.Cog):
     @commands.has_role(739510850079162530)
     async def view(self, ctx):
 
-        r     = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
-        json  = await r.json()
-        staff = em(
+        r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
+        json = await r.json()
+        r_em = em(
             title="Viewing all TODOs!",
             description="This includes the date they're due and the ID along with the user's name.",
             colour=discord.Colour.blurple(),
@@ -180,12 +180,12 @@ class Todo(commands.Cog):
 
             if len(deadlines) == 0: continue
 
-            staff.add_field(
+            r_em.add_field(
                 name=staff.capitalize()[:-4],
                 value="\n".join(deadlines)
             )
 
-        return await ctx.send(embed=staff)
+        return await ctx.send(embed=r_em)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
