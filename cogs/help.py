@@ -49,9 +49,10 @@ class Help(commands.Cog):
                 command_list[command.cog_name].append(command.name)
                 for alias in command.aliases:
                     command_list[command.cog_name].append(alias)
-                # TODO: Do this
-                # for subcommand in command.subcommands:
-                #     command_list[command.cog_name].append(f"{command} {subcommand}")
+
+                if type(command) is not discord.ext.commands.Group: continue
+                for subcommand in command.commands:
+                    command_list[command.cog_name].append(f"{command.name} {subcommand}")
 
             for cog_num, cog in enumerate(command_list):
                 if cog_num == 23:

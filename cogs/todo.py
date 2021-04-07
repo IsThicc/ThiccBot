@@ -401,6 +401,37 @@ class Todo(commands.Cog):
     #         else:
     #             return await ctx.send(embed=err_em)
 
+
+    @todo.error
+    async def todo_error(self, ctx, error):
+
+        if isinstance(error, commands.MissingRole):
+            await ctx.send(embed=em(
+                title="Missing Permissions!",
+                description="Sorry! This command is only for staff members!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            ))
+        else:
+            em_err = em(
+                title="An error has occurred!",
+                description=f"```css\n{str(error)}```",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            em_err.set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            )
+
+            if "msg" in locals():
+                await locals()["msg"].edit(embed=em_err)
+            else:
+                await ctx.send(embed=em_err)
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
