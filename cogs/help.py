@@ -52,7 +52,7 @@ class Help(commands.Cog):
 
                 if type(command) is not discord.ext.commands.Group or command.name.startswith("jishaku"): continue
                 for subcommand in command.commands:
-                    command_list[command.cog_name].append(subcommand.name)
+                    command_list[command.cog_name].append(f"{command.name} {subcommand.name}")
 
             for cog_num, cog in enumerate(command_list):
                 if cog_num == 23:
