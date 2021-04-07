@@ -25,7 +25,7 @@ class ReactionRoles(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         if payload.message_id == 804177369584631810:
 
-            member = self.guild.get_member(payload.member_id)
+            member = self.guild.get_member(payload.user_id)
             if str(payload.emoji) == "🔔":
                 role = self.guild.get_role(804161887704973323)
                 await member.add_roles(role)
@@ -44,7 +44,7 @@ class ReactionRoles(commands.Cog):
     async def on_raw_reaction_remove(self, payload):
         if payload.message_id == 804177369584631810:
 
-            member = self.guild.get_member(payload.member_id)
+            member = self.guild.get_member(payload.user_id)
             if str(payload.emoji) == "🔔":
                 role = self.guild.get_role(804161887704973323)
                 await member.remove_roles(role)
