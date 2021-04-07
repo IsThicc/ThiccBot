@@ -50,7 +50,7 @@ class Help(commands.Cog):
                 for alias in command.aliases:
                     command_list[command.cog_name].append(alias)
 
-                if type(command) is not discord.ext.commands.Group: continue
+                if type(command) is not discord.ext.commands.Group or command.name.startswith("jishaku"): continue
                 for subcommand in command.commands:
                     command_list[command.cog_name].append(f"{command.name} {subcommand}")
 
