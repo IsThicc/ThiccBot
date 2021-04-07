@@ -185,6 +185,12 @@ class Todo(commands.Cog):
                 value="\n".join(deadlines)
             )
 
+        r_em.set_thumbnail(url=ctx.guild.icon_url)
+        r_em.set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        )
+
         return await ctx.send(embed=r_em)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
