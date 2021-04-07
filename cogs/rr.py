@@ -15,6 +15,8 @@ class ReactionRoles(commands.Cog):
         self.bot   = bot
         self.guild = None
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener()
     async def on_ready(self):
         self.guild = self.bot.get_guild(739510335949635736)

@@ -49,7 +49,7 @@ class Project(commands.Cog):
     @commands.has_role(739510850079162530)
     async def project(self, ctx, member, option=None, extra: str = None):
         try:
-            app_uri = f'http://localhost:5000/staff/project/{member.name}'
+            app_uri = f'http://10.42.10.4:5000/staff/project/{member.name}'
             
             if option == "create":
                 data = {
@@ -107,11 +107,11 @@ class Project(commands.Cog):
                         "webhook" : None
                     },
                 }
-                data = json.dumps(data, separators=(',',':'))
-                headers = { "edit": data }
-                x = requests.post(app_uri, headers=headers)
-                data = x.json()
-                file = data["file"]
+                data    = json.dumps(data, separators=(',', ':'))
+                headers = {"edit": data}
+                x       = requests.post(app_uri, headers=headers)
+                data    = x.json()
+                file    = data["file"]
                 
                 if self.parse_error(ctx, data): return
 
@@ -137,7 +137,7 @@ class Project(commands.Cog):
                     ))
 
                 # start setup
-                await self.service()
+                await self.service(ctx, ctx.member)
 
 
         except Exception as e:
@@ -179,7 +179,7 @@ class Project(commands.Cog):
 
         # create channel and send message
         category = discord.utils.get(ctx.guild.categories, name='『 Staff Development 』')
-        channel = await ctx.guild.create_text_channel(f"app-{member.display_name}",category=category)
+        channel  = await ctx.guild.create_text_channel(f"app-{member.display_name}",category=category)
         await channel.set_permissions(member, send_messages=True, read_messages=True)
         # await channel.set_permissions(ctx.guild.get_member(348547981253017610), send_messages=True, read_messages=True)
             
@@ -203,7 +203,8 @@ class Project(commands.Cog):
 
         # loop though the service format and get answers
         for _ in range(len(service_format)):
-            i = open_projects[id]["index"]+1
+
+            i = open_projects[id]["index"] + 1
             open_projects[id]["index"] = i
 
             # create a list for answers
@@ -213,19 +214,19 @@ class Project(commands.Cog):
 
             if timed_out: return await channel.send(embed=close_em)
 
-        await self.save_data(member)
+        await self.save_data(member, ctx)
 
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def ask_question(self, id, ctx, question):
-        app = open_projects[id]
+        app   = open_projects[id]
         index = app["index"]
         title = f"{index}. " + question["title"]
 
         # send message
         await ctx.send(embed=em(
-            title = question["title"],
+            title=question["title"],
             url="https://isthicc.dev",
             description=question["description"],
             colour=discord.Colour.gold(),
@@ -255,14 +256,14 @@ class Project(commands.Cog):
     async def save_data(self, member, ctx):
         # update this to the real address
         app = open_projects[member.id]
-        app_uri = f'http://localhost:5000/staff/project/{member.name}'
+        app_uri = f'http://10.42.10.4:5000/staff/project/{member.name}'
 
         # (the caps in the keys don't matter)
         title = app["answers"][0]
         data = {
             title : {
-                "url": app["answers"][1],
-                "vps": app["answers"][2],
+                "url":  app["answers"][1],
+                "vps":  app["answers"][2],
                 "sudo": app["answers"][3],
                 "user": "none"
             }
