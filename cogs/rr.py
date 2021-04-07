@@ -26,7 +26,7 @@ class ReactionRoles(commands.Cog):
         if payload.message_id == 804177369584631810:
 
             member = self.guild.get_member(payload.user_id)
-            if str(payload.emoji) == "🔔":
+            if str(payload.emoji)   == "🔔":
                 role = self.guild.get_role(804161887704973323)
                 await member.add_roles(role)
 
@@ -36,6 +36,10 @@ class ReactionRoles(commands.Cog):
 
             elif str(payload.emoji) == "💻":
                 role = self.guild.get_role(804161946004881448)
+                await member.add_roles(role)
+
+            elif str(payload.emoji) == "⌛":
+                role = self.guild.get_role(829165778321276949)
                 await member.add_roles(role)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -45,7 +49,7 @@ class ReactionRoles(commands.Cog):
         if payload.message_id == 804177369584631810:
 
             member = self.guild.get_member(payload.user_id)
-            if str(payload.emoji) == "🔔":
+            if str(payload.emoji)   == "🔔":
                 role = self.guild.get_role(804161887704973323)
                 await member.remove_roles(role)
 
@@ -57,6 +61,9 @@ class ReactionRoles(commands.Cog):
                 role = self.guild.get_role(804161946004881448)
                 await member.remove_roles(role)
 
+            elif str(payload.emoji) == "⌛":
+                role = self.guild.get_role(829165778321276949)
+                await member.remove_roles(role)
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
