@@ -10,6 +10,7 @@ from discord.ext.commands import BucketType
 from discord              import Embed as em
 from datetime             import datetime
 from aiohttp              import ClientSession
+from typing               import Union
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -32,7 +33,7 @@ class Todo(commands.Cog):
         ))
 
         request = await self.session.get(f"http://10.42.10.4:5000/staff/todo/{ctx.author.id}")
-        code = request.status
+        code    = request.status
         await asyncio.sleep(2)
 
         if code == 200:
@@ -59,7 +60,7 @@ class Todo(commands.Cog):
 
                     staff.add_field(
                         name=f"TODO #{TODO['id']}",
-                        value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}\n**Deadline:** {TODO['deadline']}"
+                        value=f"**Name:** {TODO['name']}\n**Description:** {TODO['description']}\n**Deadline:** {datetime.strptime(TODO['deadline'], '%d-%m-%Y').strftime('%A %B %d')}"
                     )
 
             staff.set_thumbnail(
@@ -147,6 +148,16 @@ class Todo(commands.Cog):
     @commands.has_role(744012353808498808)
     async def view(self, ctx):
         await self.view_todo(ctx)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @todo.command(name="new")
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(739510850079162530)
+    async def new(self, ctx, member: Union[discord.Member, str], reason: str = None):
+        if reason is None:
+            return await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member)
+        await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member, reason=reason)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
