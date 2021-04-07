@@ -29,7 +29,6 @@ class Help(commands.Cog):
         :return: Returns Help embed.
         """
 
-        # TODO: Put the actual staff channel id here!
         if ctx.author.permissions_in(self.bot.get_channel(744010240542113792)).send_messages:
 
             command_list = {}

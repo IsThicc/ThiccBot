@@ -153,7 +153,7 @@ class Todo(commands.Cog):
     @todo.command(name="all")
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
-    async def view(self, ctx):
+    async def view_all(self, ctx):
 
         r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
         json = await r.json()
