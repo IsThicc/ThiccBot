@@ -154,10 +154,8 @@ class Todo(commands.Cog):
     @todo.command(name="new")
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
-    async def new(self, ctx, member: Union[discord.Member, str], reason: str = None):
-        if reason is None:
-            return await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member)
-        await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member, reason=reason)
+    async def new(self, ctx, member: Union[discord.Member, str]):
+        return await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
