@@ -22,10 +22,11 @@ class Management(commands.Cog):
         self.session  =  ClientSession()
 
     role = 739510850079162530
+    help = "An IsThicc Sotware Management commmand."
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="announce", help=help)
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(role)
     async def announce(self, ctx, option=None):
@@ -78,8 +79,7 @@ class Management(commands.Cog):
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Management"
-            )
-            )
+            ))
 
         await message.reply(ping=False, embed=em(
             title="Please delete your password!",
@@ -88,8 +88,7 @@ class Management(commands.Cog):
         ).set_footer(
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Management"
-        )
-        )
+        ))
 
         request = await self.session.post(f"http://10.42.10.4:5000/token/{message.content}")
         code = request.status
@@ -219,7 +218,7 @@ class Management(commands.Cog):
                                               "Authorization": message.content,
                                               "content": announcement.content
                                           })
-        code = request.status
+        code     = request.status
         response = await request.json()
 
         if code != 200:
@@ -283,7 +282,7 @@ class Management(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="archive", help=help)
     @commands.has_role(role)
     async def archive(self, ctx):
 
@@ -301,7 +300,7 @@ class Management(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="accept", help=help)
     @commands.has_role(role)
     async def accept(self, ctx, member: discord.Member):
 
@@ -335,9 +334,9 @@ class Management(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="remind", help=help)
     @commands.has_role(role)
-    async def remind(self, ctx, option="development", member: discord.Member=None):
+    async def remind(self, ctx, option="development", member: discord.Member = None):
 
         if option is None or member is None:
 
@@ -397,7 +396,7 @@ Hey {member.mention}, we noticed you haven't been making any progress. Please le
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command(name="strike")
+    @commands.command(name="strike", help=help)
     @commands.has_role(role)
     async def strike(self, ctx, member: discord.Member=None, *, reason="Lack of development."):
 
@@ -441,7 +440,7 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="reload", help=help)
     @commands.is_owner()
     async def reload(self, ctx, cog: str = None):
         msg = await ctx.send(embed=discord.Embed(description="GitHub Pulling...", colour=discord.Colour.green()))
@@ -477,7 +476,41 @@ Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command(name="newtodo", aliases=["new_todo", "nt", "ntodo"])
+    @commands.command(name="wireguard", aliases=["wg", "vpn"], help=help)
+    @commands.has_role(role)
+    async def wireguard(self, ctx, member: Union[discord.Member] = None):
+
+        if member is None:
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        return await ctx.send(content=member.mention, embed=em(
+            title="Wireguard!",
+            description=f"""
+Hey {member.mention}, IsThicc Management believe you are ready to get Wireguard access! Wireguard is a VPN client that we use to let staff use our internal services. 
+
+Please follow the instructions in <#800601043346915369> to get ready. If you have any concerns or issues with this please let us know! Once you've made it to the end please wait for Management!
+""",
+            colour=discord.Colour.gold(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command(name="newtodo", aliases=["new_todo", "nt", "ntodo"], help=help)
     @commands.has_role(role)
     async def newtodo(self, ctx, member: Union[discord.Member, str] = None):
 

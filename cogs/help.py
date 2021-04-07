@@ -32,6 +32,7 @@ class Help(commands.Cog):
         if ctx.author.permissions_in(self.bot.get_channel(744010240542113792)).send_messages:
 
             command_list = {}
+            commands     = {}
 
             help = em(
                 title="Staff Help!",
@@ -39,17 +40,19 @@ class Help(commands.Cog):
                 colour=discord.Colour.gold(),
                 timestamp=datetime.utcnow()
             )
-            commands = {}
 
             # I'll probably rewrite this later without so many for's but it's fine for now.
             for command in self.bot.commands:
+
                 if command.cog_name not in commands:
                     command_list[command.cog_name] = []
+
                 command_list[command.cog_name].append(command.name)
                 for alias in command.aliases:
                     command_list[command.cog_name].append(alias)
 
                 if type(command) is not discord.ext.commands.Group or command.name.startswith("jishaku"): continue
+
                 for subcommand in command.commands:
                     command_list[command.cog_name].append(f"{command.name} {subcommand.name}")
 
@@ -91,7 +94,7 @@ The IsThicc Bot doesn't currently have any public commands! Please check back la
 
     @commands.command(name="test")
     async def test(self, ctx):
-        await ctx.send("test you hoe")
+        await ctx.send("test you hoe :heart:")
 
 #
 #
