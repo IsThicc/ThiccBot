@@ -146,7 +146,7 @@ class Staff(commands.Cog):
                 text="IsThicc Staff"
             ))
 
-        self.bot.get_command(name="strike").__call__(ctx=ctx, member=member, reason=reason)
+        await self.bot.get_command(name="strike").__call__(ctx=ctx, member=member, reason=reason)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
