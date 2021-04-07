@@ -140,7 +140,7 @@ class Todo(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @todo.command(name="view", aliases=["view"])
+    @todo.command(name="view")
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(744012353808498808)
     async def view(self, ctx):
