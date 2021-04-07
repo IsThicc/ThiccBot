@@ -128,15 +128,17 @@ class Todo(commands.Cog):
 
         if ctx.invoked_subcommand is not None: return
 
-        return await ctx.send(embed=em(
-            title="Uh Oh!",
-            description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Staff"
-        ))
+        return await self.view_todo(ctx)
+
+        # return await ctx.send(embed=em(
+        #     title="Uh Oh!",
+        #     description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
+        #     colour=discord.Colour.red(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -145,6 +147,45 @@ class Todo(commands.Cog):
     @commands.has_role(744012353808498808)
     async def view(self, ctx):
         await self.view_todo(ctx)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @todo.command(name="all")
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(739510850079162530)
+    async def view(self, ctx):
+
+        r     = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
+        json  = await r.json()
+        staff = em(
+            title="Viewing all TODOs!",
+            description="This includes the date they're due and the ID along with the user's name.",
+            colour=discord.Colour.blurple(),
+            timestamp=datetime.utcnow()
+        )
+
+        for staff in json['staff']:
+
+            # TODO: Add a check to make sure we don't go over the 25 field cap(if we ever have that many staff)
+            if len(json['staff'][staff]['deadlines']) == 0: continue
+
+            deadlines = []
+
+            for deadline in json['staff'][staff]['deadlines']:
+
+                if deadline[1] is None: continue
+                # if deadline[1] != str(datetime.now().strftime("%d-%m-%Y")): continue
+
+                deadlines.append(f"#{deadline[0]} - {datetime.strptime(deadline[1], '%d-%m-%Y').strftime('%A %B %d')}")
+
+            if len(deadlines) == 0: continue
+
+            staff.add_field(
+                name=staff.capitalize()[:-4],
+                value="\n".join(deadlines)
+            )
+
+        return await ctx.send(embed=staff)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -173,19 +214,8 @@ class Todo(commands.Cog):
                 text="IsThicc Staff"
             ))
 
-        # Send Messages #
         msg = await ctx.send(embed=em(
-            title="Please supply your password!",
-            description="We need to confirm it's really you before we can mark your TODO as completed!Please check your dm's!",
-            colour=discord.Colour.dark_red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Staff"
-        ))
-
-        pass_r_msg = await ctx.author.send(embed=em(
-            title="Please send your password below!",
+            title="Attempting to mark your TODO as completed!",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
         ).set_footer(
@@ -193,49 +223,70 @@ class Todo(commands.Cog):
             text="IsThicc Staff"
         ))
 
-        timeout = em(
-            title="Timed out!",
-            description="Next time please respond within the timout time!",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Staff"
-        )
-
-        # Try to get password
-        try:
-            def pass_check(m):
-                return m.author == ctx.author and m.channel == ctx.author.dm_channel
-            pass_msg = await self.bot.wait_for("on_message", check=pass_check, timeout=60)
-
-        except asyncio.TimeoutError:
-            await msg.edit(embed=timeout)
-            return await pass_r_msg.edit(embed=timeout)
-
-        except:
-            return await msg.edit(embed=em(
-                title="An unknown error occurred!",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.bot.user.avatar_url,
-                text="IsThicc Staff"
-            ))
-
-        await pass_msg.reply(ping=False, embed=em(
-            title="Please delete your password!",
-            colour=discord.Colour.green(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Staff"
-        ))
+        # # Send Messages #
+        # msg = await ctx.send(embed=em(
+        #     title="Please supply your password!",
+        #     description="We need to confirm it's really you before we can mark your TODO as completed!Please check your dm's!",
+        #     colour=discord.Colour.dark_red(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # ))
+        #
+        # pass_r_msg = await ctx.author.send(embed=em(
+        #     title="Please send your password below!",
+        #     colour=discord.Colour.green(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # ))
+        #
+        # timeout = em(
+        #     title="Timed out!",
+        #     description="Next time please respond within the timout time!",
+        #     colour=discord.Colour.red(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # )
+        #
+        # # Try to get password
+        # try:
+        #     def pass_check(m):
+        #         return m.author == ctx.author and m.channel == ctx.author.dm_channel
+        #     pass_msg = await self.bot.wait_for("on_message", check=pass_check, timeout=60)
+        #
+        # except asyncio.TimeoutError:
+        #     await msg.edit(embed=timeout)
+        #     return await pass_r_msg.edit(embed=timeout)
+        #
+        # except:
+        #     return await msg.edit(embed=em(
+        #         title="An unknown error occurred!",
+        #         colour=discord.Colour.red(),
+        #         timestamp=datetime.utcnow()
+        #     ).set_footer(
+        #         icon_url=self.bot.user.avatar_url,
+        #         text="IsThicc Staff"
+        #     ))
+        #
+        # await pass_msg.reply(ping=False, embed=em(
+        #     title="Please delete your password!",
+        #     colour=discord.Colour.green(),
+        #     timestamp=datetime.utcnow()
+        # ).set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Staff"
+        # ))
 
         # Execute Request
         headers = {
-            "Authorization" : pass_msg.content,
-            "id" : extra
+            # TODO: Get bot Authorization from Config.py
+            "Authorization": "",
+            "id": extra
         }
 
         request = await self.session.get(f"http://10.42.10.4:5000/staff/todo/complete/{ctx.author.id}", headers=headers)
