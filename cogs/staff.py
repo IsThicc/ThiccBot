@@ -91,10 +91,6 @@ class Staff(commands.Cog):
 
         if ctx.invoked_subcommand is not None: return
 
-        # option = None
-        # member = None
-        # try:
-
         return await ctx.send(embed=em(
             title="Uh Oh!",
             description="You haven't supplied a required argument!\nAvailable arguments:\n```view```\n_ _",
@@ -104,31 +100,6 @@ class Staff(commands.Cog):
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Staff"
         ))
-
-        # return await ctx.send(embed=em(
-        #     title="So uh, yea...",
-        #     description="So you found this command! Good on you, just one issue, I haven't finished coding it! Make sure to yell at Mrmagicpie to finish this!",
-        #     colour=discord.Colour.dark_red(),
-        #     timestamp=datetime.utcnow()
-        # ).set_footer(
-        #     icon_url=self.bot.user.avatar_url,
-        #     text="IsThicc Staff"
-        # ))
-
-        # except Exception as e:
-        #     err_em = em(
-        #         title="Command Error!",
-        #         description=f"```py\n{e}```",
-        #         colour=discord.Colour.red(),
-        #         timestamp=datetime.utcnow()
-        #     ).set_footer(
-        #             icon_url=self.bot.user.avatar_url,
-        #             text="IsThicc Staff"
-        #     )
-        #     if 'msg' in locals():
-        #         return await locals()["msg"].edit(embed=err_em)
-        #     else:
-        #         return await ctx.send(embed=err_em)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -151,6 +122,8 @@ class Staff(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @staff.command(name="edit")
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(744012353808498808)
     async def edit(self, ctx, member: discord.Member = None):
 
         return await ctx.send(embed=em(
@@ -164,7 +137,223 @@ class Staff(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @staff.command(name="language", aliases=["languages"])
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(744012353808498808)
+    async def languages(self, ctx, member: str = None):
+
+        if member is None:
+            return await ctx.send(embed=em(
+                title="You didn't supply a member!",
+                description="Oh no, you forgot to supply a member to check! Make sure you do that next time!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            ))
+
+        else:
+            discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
+
+            if discord_member is not None:
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {discord_member.display_name}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+                member = str(discord_member.id)
+
+            else:
+                if member.startswith("<@"):
+                    member = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', member)[0]
+
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {member}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
+            code    = request.status
+
+            if code == 200:
+                response  = await request.json()
+                languages = []
+
+                request.close()
+                await asyncio.sleep(2)
+
+                if len(response['details']['languages']) == 0:
+                    languages.append("Not specified.")
+
+                for language in response['details']['languages']:
+                    languages.append(f'- {language}')
+
+                return await msg.edit(embed=em(
+                    title=f"Showing languages for {response['details']['name'].capitalize()}",
+                    description=f"**Languages for {response['details']['name'].capitalize()}**\n" + "\n".join(languages),
+                    colour=discord.Colour.blurple(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            elif code == 403:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="Oh no!",
+                    description="You requested a staff member you're not allowed to access!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            elif code == 404:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="Unknown Staff Member!",
+                    description="Your requested Staff Member does not exist!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            else:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="U h",
+                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code ``{str(code)}``",
+                    colour=discord.Colour.dark_red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @staff.command(name="pronoun", aliases=["pronouns"])
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(744012353808498808)
+    async def pronouns(self, ctx, member: str = None):
+
+        if member is None:
+            return await ctx.send(embed=em(
+                title="You didn't supply a member!",
+                description="Oh no, you forgot to supply a member to check! Make sure you do that next time!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Staff"
+            ))
+
+        else:
+            discord_member = discord.utils.get(ctx.guild.members, name=member.split("#")[0])
+
+            if discord_member is not None:
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {discord_member.display_name}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+                member = str(discord_member.id)
+
+            else:
+                if member.startswith("<@"):
+                    member = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', member)[0]
+
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {member}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
+            code    = request.status
+
+            if code == 200:
+                response = await request.json()
+                pronouns = []
+
+                request.close()
+                await asyncio.sleep(2)
+
+                if len(response['details']['pronouns']) == 0:
+                    pronouns.append("Not specified.")
+
+                for pronoun in response['details']['pronouns']:
+                    pronouns.append(f'- {pronoun}')
+
+                return await msg.edit(embed=em(
+                    title=f"Showing pronouns for {response['details']['name'].capitalize()}",
+                    description=f"**Pronouns for {response['details']['name'].capitalize()}**\n" + "\n".join(pronouns),
+                    colour=discord.Colour.blurple(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            elif code == 403:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="Oh no!",
+                    description="You requested a staff member you're not allowed to access!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            elif code == 404:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="Unknown Staff Member!",
+                    description="Your requested Staff Member does not exist!",
+                    colour=discord.Colour.red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+            else:
+                request.close()
+                return await msg.edit(embed=em(
+                    title="U h",
+                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code ``{str(code)}``",
+                    colour=discord.Colour.dark_red(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @staff.command(name="view")
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(744012353808498808)
     async def view(self, ctx, member: str = None):
 
         if member is None:
@@ -192,20 +381,22 @@ class Staff(commands.Cog):
                 ))
                 member = str(discord_member.id)
 
-            if member.startswith("<@"):
-                member = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', member)[0]
+            else:
 
-            msg = await ctx.send(embed=em(
-                title=f"Attempting to view: {member}",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.bot.user.avatar_url,
-                text="IsThicc Staff"
-            ))
+                if member.startswith("<@"):
+                    member = re.search(r'(?<=<[!|@]|@!)\d+(?=>)', member)[0]
+
+                msg = await ctx.send(embed=em(
+                    title=f"Attempting to view: {member}",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                ).set_footer(
+                    icon_url=self.bot.user.avatar_url,
+                    text="IsThicc Staff"
+                ))
 
             request = await self.session.get(f"http://10.42.10.4:5000/staff/{member}")
-            code = request.status
+            code    = request.status
 
             if code == 200:
 
@@ -333,7 +524,7 @@ class Staff(commands.Cog):
                 request.close()
                 return await msg.edit(embed=em(
                     title="U h",
-                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code `{str(code)}`",
+                    description=f"You ran into an unknown response code! Make sure to report this to the developers!\nExited with code ``{str(code)}``",
                     colour=discord.Colour.dark_red(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
