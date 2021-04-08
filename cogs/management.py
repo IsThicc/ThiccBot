@@ -463,9 +463,12 @@ A strike is a mark on your staff record. 3 strikes will result in disciplinary a
         return await channel.send(content=member.mention, embed=em(
             title="IsThicc Management",
             description=f"""
-Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{ctx.prefix}todo view``
+Hey {member.mention}, 
+
+You have new TODO's! Please make sure to review them!
+``{ctx.prefix}todo view``
             """,
-            colour=discord.Colour.green(),
+            colour=discord.Colour.dark_magenta(),
             timestamp=datetime.utcnow()
         ).set_thumbnail(
             url=ctx.guild.icon_url
@@ -480,9 +483,12 @@ Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{
         return await channel.send(content=member.mention, embed=em(
             title="IsThicc Management",
             description=f"""
-Hey {member.mention}, your TODOs have been updated! Please make sure to review them - ``{ctx.prefix}todo view``
+Hey {member.mention}, 
+
+Your TODOs have been **updated**! Please make sure to review them!
+``{ctx.prefix}todo view``
             """,
-            colour=discord.Colour.green(),
+            colour=discord.Colour.blue(),
             timestamp=datetime.utcnow()
         ).set_thumbnail(
             url=ctx.guild.icon_url
