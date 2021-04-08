@@ -160,14 +160,14 @@ class Todo(commands.Cog):
 
     @todo.command(name="update", aliases=["updated"])
     @commands.has_role(739510850079162530)
-    async def update(self, ctx, member: Union[discord.Member, str]):
+    async def update(self, ctx, member: Union[discord.Member, str] = None):
         return await self.bot.get_command(name="updatetodo").__call__(ctx=ctx, member=member)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @todo.command(name="new")
     @commands.has_role(739510850079162530)
-    async def new(self, ctx, member: Union[discord.Member, str]):
+    async def new(self, ctx, member: Union[discord.Member, str] = None):
         return await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
