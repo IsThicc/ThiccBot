@@ -22,6 +22,8 @@ class Todo(commands.Cog):
         self.bot     = bot
         self.session = ClientSession()
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     async def view_todo(self, ctx):
         msg = await ctx.send(embed=em(
             title=f"Attempting to view TODOs for {ctx.author.name}!",
@@ -156,8 +158,14 @@ class Todo(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @todo.command(name="update", aliases=["updated"])
+    @commands.has_role(739510850079162530)
+    async def update(self, ctx, member: Union[discord.Member, str]):
+        return await self.bot.get_command(name="updatetodo").__call__(ctx=ctx, member=member)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @todo.command(name="new")
-    @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
     async def new(self, ctx, member: Union[discord.Member, str]):
         return await self.bot.get_command(name="newtodo").__call__(ctx=ctx, member=member)

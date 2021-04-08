@@ -476,6 +476,23 @@ Hey {member.mention}, you have new TODO's! Please make sure to review them - ``{
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    async def update_todo_embed(self, member, channel, ctx):
+        return await channel.send(content=member.mention, embed=em(
+            title="IsThicc Management",
+            description=f"""
+Hey {member.mention}, your TODOs have been updated! Please make sure to review them - ``{ctx.prefix}todo view``
+            """,
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_thumbnail(
+            url=ctx.guild.icon_url
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management"
+        ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command(name="wireguard", aliases=["wg", "vpn"], help=help)
     @commands.has_role(role)
     async def wireguard(self, ctx, member: Union[discord.Member] = None):
@@ -531,6 +548,7 @@ Please follow the instructions in <#800601043346915369> to get ready. If you hav
 
         if type(member) is not discord.Member:
             if member != "all":
+                await ctx.message.delete()
                 return await ctx.author.send("You inputted an incorrect argument! Please yell at Pie to finish this with an embed!")
 
             staff_dict = {}
@@ -541,9 +559,48 @@ Please follow the instructions in <#800601043346915369> to get ready. If you hav
             for channel in self.bot.get_channel(812422468102520863).channels:
                 if channel.name in staff_dict:
                     await self.new_todo_embed(staff_dict[channel.name], channel, ctx)
+            return
 
         await ctx.message.delete()
         return await self.new_todo_embed(member, ctx.channel, ctx)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command(name="updatetodo", help=help)
+    @commands.has_role(role)
+    async def updatetodo(self, ctx, member: Union[discord.Member, str] = None):
+
+        if member is None:
+
+            await ctx.message.delete()
+            return await ctx.author.send(embed=em(
+                title="Uh oh!",
+                description="Uh oh, you forgot to supply an additional argument. Please make sure to supply a member.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_thumbnail(
+                url=ctx.guild.icon_url
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Management"
+            ))
+
+        if type(member) is not discord.Member:
+            if member != "all":
+                await ctx.message.delete()
+                return await ctx.author.send("You inputted an incorrect argument! Please yell at Pie to finish this with an embed!")
+
+            staff_dict = {}
+            for staff in ctx.guild.get_role(744012353808498808).members:
+                staff_dict[staff.name.lower()] = staff
+
+            #                               Staff development category
+            for channel in self.bot.get_channel(812422468102520863).channels:
+                if channel.name in staff_dict:
+                    await self.update_todo_embed(staff_dict[channel.name], channel, ctx)
+
+        await ctx.message.delete()
+        return await self.update_todo_embed(member, ctx.channel, ctx)
 
 #
 #
