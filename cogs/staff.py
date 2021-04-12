@@ -248,10 +248,8 @@ class Staff(commands.Cog):
     @commands.has_role(744012353808498808)
     async def time(self, ctx):
 
-        location = None
-        time = datetime.now().astimezone(location).strftime("%H:%M:%S GMT%z")
+        time = datetime.now().astimezone(None).strftime("%H:%M:%S GMT%z")
         
-        # will make it look prettier later
         await ctx.send(embed=em(
             title=f"{time}",
             colour=discord.Colour.green(),
