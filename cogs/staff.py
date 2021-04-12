@@ -243,6 +243,25 @@ class Staff(commands.Cog):
                 ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    @staff.command(name="time", aliases=["timezone"])
+    @commands.cooldown(1, 1, BucketType.user)
+    @commands.has_role(744012353808498808)
+    async def time(self, ctx):
+
+        location = None
+        time = datetime.now().astimezone(location).strftime("%H:%M:%S GMT%z")
+        
+        # will make it look prettier later
+        await ctx.send(embed=em(
+            title=f"{time}",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Staff"
+        ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @staff.command(name="pronoun", aliases=["pronouns"])
     @commands.cooldown(1, 1, BucketType.user)
