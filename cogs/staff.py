@@ -24,6 +24,21 @@ class Staff(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    # {   'api_time': '2021-04-16 21:55:50.152546',
+    #     'endpoint': '/staff/deadlines',
+    #     'info': 'Staff member deadlines endpoint!',
+    #     'name': 'IsThicc Backend API',
+    #     'staff': {   'Doge.yml': {'deadlines': [[2, None]]},
+    #                  'Fxcilities.yml': {'deadlines': [[10, '12-04-2021']]},
+    #                  'Greenlio.yml': {'deadlines': [[2, None]]},
+    #                  'Henbomb.yml': {'deadlines': [[8, '14-04-2021']]},
+    #                  'Marv.yml': {'deadlines': [[3, None]]},
+    #                  'Owocean.yml': {'deadlines': [[1, '12-04-2021']]},
+    #                  'Pie.yml': {'deadlines': [[1, None]]},
+    #                  'Shuana.yml': {'deadlines': [[3, '12-04-2021']]},
+    #                  'Strndr.yml': {'deadlines': [[4, '14-04-2021']]},
+    #                  'Zach.yml': {'deadlines': [[4, None]]}}}
+
     async def remind_staff(self):
 
         r    = await self.session.get("http://10.42.10.4:5000/staff/deadlines")
@@ -38,6 +53,7 @@ class Staff(commands.Cog):
             for deadline in json['staff'][staff]['deadlines']:
 
                 if deadline[1] is None: continue
+                # TODO: Stop using string comparisons and actually compare the datetime 
                 if deadline[1] != str(datetime.now().strftime("%d-%m-%Y")): continue
 
                 deadlines.append(deadline)
