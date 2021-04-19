@@ -608,6 +608,70 @@ Please follow the instructions in <#800601043346915369> to get ready. If you hav
         await ctx.message.delete()
         return await self.update_todo_embed(member, ctx.channel, ctx)
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    async def check_api(self, admin: bool = None) -> dict:
+        r      = await self.session.get("http://127.0.0.1:5000/endpoints")
+        j      = await r.json()
+        d      = j['details']
+        r_dict = {}
+
+        for e in d:
+            if admin:
+                r_dict[e] = d[e]
+
+            elif not admin:
+                if d[e]['admin']: continue
+                r_dict[e] = d[e]
+
+            elif admin is None:
+                if d[e]['admin'] or d[e]['staff']: continue
+                r_dict[e] = d[e]
+
+        r.close()
+        return r_dict
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    async def api_member(self, ctx):
+        return await ctx.send(embed=em(
+            title="Oh no!",
+            description="Sorry! This command is currently only available for Staff and Board members!",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Management!"
+        ))
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    async def api_staff(self, ctx):
+
+        ...
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    async def api_management(self, ctx):
+
+        ...
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command(name="api", aliases=["apis"], help=help)
+    async def api(self, ctx):
+
+        # Staff
+        if ctx.author.permissions_in(self.bot.get_channel(744010240542113792)).send_messages:
+            return await self.api_staff(ctx)
+
+        # Management
+        elif ctx.author.permissions_in(self.bot.get_channel(744010240542113792)).send_messages:
+            return await self.api_management(ctx)
+
+        else:
+            return await self.api_member(ctx)
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
