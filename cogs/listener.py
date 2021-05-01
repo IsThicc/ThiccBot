@@ -19,7 +19,7 @@ from aiohttp              import ClientSession
 #
 
 channels = [
-    '838158218567614495' # test channel
+    838158218567614495 # test channel
 ]
 
 class Listener(commands.Cog):
