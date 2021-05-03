@@ -38,7 +38,7 @@ class Listener(commands.Cog):
         if message.channel.id not in channels: 
             return
         
-        elif not message.author.bot: 
+        elif message.author.bot: 
             return await message.delete()
         
         id = message.author.id
@@ -47,6 +47,7 @@ class Listener(commands.Cog):
         if id in self.bot.verify_cache:
             if self.bot.verify_cache[id]['tries'] >= 4:
                 if not self.bot.verify_cache[id]['last_try'] >= (d.now() - timedelta(minutes=10)):
+                    await message.delete()
                     return await c.send(embed=em(title="You are being ratelimited!", 
                                                  description="Sorry! You have attempted to verify too many times! Please wait 10 minutes!",
                                                  colour=discord.Colour.red()), delete_after=10)
@@ -67,6 +68,7 @@ class Listener(commands.Cog):
             await message.delete()
             
         else:
+            await message.delete()
             request = await self.session.post(f"http://127.0.0.1:2003/", headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
             code    = request.status
 
