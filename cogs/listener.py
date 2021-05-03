@@ -39,7 +39,7 @@ class Listener(commands.Cog):
             return
         
         elif message.author.bot: 
-            return await message.delete()
+            return
         
         id = message.author.id
         c  = message.channel
