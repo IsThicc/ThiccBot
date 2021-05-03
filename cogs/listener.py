@@ -59,16 +59,19 @@ class Listener(commands.Cog):
         
         l = len(message.clean_content)
         
+        await message.delete()
+        
         if l < 30: 
-            await c.send(content=f"Your message is {30-l} letters too short:\n```{message.content}```")
-            await message.delete()
+            await c.send(embed=em(title=f"Your message is {30-l} letters too short:", 
+                                  description=f"```{message.content}```",
+                                  colour=discord.Colour.red()), delete_after=10)
         
         elif l > 60:
-            await c.send(content=f"Your message is {l-60} letters too long:\n```{message.content}```")
-            await message.delete()
+            await c.send(embed=em(title=f"Your message is {l-60} letters too long:", 
+                                  description=f"```{message.content}```",
+                                  colour=discord.Colour.red()), delete_after=10)
             
         else:
-            await message.delete()
             request = await self.session.post(f"http://127.0.0.1:2003/", headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
             code    = request.status
 
