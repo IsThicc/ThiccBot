@@ -636,7 +636,7 @@ Please follow the instructions in <#800601043346915369> to get ready. If you hav
     async def api_member(self, ctx):
         return await ctx.send(embed=em(
             title="Oh no!",
-            description="Sorry! This command is currently only available for Staff and Board members!",
+            description="Sorry! This command is currently only available for Staff members!",
             colour=discord.Colour.red(),
             timestamp=datetime.utcnow()
         ).set_footer(
@@ -654,7 +654,54 @@ Please follow the instructions in <#800601043346915369> to get ready. If you hav
 
     async def api_management(self, ctx):
 
-        ...
+        request = await self.session.get("http://10.42.10.4:5000/endpoints")
+        json    = await request.json()
+
+        if request.status != 200 or 'details' not in json:
+            return await ctx.send(embed=em(
+                title="An API Error has occurred!",
+                description=f"Please check logs to figure out why a {request.status} has happened!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc API Management"
+            ))
+
+        msg = await ctx.send(embed=em(
+            title="Processing request!",
+            colour=discord.Colour.red(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc API Management"
+        ))
+
+        r_em = em(
+            title="Management API Urls!",
+            description="Below are the API endpoints available for Management, Staff and normal user use.",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        )
+
+        if len(json['details']) <= 25:
+            for endpoint in json['details']:
+                r_em.add_field(
+                    name=endpoint['route'],
+                    value=f"""
+**Authorization:**
+Admin: {endpoint['admin']}
+Staff: {endpoint['staff']}
+
+**Methods:**
+``{"`` | ".join(endpoint['methods'])}``
+                    """
+                )
+
+        else:
+            for endpoint in json['details']: ...
+
+        await msg.edit(embed=r_em)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

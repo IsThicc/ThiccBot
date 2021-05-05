@@ -9,12 +9,12 @@ from discord.ext import commands
 from discord     import Embed as em
 from discord     import Colour
 from datetime    import datetime
+from uuid        import uuid4
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -28,103 +28,114 @@ class Moderation(commands.Cog):
     async def ban(self, ctx, member: discord.Member, *, reason = "Banned from IsThicc Software"):
         self.avatar = self.bot.user.avatar_url
 
-        lets_make_sure = em(
-            title=f"Are you sure you want to ban {member.display_name}?",
-            colour=discord.Colour.dark_red(),
+        # lets_make_sure = em(
+        #     title=f"Are you sure you want to ban {member.display_name}?",
+        #     colour=discord.Colour.dark_red(),
+        #     timestamp=datetime.utcnow()
+        # )
+        # lets_make_sure.set_footer(
+        #     icon_url=self.avatar,
+        #     text="IsThicc Moderation"
+        # )
+        # msg = await ctx.send(embed=lets_make_sure)
+        # await msg.add_reaction('👍')
+        # await msg.add_reaction('👎')
+
+        # try:
+        #     print('e1')
+        #     def yes_no(reaction, user):
+        #         return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
+        #     print('e2')
+        #     # reaction, user = await self.bot.wait_for('reaction_add', check=yes_no) # , timeout=60)
+        #     print('e')
+        #
+        #     reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
+        #
+        # except asyncio.TimeoutError:
+        #
+        #     timeout = em(
+        #         title="Timed out!",
+        #         description="You timed out! make sure to react within 60 seconds next time!",
+        #         colour=discord.Colour.red(),
+        #         timestamp=datetime.utcnow()
+        #     )
+        #     timeout.set_footer(
+        #         icon_url=self.avatar,
+        #         text="IsThicc Moderation"
+        #     )
+        #     await msg.clear_reactions()
+        #     return await msg.edit(embed=timeout)
+        #
+        # await msg.clear_reactions()
+        # emoji = str(reaction)
+        #
+        # if emoji == '👍':
+
+        if member.guild_permissions.ban_members:
+            return await ctx.send(embed=em(
+                title="Sorry!",
+                description="Sorry! I'm not able to ban this person as they also have ban permissions!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
+
+        bye_hoe = em(
+            title="You have been banned from IsThicc Software!",
+            colour=discord.Colour.red(),
             timestamp=datetime.utcnow()
         )
-        lets_make_sure.set_footer(
+        bye_hoe.add_field(
+            name="Reason:",
+            value=reason
+        )
+        bye_hoe.add_field(
+            name="Banned by:",
+            value=ctx.author
+        )
+        bye_hoe.set_footer(
             icon_url=self.avatar,
             text="IsThicc Moderation"
         )
-        msg = await ctx.send(embed=lets_make_sure)
-        await msg.add_reaction('👍')
-        await msg.add_reaction('👎')
-
         try:
-            print('e1')
-            def yes_no(reaction, user):
-                return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
-            print('e2')
-            # reaction, user = await self.bot.wait_for('reaction_add', check=yes_no) # , timeout=60)
-            print('e')
 
-            reaction, user = await self.bot.user.wait_for('reaction_add', check=yes_no, timeout=60)
+            await member.send(embed=bye_hoe)
+            await member.ban(reason=reason)
 
-        except asyncio.TimeoutError:
-
-            timeout = em(
-                title="Timed out!",
-                description="You timed out! make sure to react within 60 seconds next time!",
+        except Exception:
+            ohno = em(
+                title="Uh oh!",
+                description=f"Sorry! I couldn't ban {member.mention}! Please make sure I have proper permissions!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             )
-            timeout.set_footer(
+            ohno.set_footer(
                 icon_url=self.avatar,
                 text="IsThicc Moderation"
             )
-            await msg.clear_reactions()
-            return await msg.edit(embed=timeout)
+            return await ctx.send(embed=ohno)
 
-        await msg.clear_reactions()
-        emoji = str(reaction)
-        
-        if emoji == '👍':
+        return await ctx.send(embed=em(
+            title="Banned!",
+            description=f"I banned {member} for {reason}!",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.avatar,
+            text="IsThicc Moderation"
+        ))
 
-            bye_hoe = em(
-                title="You have been banned from IsThicc Software!",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            )
-            bye_hoe.add_field(
-                name="Reason:",
-                value=reason
-            )
-            bye_hoe.add_field(
-                name="Banned by:",
-                value=ctx.author
-            )
-            bye_hoe.set_footer(
-                icon_url=self.avatar,
-                text="IsThicc Moderation"
-            )
-            try:
-
-                await member.send(embed=bye_hoe)
-                await member.ban(reason=reason)
-
-            except Exception:
-                ohno = em(
-                    title="Uh oh!",
-                    description=f"Sorry! I couldn't ban {member.mention}! Please make sure I have proper permissions!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                )
-                ohno.set_footer(
-                    icon_url=self.avatar,
-                    text="IsThicc Moderation"
-                )
-                return await msg.edit(embed=ohno)
-
-            return await msg.edit(embed=em(
-                title="Banned!",
-                description=f"I banned {member} for {reason}!",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.avatar,
-                text="IsThicc Moderation"
-            ))
-
-        else:
-            return await msg.edit(embed=em(
-                title=f"I won't ban {member}!",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.avatar,
-                text="IsThicc Moderation"
-            ))
+        # else:
+        #     return await msg.edit(embed=em(
+        #         title=f"I won't ban {member}!",
+        #         colour=discord.Colour.green(),
+        #         timestamp=datetime.utcnow()
+        #     ).set_footer(
+        #         icon_url=self.avatar,
+        #         text="IsThicc Moderation"
+        #     ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -166,14 +177,14 @@ class Moderation(commands.Cog):
         if m is None:
             return await ctx.reply('You didnt specify a member to view warnings! Usage:\n`warnings <member>`')
         
-        r = await self.db.execute('SELECT * FROM warnings WHERE user_id = "' + str(m.id) + '"')
+        r = await self.db.execute('SELECT * FROM warnings WHERE user_id = ' + str(m.id) + '')
 
         warnings = []
         for i in range(len(r)):
             warnings.append(f'{i + 1} - {r[i][0]}')
 
         e = em(title=f'{m}(s) Warnings', colour=Colour.teal(), description='\n'.join(warnings), timestamp=datetime.utcnow())
-        e.set_thumbnail(url=self.bot.user.avatar_url_as(format='png'))
+        e . set_thumbnail(url=self.bot.user.avatar_url_as(format='png'))
         await ctx.reply(embed=e)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -183,66 +194,50 @@ class Moderation(commands.Cog):
     @commands.command()
     async def kick(self, ctx, member: discord.Member, *, reason = "Kicked from IsThicc Software"):
 
-        lets_make_sure = em(
-            title=f"Are you sure you want to kick {member.display_name}?",
-            colour=discord.Colour.dark_red(),
-            timestamp=datetime.utcnow()
-        )
-        lets_make_sure.set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Moderation"
-        )
-        msg = await ctx.send(embed=lets_make_sure)
-        await msg.add_reaction('👍')
-        await msg.add_reaction('👎')
+        # lets_make_sure = em(
+        #     title=f"Are you sure you want to kick {member.display_name}?",
+        #     colour=discord.Colour.dark_red(),
+        #     timestamp=datetime.utcnow()
+        # )
+        # lets_make_sure.set_footer(
+        #     icon_url=self.bot.user.avatar_url,
+        #     text="IsThicc Moderation"
+        # )
+        # msg = await ctx.send(embed=lets_make_sure)
+        # await msg.add_reaction('👍')
+        # await msg.add_reaction('👎')
+        #
+        # try:
+        #
+        #     def yes_no(reaction, user):
+        #         return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
+        #
+        #     reaction, user = await self.bot.wait_for('reaction_add', check=yes_no, timeout=60)
+        #
+        # except asyncio.TimeoutError:
+        #
+        #     await msg.clear_reactions()
+        #     return await msg.edit(embed=em(
+        #         title="Timed out!",
+        #         description="You timed out! make sure to react within 60 seconds next time!",
+        #         colour=discord.Colour.red(),
+        #         timestamp=datetime.utcnow()
+        #     ).set_footer(
+        #         icon_url=self.bot.user.avatar_url,
+        #         text="IsThicc Moderation"
+        #     ))
+
+        # await msg.clear_reactions()
+        # emoji = str(reaction)
+
+        # if emoji == '👍':
 
         try:
 
-            def yes_no(reaction, user):
-                return user.id == ctx.author.id and reaction.channel.id == ctx.channel.id
-
-            reaction, user = await self.bot.wait_for('reaction_add', check=yes_no, timeout=60)
-
-        except asyncio.TimeoutError:
-
-            await msg.clear_reactions()
-            return await msg.edit(embed=em(
-                title="Timed out!",
-                description="You timed out! make sure to react within 60 seconds next time!",
-                colour=discord.Colour.red(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.bot.user.avatar_url,
-                text="IsThicc Moderation"
-            ))
-
-        await msg.clear_reactions()
-        emoji = str(reaction)
-
-        if emoji == '👍':
-
-            try:
-
-                await member.send(embed=em(
-                    title="You have been kicked from IsThicc Software!",
-                    colour=discord.Colour.red(),
-                    timestamp=datetime.utcnow()
-                ).add_field(
-                    name="Reason:",
-                    value=reason
-                ).add_field(
-                    name="Kicked by:",
-                    value=ctx.author
-                ).set_footer(
-                    icon_url=self.avatar,
-                    text="IsThicc Moderation"
-                ))
-                await member.kick(reason=reason)
-
-            except Exception:
-                return await msg.edit(embed=em(
-                    title="Uh oh!",
-                    description=f"Sorry! I couldn't kick {member.mention}! Please make sure I have proper permissions!",
+            if member.guild_permissions.kick_members:
+                return await ctx.send(embed=em(
+                    title="Sorry!",
+                    description="Sorry! I'm not able to kick this person as they also have kick permissions!",
                     colour=discord.Colour.red(),
                     timestamp=datetime.utcnow()
                 ).set_footer(
@@ -250,25 +245,52 @@ class Moderation(commands.Cog):
                     text="IsThicc Moderation"
                 ))
 
-            return await msg.edit(embed=em(
-                title="Kicked!",
-                description=f"I kicked {member} for {reason}!",
-                colour=discord.Colour.green(),
+            await member.send(embed=em(
+                title="You have been kicked from IsThicc Software!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).add_field(
+                name="Reason:",
+                value=reason
+            ).add_field(
+                name="Kicked by:",
+                value=ctx.author
+            ).set_footer(
+                icon_url=self.avatar,
+                text="IsThicc Moderation"
+            ))
+            await member.kick(reason=reason)
+
+        except Exception:
+            return await ctx.send(embed=em(
+                title="Uh oh!",
+                description=f"Sorry! I couldn't kick {member.mention}! Please make sure I have proper permissions!",
+                colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Moderation"
             ))
 
-        else:
-            return await msg.edit(embed=em(
-                title=f"I won't kick {member}!",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            ).set_footer(
-                icon_url=self.bot.user.avatar_url,
-                text="IsThicc Moderation"
-            ))
+        return await ctx.send(embed=em(
+            title="Kicked!",
+            description=f"I kicked {member} for {reason}!",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=self.bot.user.avatar_url,
+            text="IsThicc Moderation"
+        ))
+
+        # else:
+        #     return await msg.edit(embed=em(
+        #         title=f"I won't kick {member}!",
+        #         colour=discord.Colour.green(),
+        #         timestamp=datetime.utcnow()
+        #     ).set_footer(
+        #         icon_url=self.bot.user.avatar_url,
+        #         text="IsThicc Moderation"
+        #     ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -286,16 +308,27 @@ class Moderation(commands.Cog):
             icon_url=self.bot.user.avatar_url,
             text="IsThicc Moderation"
         ))
-        await member.send(embed=em(
-            title="You have been warned in IsThicc Software!",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Moderation"
-        ))
+        try:
+            await member.send(embed=em(
+                title="You have been warned in IsThicc Software!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
+        except:
+            await ctx.author.send(embed=em(
+                title=f"I was unable to send the warn message to {member}!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
 
-        warn_id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        # warn_id = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        warn_id = str(uuid4())
         await self.db.warn(ctx.author.id, reason, datetime.utcnow(), True, warn_id)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -339,12 +372,12 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.MissingRole):
             return await ctx.send(embed=em(
                 title="Missing Permissions!",
-                description="Sorry! This command is only for staff members!",
+                description="Sorry! This command is only for Staff members!",
                 colour=discord.Colour.red(),
                 timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
-                text="IsThicc"
+                text="IsThicc Moderation"
             ))
 
         if isinstance(error, commands.MissingPermissions):
