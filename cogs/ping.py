@@ -36,7 +36,7 @@ class Other(commands.Cog):
         return await ctx.send(embed=em)
     
     @commands.command()
-    async def mock(self, ctx, message: str = None):
+    async def mock(self, ctx, *, message: str = None):
         if message is None:
             return await ctx.send("pLeAsE sUpPlY A mESsAgE tO mOcK")
         
