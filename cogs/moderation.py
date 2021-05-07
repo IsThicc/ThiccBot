@@ -177,6 +177,20 @@ class Moderation(commands.Cog):
         if member is None:
             return await ctx.reply('You didnt specify a member! Usage:\n`mute <member>')
         
+        if member.guild_permissions.manage_roles:
+            return await ctx.reply(embed=em(
+                title="Sorry!",
+                description="Sorry! I'm not able to mute this person as they also have manage roles permissions!",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Moderation"
+            ))
+            
+        if 748026204204040254 in member.roles:
+            return await ctx.reply(f"{member} is already muted!")
+        
         await member.add_roles(role = ctx.guild.get_role(748026204204040254))
         await member.send(f"You have been muted in **IsThicc Software** for **{reason}**!")
         await ctx.reply(f"Muted {member} for **{reason}**!")
@@ -188,6 +202,9 @@ class Moderation(commands.Cog):
     async def unmute(self, ctx, member: discord.Member = None):
         if member is None:
             return await ctx.reply('You didnt specify a member! Usage:\n`unmute <member>')
+        
+        if 748026204204040254 not in member.roles:
+            return await ctx.reply(f"{member} is not muted!")
         
         await member.remove_roles(role = ctx.guild.get_role(748026204204040254))
         await ctx.reply(f"Unmuted {member}!")
