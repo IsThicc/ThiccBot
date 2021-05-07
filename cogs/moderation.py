@@ -188,7 +188,7 @@ class Moderation(commands.Cog):
                 text="IsThicc Moderation"
             ))
             
-        if 748026204204040254 in member.roles:
+        if 748026204204040254 in [r.id for r in member.roles]:
             return await ctx.reply(f"{member} is already muted!")
         
         await member.add_roles(role = ctx.guild.get_role(748026204204040254))
@@ -203,7 +203,7 @@ class Moderation(commands.Cog):
         if member is None:
             return await ctx.reply('You didnt specify a member! Usage:\n`unmute <member>')
         
-        if 748026204204040254 not in member.roles:
+        if 748026204204040254 not in [r.id for r in member.roles]:
             return await ctx.reply(f"{member} is not muted!")
         
         await member.remove_roles(role = ctx.guild.get_role(748026204204040254))
