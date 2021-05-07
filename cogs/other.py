@@ -1,5 +1,5 @@
 #
-#                             IsThicc-bot Ping.py | 2020-2021 (c) IsThicc
+#                             IsThicc-bot Other.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
