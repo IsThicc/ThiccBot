@@ -173,6 +173,29 @@ class Moderation(commands.Cog):
 
     @commands.command()
     @commands.has_guild_permissions(manage_roles=True)
+    async def mute(self, ctx, member: discord.Member = None, *, reason: str = "No reason specified."):
+        if member is None:
+            return await ctx.reply('You didnt specify a member! Usage:\n`mute <member>')
+        
+        await member.add_roles(role = ctx.guild.get_role(748026204204040254))
+        await member.send(f"You have been muted in **IsThicc Software** for **{reason}**!")
+        await ctx.reply(f"Muted {member} for **{reason}**!")
+    
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    
+    @commands.command()
+    @commands.has_guild_permissions(manage_roles=True)
+    async def unmute(self, ctx, member: discord.Member = None):
+        if member is None:
+            return await ctx.reply('You didnt specify a member! Usage:\n`unmute <member>')
+        
+        await member.remove_roles(role = ctx.guild.get_role(748026204204040254))
+        await ctx.reply(f"Unmuted {member}!")
+        
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command()
+    @commands.has_guild_permissions(manage_roles=True)
     async def warnings(self, ctx, m: discord.Member = None):
         if m is None:
             return await ctx.reply('You didnt specify a member to view warnings! Usage:\n`warnings <member>`')
