@@ -31,7 +31,7 @@ class Other(commands.Cog):
             em.description = f":orange_circle: Latency: {ping:.0f}"
 
         else:
-            em.description = f":red_circle: Latency: {ping:.0f}"
+            em.description = f":red_circle: Latency: {ping:.0f}" 
         
         return await ctx.send(embed=em)
     
