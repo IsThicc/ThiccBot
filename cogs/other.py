@@ -44,7 +44,7 @@ class Other(commands.Cog):
             return await ctx.send("pLeAsE sUpPlY A mESsAgE tO mOcK")
         
         list = [random.choice([s.upper(), s.lower()]) for s in message]
-        await ctx.send("".join(list), allowed_mentions=AllowedMentions(roles=False, members=False, everyone=False))
+        await ctx.send("".join(list), allowed_mentions=AllowedMentions(roles=False, users=False, everyone=False))
 
 #
 #
