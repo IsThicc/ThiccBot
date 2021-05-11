@@ -46,11 +46,15 @@ class Listener(commands.Cog):
         
         if id in self.bot.verify_cache:
             if self.bot.verify_cache[id]['tries'] >= 4:
-                if not self.bot.verify_cache[id]['last_try'] <= (d.now() + timedelta(minutes=10)):
+                # if not self.bot.verify_cache[id]['last_try'] >= (d.now() + timedelta(minutes=10)):
+                if not d.now() >= (self.bot.verify_cache[id]['last_try'] + timedelta(minutes=10)):
                     await message.delete()
                     return await c.send(embed=em(title="You are being ratelimited!", 
                                                  description="Sorry! You have attempted to verify too many times! Please wait 10 minutes!",
                                                  colour=discord.Colour.red()), delete_after=10)
+                
+                else:
+                    self.bot.verify_cache[id]['tries'] = 0
                 
         else:
             self.bot.verify_cache[id]             = {}    
