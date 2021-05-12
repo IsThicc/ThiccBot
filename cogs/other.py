@@ -43,8 +43,8 @@ class Other(commands.Cog):
         if message is None:
             return await ctx.send("pLeAsE sUpPlY A mESsAgE tO mOcK")
         
-        list = [random.choice([s.upper(), s.lower()]) for s in message]
-        send = "".join(list).replace("!", random.choice(["!", "1"])
+        list = [random.choice(if s == "!": random.choice(["!", "1"]); else: [s.upper(), s.lower()]) for s in message]
+        send = "".join(list)
         await ctx.send(send, allowed_mentions=AllowedMentions(roles=False, users=False, everyone=False))
 
 #
