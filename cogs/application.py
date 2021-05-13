@@ -104,7 +104,7 @@ class Application(commands.Cog):
     @commands.command(name="application", aliases=["apply", "app"])
     @commands.cooldown(1, 1, BucketType.user)
     @commands.has_role(739510850079162530)
-    async def application(self, ctx, member): # : discord.Member):
+    async def application(self, ctx, member: discord.Member = None):
         try:
             if member == None:
                 member = ctx.author
