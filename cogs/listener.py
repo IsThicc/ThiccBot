@@ -11,6 +11,7 @@ from discord              import Embed as em
 from datetime             import datetime
 from aiohttp              import ClientSession
 from datetime             import datetime as d, timedelta 
+from config               import VERIFY_URL
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -76,7 +77,7 @@ class Listener(commands.Cog):
                                   colour=discord.Colour.red()), delete_after=10)
             
         else:
-            request = await self.session.post(f"http://127.0.0.1:2003/", headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
+            request = await self.session.post(VERIFY_URL, headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
             code    = request.status
 
             if code == 200:
