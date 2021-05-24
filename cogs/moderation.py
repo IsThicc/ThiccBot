@@ -197,7 +197,7 @@ class Moderation(commands.Cog):
     
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     
-    @commands.command(name="unmute)
+    @commands.command(name="unmute")
     @commands.has_guild_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member = None):
         if member is None:
