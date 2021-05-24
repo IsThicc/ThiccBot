@@ -171,11 +171,11 @@ class Moderation(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    @commands.command()
+    @commands.command(name="mute")
     @commands.has_guild_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member = None, *, reason: str = "No reason specified."):
         if member is None:
-            return await ctx.reply('You didnt specify a member! Usage:\n`mute <member>')
+            return await ctx.reply('You didnt specify a member! Usage:\n`mute <member>`')
         
         if member.guild_permissions.manage_roles:
             return await ctx.reply(embed=em(
@@ -191,7 +191,7 @@ class Moderation(commands.Cog):
         if 748026204204040254 in [r.id for r in member.roles]:
             return await ctx.reply(f"{member} is already muted!")
         
-        await member.add_roles(role = ctx.guild.get_role(748026204204040254))
+        await member.add_roles(ctx.guild.get_role(748026204204040254))
         await member.send(f"You have been muted in **IsThicc Software** for **{reason}**!")
         await ctx.reply(f"Muted {member} for **{reason}**!")
     
