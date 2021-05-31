@@ -24,11 +24,11 @@ class Tickets(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
 
-        emoji = str(payload.emoji)
-        open_channel = self.bot.get_channel(806012160198705183)
+        emoji         = str(payload.emoji)
+        open_channel  = self.bot.get_channel(806012160198705183)
         reaction_user = self.bot.get_user(payload.user_id)
-        guild = await self.bot.fetch_guild(payload.guild_id)
-        av = self.bot.user.avatar_url
+        guild         = await self.bot.fetch_guild(payload.guild_id)
+        av            = self.bot.user.avatar_url
 
         if payload.channel_id != open_channel.id:
             return
@@ -158,7 +158,7 @@ class Tickets(commands.Cog):
         )
         await ticket.send(content="<@!796953153010532362>", embed=opened)
 
-        await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ',' + str(reaction_user.id) + ',true)')
+        await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ', ' + str(reaction_user.id) + ', true)')
         # parse as str in query, but the database will parse it as whatever you chose it to be in phpmyadmin.
 
         #   # Channel id(ticket.id):                 ticket_id
@@ -200,10 +200,11 @@ class Tickets(commands.Cog):
         await self.db.execute('UPDATE tickets SET closing = false WHERE channel_id = ' + str(ctx.channel.id))
         user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
 
-        msg = await ctx.send(embed=closing)
-        user = await self.bot.get_user(user[0])
+        msg    = await ctx.send(embed=closing)
+        user   = await self.bot.get_user(user[0])
         closed = discord.utils.get(ctx.guild.categories, name="『 Archived Tickets 』")
-        time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+        time   = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+
         await ctx.channel.edit(
             name=f"Archived-{user.display_name}",
             topic=f"Ticket opened by {user.mention}. Closed by {ctx.author.mention} at {time}!",
