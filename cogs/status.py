@@ -80,7 +80,6 @@ class Status(commands.Cog):
             # Getting Status
             request = await self.session.get(url)
             code = request.status
-            await asyncio.sleep(2)
 
             val = "unspecified"
 
