@@ -58,8 +58,17 @@ questions = {
         "embed_field" : "-Nick/Name",
         "api_name":""
     },
-    # Who brought you to IsThicc?
+    # What are your preferred pronouns?
     5: {
+        "time" : 5,
+        "title" : "What are your preferred pronouns? ",
+        "description" : "Please tell us your pronouns if you are comfortable sharing them. Multiple options are allowed, separated by a comma.\nExample: `He/Him, They/Them, ...`",
+        "required": [],
+        "embed_field" : "-Pronouns",
+        "api_name":""
+    },
+    # Who brought you to IsThicc?
+    6: {
         "time" : 5,
         "title" : "Who brought you to IsThicc?",
         "description" : "Did someone tell you to? If someone did, state their name, and if no one did, say why you think you applied here.",
@@ -68,7 +77,7 @@ questions = {
         "api_name":"whyapply"
     },
     # Rate yourself 1-10 in working with a team.
-    6:  {
+    7:  {
         "time" : 5,
         "title" : "Rate yourself 1-10 in working with a team.",
         "description" : "-Missing description-",
@@ -77,7 +86,7 @@ questions = {
         "api_name":"rateteam"
     },
     # What is your timezone?
-    7: {
+    8: {
         "time" : 5,
         "title" : "What is your timezone?",
         "description" : "-Missing description-",
