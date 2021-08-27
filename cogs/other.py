@@ -6,6 +6,7 @@
 #
 from discord.ext import commands
 from discord     import Embed, Color, AllowedMentions
+from aiohttp     import ClientSession
 import random
 #
 #
@@ -36,7 +37,7 @@ class Other(commands.Cog):
         return await ctx.send(embed=em)
     
 
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    # #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
     @commands.command()
     async def mock(self, ctx, *, message: str = None):
@@ -51,6 +52,15 @@ class Other(commands.Cog):
         send = "".join(list)
         await ctx.send(send, allowed_mentions=AllowedMentions(roles=False, users=False, everyone=False))
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    
+    @commanes.command(aliases=["doge"])
+    async def shiba(self, ctx):
+        session = ClientSession()
+        async with session.get("http://shibe.online/api/shibes") as req:
+            json = await req.json()
+            await ctx.send(embed=discord.Embed(colour=discord.Colour.teal()).set_image(url=json[0])
+        session.close()
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
