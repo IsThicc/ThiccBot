@@ -1,6 +1,6 @@
 <h1 align="center">ThiccBot</h1>
 
-The IsThicc-Bot is a small bot to help IsThicc staff with everyday tasks. Most built-in staff commands and code will not work, since they rely on our API.  
+The ThiccBot is a small bot to help IsThicc staff with everyday tasks. Most built-in staff commands and code will not work, since they rely on our API.  
 
 ## Contributors
 
@@ -20,4 +20,4 @@ We reserve the right to reject any pull request or edits without reason or warni
 
 All data in this repository is owned by [IsThicc](https://isthicc.dev/). No support will be given for attempts to use this as your own. For further Legal and Copyright concerns or information, please email our Management (contact information can be found on our website).
 
-<p align="center">Copyright (c) 2020-2021 IsThicc</p>
+<p align="center">Copyright (c) 2020-2021 IsThicc Software</p>
