@@ -15,7 +15,7 @@ Feel free to fork this repo and make any edits you think would be beneficial. An
 
 ### Please note:
 
-We reserve the right to reject any pull request or edits without reason or warning. When editing any IsThicc source code, you waive all rights over the code you contribute. Any attempt to claim the code as your own will be met with consequences to the fullest extent of the law.
+We reserve the right to reject any pull request or edits without reason or warning. When editing any IsThicc source code, you waive all rights over the code you contribute. Any attempt to claim the code as your own will be met with consequences.
 
 All data in this repository is owned by [IsThicc](https://isthicc.dev/). No support will be given for attempts to use this as your own. For further Legal and Copyright concerns or information, please email our Management (contact information can be found on our website).
 
