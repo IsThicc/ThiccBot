@@ -6,8 +6,22 @@
 #
 import discord, asyncio
 from discord.ext import commands
-from discord     import Embed as em
-from datetime    import datetime
+from discord import Embed as em
+from datetime import datetime
+from enum import Enum
+
+
+#
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+
+class Priority(Enum): # String better for sending as message
+    LOW = "Low" # 1
+    MEDIUM = "Medium" # 2
+    HIGH = "High" # 3
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -17,26 +31,32 @@ from datetime    import datetime
 class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db  = bot.db
+        self.db = bot.db
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
 
-        emoji         = str(payload.emoji)
-        open_channel  = self.bot.get_channel(806012160198705183)
+        emoji = str(payload.emoji)
+        open_channel = self.bot.get_channel(0)  # Replace this to the channel of where you open tickets
         reaction_user = self.bot.get_user(payload.user_id)
-        guild         = await self.bot.fetch_guild(payload.guild_id)
-        av            = self.bot.user.avatar_url
+        av = self.bot.user.avatar_url
+        self.priorities = {
+            "🟢": Priority.LOW,
+            "🟡": Priority.MEDIUM,
+            "🔴": Priority.HIGH
+        }
 
         if payload.channel_id != open_channel.id:
             return
 
         msg = await open_channel.fetch_message(payload.message_id)
 
-        if emoji != "custom ticket emoji":
+        if emoji != "<:ticket:849650925625671707>":
             return
+
+        guild = await self.bot.fetch_guild(payload.guild_id)
 
         opening = em(
             title=f"Opening new ticket for {reaction_user.display_name}",
@@ -51,6 +71,15 @@ class Tickets(commands.Cog):
         await msg.remove_reaction(emoji, reaction_user)
         await open_channel.send(embed=opening, delete_after=5)
 
+        topic_embed = em(
+            title="What is your ticket about?",
+            timestamp=datetime.utcnow(),
+            colour=discord.Colour.green(),
+        ).set_footer(
+            icon_url=av,
+            text="IsThicc Tickets"
+        )
+
         priority_embed = em(
             title="Please choose a priority below!",
             colour=discord.Colour.green(),
@@ -63,8 +92,9 @@ class Tickets(commands.Cog):
         )
         priority_embed.add_field(
             name="Medium:",
+            inline=True,
             value=":yellow_circle:",
-            inline=True
+
         )
         priority_embed.add_field(
             name="High:",
@@ -75,46 +105,24 @@ class Tickets(commands.Cog):
             icon_url=av,
             text="IsThicc Tickets"
         )
+
+        priority_message = await reaction_user.send(embed=priority_embed)
+
+        await priority_message.add_reaction(emoji="🟢")
+        await priority_message.add_reaction(emoji="🟡")
+        await priority_message.add_reaction(emoji="🔴")
+
+        priority = None
+        topic = None
         try:
-            dm_msg = await reaction_user.send(embed=priority_embed, timeout=10)
-            await dm_msg.add_reaction("🟢")  # Green
-            await dm_msg.add_reaction("🟡")  # Yellow
-            await dm_msg.add_reaction("🔴")   # Red
+            reaction, user = await self.bot.wait_for("reaction_add", check=lambda r, u: r.emoji in ["🟢", "🟡", "🔴"] and u == reaction_user and r.message.channel == reaction_user.dm_channel, timeout=60)
+            priority = self.priorities[reaction.emoji]
+            await priority_message.add_reaction(emoji="✅")
+            topic_message = await reaction_user.send(embed=topic_embed)
 
-            def priority_check(reaction, user):
-                emoji = str(reaction.emoji)
-                return user.id == reaction_user.id and reaction.channel == reaction_user.dm_channel \
-                       and emoji == "🟢" \
-                       or emoji == "🟡" \
-                       or emoji == "🔴"
-
-            reaction, user = await self.bot.wait_for("reaction_add", check=priority_check)
-
-            if str(reaction.emoji) == "🟢":
-                priority = ["Low", "🟢"]
-            elif str(reaction.emoji) == "🟡":
-                priority = ["Medium", "🟡"]
-            else:
-                priority = ["High", "🔴"]
-
-            topic_embed = em(
-                title="What do you want your ticket to be about?",
-                colour=discord.Colour.green(),
-                timestamp=datetime.utcnow()
-            )
-            topic_embed.set_footer(
-                icon_url=av,
-                text="IsThicc Tickets"
-            )
-            dm_msg = await reaction_user.send(embed=topic_embed, timeout=60)
-            await dm_msg.add_reaction("🟢")  # Green
-            await dm_msg.add_reaction("🟡")  # Yellow
-            await dm_msg.add_reaction("🔴")   # Red
-
-            def topic_check(m):
-                return user.id == reaction_user.id and user.id == reaction_user.dm_channel
-
-            topic = await self.bot.wait_for("message", check=topic_check)
+            message = await self.bot.wait_for("message", check=lambda m: m.author == reaction_user and m.channel == reaction_user.dm_channel, timeout=60)
+            await topic_message.add_reaction(emoji="✅")
+            topic = message.content
 
         except asyncio.TimeoutError:
             timeout_e = em(
@@ -126,25 +134,25 @@ class Tickets(commands.Cog):
                 icon_url=av,
                 text="IsThicc Tickets"
             )
-            return await dm_msg.edit(embed=timeout_e)
+            return await reaction_user.send(embed=timeout_e)
 
-        time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
-        category = discord.utils.get(guild.categories, name="『 Tickets 』")
+        category = discord.utils.get(guild.categories, id=0) # TODO: Change this to the ID of the tickets category
 
         ticket = await guild.create_text_channel(
-            name=f'Ticket-{reaction_user.display_name}',
+            name=f'ticket-{reaction_user.display_name}',
             category=category,
-            topic=f"Ticket opened by {reaction_user.mention} at {time}! Priority: {priority[1]}"
+            topic=f"Ticket opened by {reaction_user.mention}. Priority: {priority.value}"
         )
+        await ticket.set_permissions(reaction_user, send_messages=True)
 
         opened = em(
-            description=f"Ticket opened for {reaction_user.mention} at {time}!",
+            description=f"Ticket opened for {reaction_user.mention}!",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
         )
         opened.add_field(
             name="Priority",
-            value=": ".join(priority),
+            value=priority.value,
             inline=True
         )
         opened.add_field(
@@ -156,21 +164,61 @@ class Tickets(commands.Cog):
             icon_url=av,
             text="IsThicc Tickets"
         )
-        await ticket.send(content="<@!796953153010532362>", embed=opened)
+        await ticket.send(content="<@&796953153010532362>", embed=opened)
 
         await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ', ' + str(reaction_user.id) + ', true)')
-        # parse as str in query, but the database will parse it as whatever you chose it to be in phpmyadmin.
 
-        #   # Channel id(ticket.id):                 ticket_id
-        #   # Ticket opener id(reaction_user.id):    user_id
-        #   # Open or closed(bool: true):            open_close
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command()
+    async def add(self, ctx, member: discord.Member):
+        av = self.bot.user.avatar_url
+
+        if not ctx.guild.get_role(796953153010532362) in ctx.author.roles:
+            await ctx.message.delete()
+            return await ctx.channel.send(embed=discord.Embed(
+                title="You dont have permission to add a user to this ticket!",
+                colour=discord.Colour.red()
+            ), delete_after=10)
+
+        try:
+            r = await self.db.execute('SELECT * FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+        except Exception:
+            not_ticket = em(
+                title="Sorry!",
+                description="Sorry! This channel isn't a ticket. Please use this command again in a ticket.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            not_ticket.set_footer(
+                icon_url=av,
+                text="IsThicc Tickets"
+            )
+            return await ctx.send(embed=not_ticket)
+
+        await ctx.channel.set_permissions(member, send_messages=True)
+        await ctx.send(embed=discord.Embed(
+            title=f"Added {member.name} to the ticket",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=av,
+            text="IsThicc Tickets"
+        ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     async def close(self, ctx):
-
         av = self.bot.user.avatar_url
+        user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
+        user = self.bot.get_user(user[0][0])
+        if not (ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles):
+            await ctx.message.delete()
+            return await ctx.channel.send(embed=discord.Embed(
+                title="You dont have permission to close this ticket!",
+                colour=discord.Colour.red()
+            ), delete_after=10)
 
         try:
             r = await self.db.execute('SELECT * FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
@@ -197,21 +245,19 @@ class Tickets(commands.Cog):
             text="IsThicc Tickets"
         )
 
-        await self.db.execute('UPDATE tickets SET closing = false WHERE channel_id = ' + str(ctx.channel.id))
-        user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
+        await asyncio.sleep(3)
 
-        msg    = await ctx.send(embed=closing)
-        user   = await self.bot.get_user(user[0])
-        closed = discord.utils.get(ctx.guild.categories, name="『 Archived Tickets 』")
-        time   = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
+        await self.db.execute('UPDATE tickets SET open = false WHERE channel_id = ' + str(ctx.channel.id))
+        msg = await ctx.send(embed=closing)
+        closed = discord.utils.get(ctx.guild.categories, id=0) # TODO: Change this to the channel of the archived tickets category id
 
         await ctx.channel.edit(
             name=f"Archived-{user.display_name}",
-            topic=f"Ticket opened by {user.mention}. Closed by {ctx.author.mention} at {time}!",
+            topic=f"Ticket opened by {user.mention}. Closed by {ctx.author.mention}!",
             category=closed,
             reason="Ticket Closed."
         )
-        await asyncio.sleep(3)
+        await ctx.channel.set_permissions(ctx.author, send_messages=False, read_messages=False)
 
         closed = em(
             title="Ticket closed!",
@@ -223,6 +269,7 @@ class Tickets(commands.Cog):
             text="IsThicc Tickets"
         )
         await msg.edit(embed=closed)
+
 
 #
 #
