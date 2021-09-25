@@ -39,8 +39,8 @@ class Priority(Enum):
 
 class Tickets(commands.Cog):
     def __init__(self, bot):
+        self.db  = bot.db
         self.bot = bot
-        self.db = bot.db
         self.priorities = {
             "🟢": Priority.LOW,
             "🟡": Priority.MEDIUM,
