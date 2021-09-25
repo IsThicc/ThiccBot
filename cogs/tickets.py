@@ -9,18 +9,27 @@ from discord.ext import commands
 from discord import Embed as em
 from datetime import datetime
 from enum import Enum
-
-
+from config import (tickets_category_id,
+                    tickets_archived_category_id,
+                    tickets_open_channel_id,
+                    logs_channel_id)
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+class Priority(Enum):
+    """Priority Enum
+    A enum to represent the ticket priority, (how it should be ranked based on how urgent it is, etc...)
 
-class Priority(Enum): # String better for sending as message
-    LOW = "Low" # 1
+    Example:
+        >>> priority = Priority.HIGH
+        >>> print(f"Ticket priority: {priority.value}")
+        Ticket priority: High
+    """
+    LOW    = "Low" # 1
     MEDIUM = "Medium" # 2
-    HIGH = "High" # 3
+    HIGH   = "High" # 3
 
 #
 #
@@ -32,6 +41,11 @@ class Tickets(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = bot.db
+        self.priorities = {
+            "🟢": Priority.LOW,
+            "🟡": Priority.MEDIUM,
+            "🔴": Priority.HIGH
+        }
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -39,14 +53,10 @@ class Tickets(commands.Cog):
     async def on_raw_reaction_add(self, payload):
 
         emoji = str(payload.emoji)
-        open_channel = self.bot.get_channel(0)  # Replace this to the channel of where you open tickets
+        open_channel  = self.bot.get_channel(tickets_open_channel_id)
+        logs_channel  = self.bot.get_channel(logs_channel_id)
         reaction_user = self.bot.get_user(payload.user_id)
         av = self.bot.user.avatar_url
-        self.priorities = {
-            "🟢": Priority.LOW,
-            "🟡": Priority.MEDIUM,
-            "🔴": Priority.HIGH
-        }
 
         if payload.channel_id != open_channel.id:
             return
@@ -112,10 +122,13 @@ class Tickets(commands.Cog):
         await priority_message.add_reaction(emoji="🟡")
         await priority_message.add_reaction(emoji="🔴")
 
-        priority = None
         topic = None
+        priority = None
         try:
-            reaction, user = await self.bot.wait_for("reaction_add", check=lambda r, u: r.emoji in ["🟢", "🟡", "🔴"] and u == reaction_user and r.message.channel == reaction_user.dm_channel, timeout=60)
+            def check(r, u):
+                return r.emoji in self.priorities.keys() and u == reaction_user and r.message.channel == reaction_user.dm_channel
+
+            reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60)
             priority = self.priorities[reaction.emoji]
             await priority_message.add_reaction(emoji="✅")
             topic_message = await reaction_user.send(embed=topic_embed)
@@ -136,35 +149,46 @@ class Tickets(commands.Cog):
             )
             return await reaction_user.send(embed=timeout_e)
 
-        category = discord.utils.get(guild.categories, id=0) # TODO: Change this to the ID of the tickets category
+        category = discord.utils.get(guild.categories, id=tickets_category_id)
 
-        ticket = await guild.create_text_channel(
-            name=f'ticket-{reaction_user.display_name}',
-            category=category,
-            topic=f"Ticket opened by {reaction_user.mention}. Priority: {priority.value}"
-        )
-        await ticket.set_permissions(reaction_user, send_messages=True)
+        for attempt in range(2):
+            try:
+                ticket = await guild.create_text_channel(
+                    name=f'ticket-{reaction_user.display_name}',
+                    category=category,
+                    topic=f"Ticket opened by {reaction_user.mention}. Priority: {priority.value}"
+                )
+                await ticket.set_permissions(reaction_user, send_messages=True)
 
-        opened = em(
-            description=f"Ticket opened for {reaction_user.mention}!",
-            colour=discord.Colour.green(),
-            timestamp=datetime.utcnow()
-        )
-        opened.add_field(
-            name="Priority",
-            value=priority.value,
-            inline=True
-        )
-        opened.add_field(
-            name="Topic",
-            value=topic,
-            inline=True
-        )
-        opened.set_footer(
-            icon_url=av,
-            text="IsThicc Tickets"
-        )
-        await ticket.send(content="<@&796953153010532362>", embed=opened)
+                opened = em(
+                    description=f"Ticket opened for {reaction_user.mention}!",
+                    colour=discord.Colour.green(),
+                    timestamp=datetime.utcnow()
+                )
+                opened.add_field(
+                    name="Priority",
+                    value=priority.value,
+                    inline=True
+                )
+                opened.add_field(
+                    name="Topic",
+                    value=topic,
+                    inline=True
+                )
+                opened.set_footer(
+                    icon_url=av,
+                    text="IsThicc Tickets"
+                )
+                await ticket.send(content="<@&796953153010532362>", embed=opened)
+
+            except:
+                if attempt == 1:
+                    await logs_channel.send(content="<@&796953153010532362>", embed=discord.Embed(
+                        title="Failed to create ticket!",
+                        description=f"Failed to create ticket channel for {reaction_user.mention}. Does the bot have the correct permissions?",
+                        colour=discord.Colour.red()
+                    ))
+
 
         await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ', ' + str(reaction_user.id) + ', true)')
 
@@ -182,7 +206,7 @@ class Tickets(commands.Cog):
             ), delete_after=10)
 
         try:
-            r = await self.db.execute('SELECT * FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+            r = await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
             not_ticket = em(
                 title="Sorry!",
@@ -213,7 +237,7 @@ class Tickets(commands.Cog):
         av = self.bot.user.avatar_url
         user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = self.bot.get_user(user[0][0])
-        if not (ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles):
+        if not ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles:
             await ctx.message.delete()
             return await ctx.channel.send(embed=discord.Embed(
                 title="You dont have permission to close this ticket!",
@@ -221,7 +245,7 @@ class Tickets(commands.Cog):
             ), delete_after=10)
 
         try:
-            r = await self.db.execute('SELECT * FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+            r = await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
             not_ticket = em(
                 title="Sorry!",
@@ -249,7 +273,7 @@ class Tickets(commands.Cog):
 
         await self.db.execute('UPDATE tickets SET open = false WHERE channel_id = ' + str(ctx.channel.id))
         msg = await ctx.send(embed=closing)
-        closed = discord.utils.get(ctx.guild.categories, id=0) # TODO: Change this to the channel of the archived tickets category id
+        closed = discord.utils.get(ctx.guild.categories, id=tickets_archived_category_id)
 
         await ctx.channel.edit(
             name=f"Archived-{user.display_name}",
@@ -257,7 +281,8 @@ class Tickets(commands.Cog):
             category=closed,
             reason="Ticket Closed."
         )
-        await ctx.channel.set_permissions(ctx.author, send_messages=False, read_messages=False)
+
+        await ctx.channel.set_permissions(user, send_messages=False, read_messages=False)
 
         closed = em(
             title="Ticket closed!",

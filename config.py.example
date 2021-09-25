@@ -10,6 +10,13 @@ mysql_host = "1.1.1.1"
 mysql_db = "isthicc_bot"
 mysql_user = "root"
 mysql_password = ""
+VERIFY_URL = ""
+
+logs_channel_id = 0
+
+tickets_category_id = 0
+tickets_archived_category_id = 0
+tickets_open_channel_id = 0
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

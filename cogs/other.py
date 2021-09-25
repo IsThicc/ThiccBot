@@ -4,12 +4,10 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+import random
 from discord.ext import commands
 from discord import Embed, Color, AllowedMentions
 from aiohttp import ClientSession
-import random
-
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -18,14 +16,15 @@ import random
 class Other(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.session = ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     async def ping(self, ctx):
 
+        em   = Embed(title="IsThicc", color=Color.gold())
         ping = float(self.bot.latency * 1000)
-        em = Embed(title="IsThicc", color=Color.gold())
 
         if ping <= 20:
             em.description = f":green_circle: Latency: {ping:.0f}"
@@ -57,11 +56,9 @@ class Other(commands.Cog):
 
     @commands.command(aliases=["doge"])
     async def shiba(self, ctx):
-        session = ClientSession()
         async with session.get("http://shibe.online/api/shibes") as req:
             json = await req.json()
             await ctx.send(embed=discord.Embed(colour=discord.Colour.teal()).set_image(url=json[0]))
-        session.close()
 
 
 #
