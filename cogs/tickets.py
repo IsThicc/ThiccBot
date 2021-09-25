@@ -122,8 +122,6 @@ class Tickets(commands.Cog):
         await priority_message.add_reaction(emoji="🟡")
         await priority_message.add_reaction(emoji="🔴")
 
-        topic = None
-        priority = None
         try:
             def check(r, u):
                 return r.emoji in self.priorities.keys() and u == reaction_user and r.message.channel == reaction_user.dm_channel
