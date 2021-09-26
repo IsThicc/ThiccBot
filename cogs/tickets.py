@@ -13,11 +13,17 @@ from config import (tickets_category_id,
                     tickets_archived_category_id,
                     tickets_open_channel_id,
                     logs_channel_id)
+
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+class InsufficientTicketPermissions(commands.CheckFailure):
+    pass
+
+
 class Priority(Enum):
     """Priority Enum
     A enum to represent the ticket priority, (how it should be ranked based on how urgent it is, etc...)
@@ -27,9 +33,23 @@ class Priority(Enum):
         >>> print(f"Ticket priority: {priority.value}")
         Ticket priority: High
     """
-    LOW    = "Low" # 1
-    MEDIUM = "Medium" # 2
-    HIGH   = "High" # 3
+    LOW    = "Low"     # 1
+    MEDIUM = "Medium"  # 2
+    HIGH   = "High"    # 3
+
+
+def has_ticket_permissions():
+    async def decorator(ctx):
+        db = ctx.bot.db
+        user = await db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
+        user = ctx.bot.get_user(user[0][0])
+
+        if not ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles:
+            raise InsufficientTicketPermissions()
+        return True
+
+    return commands.check(decorator)
+
 
 #
 #
@@ -126,12 +146,15 @@ class Tickets(commands.Cog):
             def check(r, u):
                 return r.emoji in self.priorities.keys() and u == reaction_user and r.message.channel == reaction_user.dm_channel
 
+            def topic_check(m):
+                return m.author == reaction_user and m.channel == reaction_user.dm_channel
+
             reaction, user = await self.bot.wait_for("reaction_add", check=check, timeout=60)
             priority = self.priorities[reaction.emoji]
             await priority_message.add_reaction(emoji="✅")
             topic_message = await reaction_user.send(embed=topic_embed)
 
-            message = await self.bot.wait_for("message", check=lambda m: m.author == reaction_user and m.channel == reaction_user.dm_channel, timeout=60)
+            message = await self.bot.wait_for("message", check=topic_check, timeout=60)
             await topic_message.add_reaction(emoji="✅")
             topic = message.content
 
@@ -187,22 +210,14 @@ class Tickets(commands.Cog):
                         colour=discord.Colour.red()
                     ))
 
-
         await self.db.execute('INSERT INTO tickets VALUES(' + str(ticket.id) + ', ' + str(reaction_user.id) + ', true)')
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
+    @has_ticket_permissions()
     async def add(self, ctx, member: discord.Member):
         av = self.bot.user.avatar_url
-
-        if not ctx.guild.get_role(796953153010532362) in ctx.author.roles:
-            await ctx.message.delete()
-            return await ctx.channel.send(embed=discord.Embed(
-                title="You dont have permission to add a user to this ticket!",
-                colour=discord.Colour.red()
-            ), delete_after=10)
-
         try:
             r = await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
@@ -231,17 +246,11 @@ class Tickets(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
+    @has_ticket_permissions()
     async def close(self, ctx):
         av = self.bot.user.avatar_url
         user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = self.bot.get_user(user[0][0])
-        if not ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles:
-            await ctx.message.delete()
-            return await ctx.channel.send(embed=discord.Embed(
-                title="You dont have permission to close this ticket!",
-                colour=discord.Colour.red()
-            ), delete_after=10)
-
         try:
             r = await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
