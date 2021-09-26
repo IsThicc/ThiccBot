@@ -13,8 +13,6 @@ from config import (tickets_category_id,
                     tickets_archived_category_id,
                     tickets_open_channel_id,
                     logs_channel_id)
-
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
