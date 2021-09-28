@@ -7,8 +7,6 @@
 import discord
 from tickets import InsufficientTicketPermissions
 from discord.ext import commands
-
-
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
