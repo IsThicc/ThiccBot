@@ -25,7 +25,7 @@ class Errors(commands.Cog):
         if isinstance(error, InsufficientTicketPermissions):
             await ctx.message.delete()
             return await ctx.channel.send(embed=discord.Embed(
-                title="You dont have permission to add a user to this ticket!",
+                title="You do not have permissions to execute this command in this ticket!",
                 colour=discord.Colour.red()
             ), delete_after=10)
 
