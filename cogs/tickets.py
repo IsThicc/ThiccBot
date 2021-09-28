@@ -39,10 +39,25 @@ class Priority(Enum):
 def has_ticket_permissions():
     async def decorator(ctx):
         db = ctx.bot.db
+        try:
+            await db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+        except Exception:
+            not_ticket = em(
+                title="Sorry!",
+                description="Sorry! This channel isn't a ticket. Please use this command again in a ticket.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            not_ticket.set_footer(
+                icon_url=ctx.author.avatar_url,
+                text="IsThicc Tickets"
+            )
+            return await ctx.send(embed=not_ticket)
+
         user = await db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = ctx.bot.get_user(user[0][0])
 
-        if not ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles:
+        if not ctx.author == user or ctx.guild.get_role(796953153010532362) not in ctx.author.roles:
             raise InsufficientTicketPermissions()
         return True
 
@@ -142,7 +157,7 @@ class Tickets(commands.Cog):
 
         try:
             def check(r, u):
-                return r.emoji in self.priorities.keys() and u == reaction_user and r.message.channel == reaction_user.dm_channel
+                return r.emoji in self.priorities and u == reaction_user and r.message.channel == reaction_user.dm_channel
 
             def topic_check(m):
                 return m.author == reaction_user and m.channel == reaction_user.dm_channel
@@ -250,7 +265,7 @@ class Tickets(commands.Cog):
         user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = self.bot.get_user(user[0][0])
         try:
-            r = await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+            self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
             not_ticket = em(
                 title="Sorry!",

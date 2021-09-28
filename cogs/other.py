@@ -5,9 +5,9 @@
 #
 #
 import random
+from discord     import Embed, Color, AllowedMentions
 from discord.ext import commands
-from discord import Embed, Color, AllowedMentions
-from aiohttp import ClientSession
+from aiohttp     import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
