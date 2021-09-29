@@ -1,15 +1,16 @@
 #
-#                          IsThicc-bot __main__.py | 2020-2021 (c) IsThicc
+#                             ThiccBot __main__.py | 2020-2021 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
 import asyncio, os, aiomysql
 from config        import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
+from discord       import Activity, ActivityType, Status, Intents
+from datetime      import datetime, timezone 
+from db.database   import Pool
 from discord.ext   import commands
 from discord_slash import SlashCommand
-from discord       import Activity, ActivityType, Status, Intents
-from db.database   import Pool
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -25,20 +26,22 @@ async def get_prefix(bot, message):
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
-#
-#
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+
 bot       = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
 bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
-#
-#
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
+
+def gen_timestamp(format: str = "R"):
+    return f"<t:{int(datetime.now(tz=timezone.utc).timestamp())}:{format}"
+
+setattr(bot, "gen_timestamp", gen_timestamp)
+    
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 async def _init_async():
     _pool = await aiomysql.create_pool(
         host       = mysql_host,
