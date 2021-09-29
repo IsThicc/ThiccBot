@@ -52,13 +52,13 @@ class Status(commands.Cog):
             )
         status_em = em(
             title="Status Report",
-            description="IsThicc software status report.",
+            description=f"IsThicc software status report.\nWritten: {self.bot.gen_timestamp()}",
             colour=discord.Colour.green(),
             timestamp=datetime.utcnow()
             ).set_footer(
                 icon_url=self.bot.user.avatar_url,
                 text="IsThicc Status"
-            ).set_thumbnail(url='https://rebin.ch/wp-content/uploads/2015/09/icon-2.png')
+            ).set_thumbnail(url='https://rebin.ch/wp-content/uploads/2015/09/icon-2.png')  # TODO: Put this on our own CDN
 
         i = 0
         for title, url in urls.items():
@@ -81,6 +81,7 @@ class Status(commands.Cog):
             request = await self.session.get(url)
             code = request.status
 
+            # TODO: Change this to a dictionary, and use .get, not if's
             val = "unspecified"
 
             if code == 200  : val = "is working"
