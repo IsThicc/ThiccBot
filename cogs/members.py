@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Members.py | 2020-2021 (c) IsThicc
+#                          ThiccBot Members.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

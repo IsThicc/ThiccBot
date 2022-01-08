@@ -1,5 +1,5 @@
 #
-#                           Thicc-bot Snipe.py | 2020-2021 (c) IsThicc
+#                           Thicc-bot Snipe.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

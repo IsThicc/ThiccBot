@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Starboard.py | 2020-2021 (c) IsThicc
+#                          ThiccBot Starboard.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

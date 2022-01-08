@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Suggest.py | 2020-2021 (c) IsThicc
+#                          ThiccBot Suggest.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

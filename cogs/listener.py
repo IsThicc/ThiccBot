@@ -1,5 +1,5 @@
 #
-#                         IsThicc-bot Listener.py | 2020-2021 (c) IsThicc
+#                         ThiccBot Listener.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

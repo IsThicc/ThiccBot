@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Tags.py | 2020-2021 (c) IsThicc
+#                          ThiccBot Tags.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #

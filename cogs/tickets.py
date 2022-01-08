@@ -1,5 +1,5 @@
 #
-#                          IsThicc-bot Tickets.py | 2020-2021 (c) IsThicc
+#                          ThiccBot Tickets.py | 2020-2022 (c) IsThicc
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
