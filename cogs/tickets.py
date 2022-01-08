@@ -91,6 +91,9 @@ class Tickets(commands.Cog):
         reaction_user = self.bot.get_user(payload.user_id)
         av = self.bot.user.avatar_url
 
+        if None in {open_channel, logs_channel}:
+            return
+
         if payload.channel_id != open_channel.id:
             return
 
