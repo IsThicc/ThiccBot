@@ -69,14 +69,13 @@ async def _init_async():
 
     await bot.db.execute('CREATE TABLE IF NOT EXISTS warnings(warn_id VARCHAR(30) CHARACTER SET utf8 COLLATE '
                          'utf8_swedish_ci NOT NULL PRIMARY KEY, user_id BIGINT NOT NULL)')
-    
+
     await bot.db.execute("""
 CREATE TABLE IF NOT EXISTS Counting (
     LastUser  BIGINT NOT NULL,
     Count     INT    NOT NULL DEFAULT 0,
     ChannelID BIGINT NOT NULL
 ); """)
-
 
 bot.loop.run_until_complete(_init_async())
 #
