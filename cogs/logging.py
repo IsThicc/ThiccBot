@@ -53,9 +53,13 @@ class Logging(commands.Cog):
             return
         
         channel = self.bot.get_channel(config.logs_channel_id)
-        embed   = discord.Embed(title=f"Edited Message | {after.guild.name}",
-                                timestamp=datetime.utcnow(),
-                                colour=0x8D5FF8)
+
+        if channel.id in {841342763102765106}:  # Ignored channels, only #tickets included
+            return
+
+        embed = discord.Embed(title=f"Edited Message | {after.guild.name}",
+                              timestamp=datetime.utcnow(),
+                              colour=0x8D5FF8)
         embed.add_field(name="Message Contents: ",
                         value=f"Before: ```{before.content}```\n After: ```{after.content}```",
                         inline=False)

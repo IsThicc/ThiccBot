@@ -21,6 +21,7 @@ from discord.ext import commands
 class InsufficientTicketPermissions(commands.CheckFailure):
     pass
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 class Priority(Enum):
     """Priority Enum
@@ -35,6 +36,7 @@ class Priority(Enum):
     MEDIUM = "Medium"  # 2
     HIGH   = "High"    # 3
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def has_ticket_permissions():
     async def decorator(ctx):
@@ -56,19 +58,17 @@ def has_ticket_permissions():
         user = await ctx.bot.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = ctx.bot.get_user(user[0][0])
 
-        if not ctx.author == user or ctx.guild.get_role(796953153010532362) not in ctx.author.roles:
-            raise InsufficientTicketPermissions()
-        return True
+        if ctx.author == user or ctx.guild.get_role(796953153010532362) in ctx.author.roles:
+            return True
+        raise InsufficientTicketPermissions()
 
     return commands.check(decorator)
-
 
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class Tickets(commands.Cog):
     def __init__(self, bot):
         self.db  = bot.db
@@ -76,7 +76,7 @@ class Tickets(commands.Cog):
         self.priorities = {
             "🟢": Priority.LOW,
             "🟡": Priority.MEDIUM,
-            "🔴": Priority.HIGH
+            "🔴" : Priority.HIGH
         }
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -101,7 +101,6 @@ class Tickets(commands.Cog):
         if emoji != "<:ticket:849650925625671707>":
             return
 
-        guild = await self.bot.fetch_guild(payload.guild_id)
 
         opening = em(
             title=f"Opening new ticket for {reaction_user.display_name}",
@@ -185,6 +184,7 @@ class Tickets(commands.Cog):
             )
             return await reaction_user.send(embed=timeout_e)
 
+        guild = self.bot.get_guild(payload.guild_id)
         category = discord.utils.get(guild.categories, id=tickets_category_id)
 
         for attempt in [0, 1]:  # range(2):
@@ -194,7 +194,7 @@ class Tickets(commands.Cog):
                     category=category,
                     topic=f"Ticket opened by {reaction_user.mention}. Priority: {priority.value}"
                 )
-                await ticket.set_permissions(reaction_user, send_messages=True)
+                await ticket.set_permissions(reaction_user, read_messages=True, send_messages=True)
 
                 opened = em(
                     description=f"Ticket opened for {reaction_user.mention}!",
@@ -216,10 +216,11 @@ class Tickets(commands.Cog):
                     text="IsThicc Tickets"
                 )
                 await ticket.send(content="<@&796953153010532362>", embed=opened)
+                break
 
             except:
                 if attempt == 1:
-                    await logs_channel.send(content="<@&796953153010532362>", embed=discord.Embed(
+                    return await logs_channel.send(content="<@&796953153010532362>", embed=discord.Embed(
                         title="Failed to create ticket!",
                         description=f"Failed to create ticket channel for {reaction_user.mention}. Does the bot have the correct permissions?",
                         colour=discord.Colour.red()
@@ -248,7 +249,7 @@ class Tickets(commands.Cog):
             )
             return await ctx.send(embed=not_ticket)
 
-        await ctx.channel.set_permissions(member, send_messages=True)
+        await ctx.channel.set_permissions(member, send_messages=True, read_messages=True)
         await ctx.send(embed=discord.Embed(
             title=f"Added {member.name} to the ticket",
             colour=discord.Colour.green(),
@@ -263,11 +264,12 @@ class Tickets(commands.Cog):
     @commands.command()
     @has_ticket_permissions()
     async def close(self, ctx):
+
         av = self.bot.user.avatar_url
         user = await self.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = self.bot.get_user(user[0][0])
         try:
-            self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+            await self.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
             not_ticket = em(
                 title="Sorry!",
@@ -304,7 +306,7 @@ class Tickets(commands.Cog):
             reason="Ticket Closed."
         )
 
-        await ctx.channel.set_permissions(user, send_messages=False, read_messages=False)
+        # await ctx.channel.set_permissions(user, send_messages=True, read_messages=True)
 
         closed = em(
             title="Ticket closed!",
@@ -317,6 +319,51 @@ class Tickets(commands.Cog):
         )
         await msg.edit(embed=closed)
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command()
+    @has_ticket_permissions()
+    async def reopen(self, ctx):
+
+        av = self.bot.user.avatar_url
+        user = await self.db.execute("SELECT user_id FROM tickets WHERE open = false AND channel_id = " + str(ctx.channel.id))
+        user = self.bot.get_user(user[0][0])
+        try:
+            result = await self.db.execute('SELECT 1 FROM tickets WHERE open = false AND channel_id = ' + str(ctx.channel.id))
+            if not result:
+                raise Exception()
+        except Exception:
+            not_ticket = em(
+                title="Sorry!",
+                description="Sorry! This channel isn't a ticket or a closed ticket. "
+                            "Please use this command again in a closed ticket.",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            )
+            not_ticket.set_footer(
+                icon_url=av,
+                text="IsThicc Tickets"
+            )
+            return await ctx.send(embed=not_ticket)
+
+        await self.db.execute('UPDATE tickets SET open = true WHERE channel_id = ' + str(ctx.channel.id))
+        open = discord.utils.get(ctx.guild.categories, id=tickets_category_id)
+
+        await ctx.channel.edit(
+            name=f"Ticket-{user.display_name}",
+            topic=f"Ticket opened by {user.mention}. Reopened by {ctx.author.mention}!",
+            category=open,
+            reason="Ticket Reopened."
+        )
+
+        await ctx.send(embed=em(
+            title="Ticket reopened!",
+            colour=discord.Colour.green(),
+            timestamp=datetime.utcnow()
+        ).set_footer(
+            icon_url=av,
+            text="IsThicc Tickets"
+        ))
 
 #
 #

@@ -67,14 +67,16 @@ class Starboard(commands.Cog):
                 if reactions != 1:
                     return await self.__update_starboard(reactions, payload)
 
-                embed = discord.Embed(colour=discord.Colour.gold(), description=f"{msg.content}\n[Jump!]({msg.jump_url})", timestamp=d.utcnow())
+                embed = discord.Embed(colour=discord.Colour.gold(),
+                                      description=f"{msg.content}\n[Jump!]({msg.jump_url})",
+                                      timestamp=d.utcnow())
                 embed.set_footer(text="IsThicc Starboard", icon_url=self.bot.user.avatar_url)
 
                 if msg.attachments:
-                        embed.set_image(url=msg.attachments[0].url)
+                    embed.set_image(url=msg.attachments[0].url)
                 if len(msg.attachments) >= 1:
-                    attachmenturls = [att.url for att in msg.attachments]
-                    embed.add_field(name="Attachments", value="\n".join(attachmenturls))
+                    attachment_urls = [att.url for att in msg.attachments]
+                    embed.add_field(name="Attachments", value="\n".join(attachment_urls))
 
                 await starboard.send(f"⭐ **{reactions}** {channel.mention} ID: {msg.id}", embed=embed)
 
