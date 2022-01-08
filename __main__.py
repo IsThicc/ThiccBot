@@ -53,29 +53,8 @@ async def _init_async():
         password   = mysql_password,
         autocommit = True,
     )
-
     bot.db = Pool(_pool)
-
-    await bot.db.execute('CREATE TABLE IF NOT EXISTS tags(name VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_swedish_ci '
-                         'NOT NULL PRIMARY KEY, content VARCHAR(150) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT '
-                         'NULL, owner BIGINT NOT NULL, command_id BIGINT NOT NULL, createdate DATETIME)')
-
-    tickets_query = 'CREATE TABLE IF NOT EXISTS tickets(channel_id THICCINT NOT NULL PRIMARY KEY, user_id ' \
-                    'EXTREMLY_THICC_INT NOT NULL, open BOOLEAN HAS_TO_EXIST_KEK) '
-    await bot.db.execute(
-        tickets_query.replace('THICCINT', 'BIGINT').replace('EXTREMLY_THICC_INT',
-                                                            'BIGINT').replace('HAS_TO_EXIST_KEK',
-                                                                              'NOT NULL'))
-
-    await bot.db.execute('CREATE TABLE IF NOT EXISTS warnings(warn_id VARCHAR(30) CHARACTER SET utf8 COLLATE '
-                         'utf8_swedish_ci NOT NULL PRIMARY KEY, user_id BIGINT NOT NULL)')
-
-    await bot.db.execute("""
-CREATE TABLE IF NOT EXISTS Counting (
-    LastUser  BIGINT NOT NULL,
-    Count     INT    NOT NULL DEFAULT 0,
-    ChannelID BIGINT NOT NULL
-); """)
+    await bot.db.execute_script("database.sql")
 
 bot.loop.run_until_complete(_init_async())
 #
@@ -83,16 +62,12 @@ bot.loop.run_until_complete(_init_async())
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-dont_import = \
-    [
-        "dontimportme.py"
-    ]
+dont_import = {"dontimportme.py"}
 
 for cog in os.listdir("cogs"):
     if cog.endswith('.py') and cog not in dont_import:
         bot.load_extension(f"cogs.{cog[:-3]}")
         print(f"Loaded cog: cogs.{cog[:-3]}")
-
 
 #
 #
@@ -115,7 +90,7 @@ async def on_ready() -> None:
 |    {bot.user}    |
 |                    |
 |  Too many guilds?  |
-|        {str(True) + " " if len(bot.guilds) >= 3 else str(False)}       |
+|        {"True " if len(bot.guilds) >= 3 else "False"}       |
 |--------------------|
     ''')
 

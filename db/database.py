@@ -16,7 +16,23 @@ class Pool:
         self.pool = pool
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    
+
+    async def execute_script(self, script: str):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cursor:
+                with open(script, "r") as file:
+                    contents = file.read()
+                    contents = contents.split(";")
+
+                    for cmd in contents:
+                        cmd = cmd.strip()
+                        if not cmd:
+                            continue
+                        cmd += ";"
+                        await cursor.execute(cmd, None)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     # Base Methods
 
     async def execute(self, query: str, options: tuple = None) -> list:
