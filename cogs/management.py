@@ -5,12 +5,12 @@
 #
 #
 import discord, asyncio, subprocess
-from discord.ext          import commands
+from typing  import Union
+from discord import Embed as em
+from aiohttp import ClientSession
+from datetime import datetime
+from discord.ext import commands
 from discord.ext.commands import BucketType
-from discord              import Embed as em
-from datetime             import datetime
-from aiohttp              import ClientSession
-from typing               import Union
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

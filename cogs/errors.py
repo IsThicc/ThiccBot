@@ -4,8 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord
-from tickets import InsufficientTicketPermissions
+import discord, tickets
 from discord.ext import commands
 #
 #
@@ -20,7 +19,7 @@ class Errors(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, InsufficientTicketPermissions):
+        if isinstance(error, tickets.InsufficientTicketPermissions):
             await ctx.message.delete()
             return await ctx.channel.send(embed=discord.Embed(
                 title="You do not have permissions to execute this command in this ticket!",

@@ -5,15 +5,14 @@
 #
 #
 import discord
+from discord  import Embed as em
+from datetime import datetime
 from discord.ext import commands
-from discord     import Embed as em
-from datetime    import datetime
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class Snipe(commands.Cog):
     def __init__(self, bot):
         self.bot             = bot
@@ -107,15 +106,16 @@ class Snipe(commands.Cog):
             return await ctx.send(embed=snipe_all)
 
         try: num = int(num)
-        except: return await ctx.send(embed=em(
-            title="Error!",
-            description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Software"
-        ))
+        except ValueError:
+            return await ctx.send(embed=em(
+                title="Error!",
+                description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            ))
 
         if num <= 0 or num >= 11:
             return await ctx.send(embed=em(
@@ -137,7 +137,7 @@ class Snipe(commands.Cog):
             ))
 
         msg = self.snipe_cache[ctx.channel.id][num]
-        e   = em(
+        await ctx.send(embed=em(
             title='IsThicc | Snipe',
             colour=discord.Colour.blue(),
             description=f'{msg.author.mention} ({msg.author}):\n{msg.content}',
@@ -145,9 +145,7 @@ class Snipe(commands.Cog):
         ).set_footer(
             text='Sniped message sent at',
             icon_url=self.bot.user.avatar_url
-        )
-
-        await ctx.send(embed=e)
+        ))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -184,15 +182,16 @@ class Snipe(commands.Cog):
             return await ctx.send(embed=editsnipe_all)
 
         try: num = int(num)
-        except: return await ctx.send(embed=em(
-            title="Error!",
-            description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
-            colour=discord.Colour.red(),
-            timestamp=datetime.utcnow()
-        ).set_footer(
-            icon_url=self.bot.user.avatar_url,
-            text="IsThicc Software"
-        ))
+        except ValueError:
+            return await ctx.send(embed=em(
+                title="Error!",
+                description="Make sure you're inputting a valid integer between 1 and 10! Ex: 3",
+                colour=discord.Colour.red(),
+                timestamp=datetime.utcnow()
+            ).set_footer(
+                icon_url=self.bot.user.avatar_url,
+                text="IsThicc Software"
+            ))
 
         if num <= 0 or num >= 11:
             return await ctx.send(embed=em(
@@ -215,7 +214,8 @@ class Snipe(commands.Cog):
 
         b = self.editsnipe_cache[ctx.channel.id][num][0]
         a = self.editsnipe_cache[ctx.channel.id][num][1]
-        e = em(
+
+        await ctx.send(embed=em(
             title='IsThicc | Edit Snipe',
             colour=discord.Colour.blue(),
             description=f'{b.author.mention} ({b.author}):\n**Before:** {b.content}\n**After:** {a.content}',
@@ -223,9 +223,7 @@ class Snipe(commands.Cog):
         ).set_footer(
             text='Edit snipe message sent at',
             icon_url=self.bot.user.avatar_url
-        )
-
-        await ctx.send(embed=e)
+        ))
 
 #
 #

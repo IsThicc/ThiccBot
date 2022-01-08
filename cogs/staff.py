@@ -4,13 +4,11 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, re
-from discord.ext          import commands, tasks
+import discord, asyncio, re, aiohttp
+from discord  import Embed as em
+from datetime import datetime
+from discord.ext import commands, tasks
 from discord.ext.commands import BucketType
-from discord              import Embed as em
-from datetime             import datetime
-from aiohttp              import ClientSession
-from asyncio              import sleep
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -19,8 +17,7 @@ from asyncio              import sleep
 class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.session = ClientSession()
-
+        self.session = aiohttp.ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -94,7 +91,7 @@ class Staff(commands.Cog):
 
     @commands.Cog.listener(name="on_ready")
     async def deadline_on_ready(self):
-        await sleep(5)
+        await asyncio.sleep(5)
         print("Starting Staff Loop!")
         self.deadline_24_loop.start()
         
@@ -204,7 +201,7 @@ class Staff(commands.Cog):
                 languages = []
 
                 request.close()
-                await asyncio.sleep(2)
+                await asyncio.asyncio.sleep(2)
 
                 if len(response['details']['languages']) == 0:
                     languages.append("Not specified.")
@@ -328,7 +325,7 @@ class Staff(commands.Cog):
                 pronouns = []
 
                 request.close()
-                await asyncio.sleep(2)
+                await asyncio.asyncio.sleep(2)
 
                 if len(response['details']['pronouns']) == 0:
                     pronouns.append("Not specified.")
@@ -436,7 +433,7 @@ class Staff(commands.Cog):
                 response = await request.json()
                 # github_r = await self.session.get(f"https://api.github.com/users/{response['details']['github_username']}")
                 # github_code = github_r.status
-                await asyncio.sleep(2)
+                await asyncio.asyncio.sleep(2)
 
                 positions = []
                 for position in response['details']['position']:

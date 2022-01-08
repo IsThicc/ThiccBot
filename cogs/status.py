@@ -4,12 +4,11 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
-from discord.ext          import commands
+import discord, asyncio, aiohttp
+from discord  import Embed as em
+from datetime import datetime
+from discord.ext import commands
 from discord.ext.commands import BucketType
-from discord              import Embed as em
-from datetime             import datetime
-from aiohttp              import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -29,7 +28,7 @@ urls = {
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.session = ClientSession()
+        self.session = aiohttp.ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

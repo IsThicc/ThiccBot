@@ -4,9 +4,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import random
-from aiohttp     import ClientSession
-from discord     import Embed, Color, AllowedMentions
+import random, aiohttp
+from discord import Embed, Colour, AllowedMentions
 from discord.ext import commands
 #
 #
@@ -16,14 +15,14 @@ from discord.ext import commands
 class Other(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = ClientSession()
+        self.session = aiohttp.ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     async def ping(self, ctx):
 
-        em   = Embed(title="IsThicc", color=Color.gold())
+        em   = Embed(title="IsThicc", color=Colour.gold())
         ping = float(self.bot.latency * 1000)
 
         if ping <= 20:
@@ -37,29 +36,33 @@ class Other(commands.Cog):
 
         return await ctx.send(embed=em)
 
-    # #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    def _mock_message(self, message: str) -> str:
+        chars = [random.choice([s.upper(), s.lower()]) for s in message]
+        for char in range(len(chars)):
+            if chars[char] == "!":
+                chars[char] = random.choice(["1", "!"])
+
+        return "".join(chars)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
     async def mock(self, ctx, *, message: str = None):
         if message is None:
-            return await ctx.send("pLeAsE sUpPlY A mESsAgE tO mOcK")
+            return await ctx.send(self._mock_message("Please supply a message to mock!"))
 
-        list = [random.choice([s.upper(), s.lower()]) for s in message]
-        for char in range(len(list)):
-            if list[char] == "!":
-                list[char] = random.choice(["1", "!"])
-
-        send = "".join(list)
+        send = self._mock_message(message)
         await ctx.send(send, allowed_mentions=AllowedMentions(roles=False, users=False, everyone=False))
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
     @commands.command(aliases=["doge"])
     async def shiba(self, ctx):
-        async with session.get("http://shibe.online/api/shibes") as req:
+        async with self.session.get("http://shibe.online/api/shibes") as req:
             json = await req.json()
-            await ctx.send(embed=discord.Embed(colour=discord.Colour.teal()).set_image(url=json[0]))
-
+            await ctx.send(embed=Embed(colour=Colour.teal()).set_image(url=json[0]))
 
 #
 #

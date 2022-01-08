@@ -66,6 +66,7 @@ class ReactionRoles(commands.Cog):
             elif str(payload.emoji) == "⌛":
                 role = self.guild.get_role(829165778321276949)
                 await member.remove_roles(role)
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

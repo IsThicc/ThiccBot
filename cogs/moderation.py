@@ -5,11 +5,10 @@
 #
 #
 import discord, asyncio, random, string
+from uuid import uuid4
+from discord  import Embed as em, Colour
+from datetime import datetime
 from discord.ext import commands
-from discord     import Embed as em
-from discord     import Colour
-from datetime    import datetime
-from uuid        import uuid4
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

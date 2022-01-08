@@ -4,14 +4,12 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio
-from discord.ext          import commands
+import discord, asyncio, aiohttp
+from config   import VERIFY_URL
+from discord  import Embed as em
+from datetime import datetime as d, timedelta
+from discord.ext import commands
 from discord.ext.commands import BucketType
-from discord              import Embed as em
-from datetime             import datetime
-from aiohttp              import ClientSession
-from datetime             import datetime as d, timedelta 
-from config               import VERIFY_URL
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -27,7 +25,7 @@ channels = [
 class Listener(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.session =  ClientSession()
+        self.session =  aiohttp.ClientSession()
         
         self.bot.verify_cache = {}
 
@@ -77,25 +75,28 @@ class Listener(commands.Cog):
                                   colour=discord.Colour.red()), delete_after=10)
             
         else:
-            request = await self.session.post(VERIFY_URL, headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
-            code    = request.status
+            request = await self.session.post(VERIFY_URL,
+                                              headers={"Authorization": "fill in config token here", "AuthToken": message.clean_content})
+            code = request.status
+            request.close()
 
             if code == 200:
-                return await c.send(embed=em(title="Verified!", 
-                                             colour=discord.Colour.green(),
-                                             description="You have been verified on the IsThicc Dashboard!"), delete_after=10)
+                return await c.send(
+                    embed=em(title="Verified!",
+                             colour=discord.Colour.green(),
+                             description="You have been verified on the IsThicc Dashboard!"), delete_after=10)
 
             if code == 403:
-                return await c.send(embed=em(title="Unable to verify!", 
-                                             description="Sorry! Your provided ID is not valid! Please make sure you copy the exact ID from [here](https://isthicc.dev/dash/discord).",
-                                             colour=discord.Colour.red()), delete_after=10)
+                return await c.send(
+                    embed=em(title="Unable to verify!",
+                             description="Sorry! Your provided ID is not valid! Please make sure you copy the exact ID from [here](https://isthicc.dev/dash/discord).",
+                             colour=discord.Colour.red()), delete_after=10)
 
             else:
-                return await c.send(embed=em(title="An internal error has occurred!", 
-                                             description=f"Please let IsThicc management know that an internal error has occurred! Please provide the status code!\nStatus code: {code}",
-                                             colour=discord.Colour.red()), delete_after=10)
-            
-            request.close()
+                return await c.send(
+                    embed=em(title="An internal error has occurred!",
+                             description=f"Please let IsThicc management know that an internal error has occurred! Please provide the status code!\nStatus code: {code}",
+                             colour=discord.Colour.red()), delete_after=10)
         
         self.bot.verify_cache[id]['tries']    += 1
         self.bot.verify_cache[id]['last_try']  = d.now()

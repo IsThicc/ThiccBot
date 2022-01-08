@@ -5,14 +5,14 @@
 #
 #
 import discord, asyncio
-from discord.ext import commands
+from enum import Enum
 from discord import Embed as em
 from datetime import datetime
-from enum import Enum
 from config import (tickets_category_id,
                     tickets_archived_category_id,
                     tickets_open_channel_id,
                     logs_channel_id)
+from discord.ext import commands
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

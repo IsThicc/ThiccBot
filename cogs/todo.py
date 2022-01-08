@@ -4,13 +4,12 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord, asyncio, re, traceback
-from discord.ext          import commands
+import discord, asyncio, re, traceback, aiohttp
+from typing   import Union
+from discord  import Embed as em
+from datetime import datetime
+from discord.ext import commands
 from discord.ext.commands import BucketType
-from discord              import Embed as em
-from datetime             import datetime
-from aiohttp              import ClientSession
-from typing               import Union
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -20,7 +19,7 @@ from typing               import Union
 class Todo(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.session = ClientSession()
+        self.session = aiohttp.ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

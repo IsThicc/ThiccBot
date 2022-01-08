@@ -4,8 +4,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+import aiohttp
 from discord.ext import commands
-from aiohttp     import ClientSession
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -15,7 +15,7 @@ from aiohttp     import ClientSession
 class GitHub(commands.Cog):
     def __init__(self, bot):
         self.bot     = bot
-        self.session = ClientSession()
+        self.session = aiohttp.ClientSession()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -24,7 +24,8 @@ class GitHub(commands.Cog):
         if after.name != "project":
             return
         
-        await self.session.post("http://10.42.0.4:5000/github/teams", headers={"Authorization": "", "Role": after.id})  # Request to github teams.
+        await self.session.post("http://10.42.0.4:5000/github/teams",
+                                headers={"Authorization": "", "Role": after.id})  # Request to github teams.
        
 #
 #

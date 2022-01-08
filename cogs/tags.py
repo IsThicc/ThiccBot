@@ -5,18 +5,15 @@
 #
 #
 import asyncio, discord
-from datetime      import datetime
-from discord       import Embed
+from discord  import Embed
+from datetime import datetime
 from discord.ext   import commands
-from discord_slash import SlashContext
-from discord_slash import cog_ext as cmd
-from discord_slash import utils
+from discord_slash import SlashContext, cog_ext as cmd, utils
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-
 class Tags(commands.Cog):
     def __init__(self, bot):
         self.bot   = bot
