@@ -17,6 +17,8 @@ logs_channel_id = 0
 tickets_category_id = 0
 tickets_archived_category_id = 0
 tickets_open_channel_id = 0
+
+counting_channel = 0
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

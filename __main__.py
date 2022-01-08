@@ -5,11 +5,11 @@
 #
 #
 import asyncio, os, aiomysql
-from config        import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
-from discord       import Activity, ActivityType, Status, Intents
-from datetime      import datetime, timezone 
-from db.database   import Pool
-from discord.ext   import commands
+from config   import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
+from discord  import Activity, ActivityType, Status, Intents
+from datetime import datetime, timezone
+from db.database import Pool
+from discord.ext import commands
 from discord_slash import SlashCommand
 #
 #
@@ -24,11 +24,12 @@ async def get_prefix(bot, message):
     :return: Returns available prefix's.
     """
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
+    # prefixes = ["t "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-bot       = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
+bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
 bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
@@ -48,9 +49,9 @@ async def _init_async():
         port       = 3306,
         db         = mysql_db,
         user       = mysql_user,
+        loop       = bot.loop,
         password   = mysql_password,
         autocommit = True,
-        loop       = bot.loop
     )
 
     bot.db = Pool(_pool)
@@ -68,6 +69,13 @@ async def _init_async():
 
     await bot.db.execute('CREATE TABLE IF NOT EXISTS warnings(warn_id VARCHAR(30) CHARACTER SET utf8 COLLATE '
                          'utf8_swedish_ci NOT NULL PRIMARY KEY, user_id BIGINT NOT NULL)')
+    
+    await bot.db.execute("""
+CREATE TABLE IF NOT EXISTS Counting (
+    LastUser  BIGINT NOT NULL,
+    Count     INT    NOT NULL DEFAULT 0,
+    ChannelID BIGINT NOT NULL
+); """)
 
 
 bot.loop.run_until_complete(_init_async())
@@ -120,6 +128,7 @@ async def on_ready() -> None:
     await bot.change_presence(status=Status.idle,
                               activity=Activity(name="IsThicc.dev!",
                                                 type=5))
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
