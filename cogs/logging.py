@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import discord
+import discord, config
 from datetime import datetime
 from discord.ext import commands
 #
@@ -24,7 +24,7 @@ class Logging(commands.Cog):
         if message.guild.id not in {857789766312394752, 739510335949635736}:
             return
         
-        channel = self.bot.get_channel(858814667472633906)
+        channel = self.bot.get_channel(config.logs_channel_id)
         embed   = discord.Embed(title=f"Deleted Message | {message.guild.name}",
                                 timestamp=datetime.utcnow(),
                                 colour=discord.Colour.teal())
@@ -52,7 +52,7 @@ class Logging(commands.Cog):
         if after.guild.id not in {857789766312394752, 739510335949635736} or after.embeds:
             return
         
-        channel = self.bot.get_channel(858814667472633906)
+        channel = self.bot.get_channel(config.logs_channel_id)
         embed   = discord.Embed(title=f"Edited Message | {after.guild.name}",
                                 timestamp=datetime.utcnow(),
                                 colour=0x8D5FF8)

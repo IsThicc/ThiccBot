@@ -38,9 +38,8 @@ class Priority(Enum):
 
 def has_ticket_permissions():
     async def decorator(ctx):
-        db = ctx.bot.db
         try:
-            await db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
+            await ctx.bot.db.execute('SELECT 1 FROM tickets WHERE channel_id = ' + str(ctx.channel.id))
         except Exception:
             not_ticket = em(
                 title="Sorry!",
@@ -54,7 +53,7 @@ def has_ticket_permissions():
             )
             return await ctx.send(embed=not_ticket)
 
-        user = await db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
+        user = await ctx.bot.db.execute("SELECT user_id FROM tickets WHERE channel_id = " + str(ctx.channel.id))
         user = ctx.bot.get_user(user[0][0])
 
         if not ctx.author == user or ctx.guild.get_role(796953153010532362) not in ctx.author.roles:
@@ -188,7 +187,7 @@ class Tickets(commands.Cog):
 
         category = discord.utils.get(guild.categories, id=tickets_category_id)
 
-        for attempt in range(2):
+        for attempt in [0, 1]:  # range(2):
             try:
                 ticket = await guild.create_text_channel(
                     name=f'ticket-{reaction_user.display_name}',
