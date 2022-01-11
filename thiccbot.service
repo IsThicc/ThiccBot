@@ -1,0 +1,14 @@
+[Unit]
+Description="IsThicc Services | Discord Bot"
+Before=network.target
+
+[Service]
+WorkingDirectory=/home/isthicc/thiccbot
+ExecStart=/usr/bin/python3 /home/isthicc/thiccbot/__main__.py
+Restart=always
+SyslogIdentifier="isthicc | bot"
+User=isthicc
+Group=isthicc
+
+[Install]
+WantedBy=multi-user.target
