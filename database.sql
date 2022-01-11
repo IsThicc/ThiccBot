@@ -24,3 +24,10 @@ CREATE TABLE IF NOT EXISTS Counting (
     Count     INT    NOT NULL DEFAULT 0,
     ChannelID BIGINT NOT NULL
 );
+
+
+CREATE TABLE IF NOT EXISTS Alphabet (
+    LastUser  BIGINT     NOT NULL,
+    Letter    VARCHAR(1) NOT NULL DEFAULT 'a',
+    ChannelID BIGINT     NOT NULL
+);
