@@ -49,12 +49,15 @@ class Logging(commands.Cog):
     # Edited Message Logger
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if after.guild.id not in {857789766312394752, 739510335949635736} or before.embeds:
+        if before.content == after.content or before.embeds:
+            return
+
+        if after.guild.id not in {857789766312394752, 739510335949635736}:
             return
         
         channel = self.bot.get_channel(config.logs_channel_id)
 
-        if channel.id in {841342763102765106}:  # Ignored channels, only #tickets included
+        if before.channel.id in {841342763102765106}:  # Ignored channels, only #tickets included
             return
 
         embed = discord.Embed(title=f"Edited Message | {after.guild.name}",
