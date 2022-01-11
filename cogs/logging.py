@@ -21,7 +21,7 @@ class Logging(commands.Cog):
     # Deleted Message Logger
     @commands.Cog.listener(name="on_message_delete")
     async def on_message_delete(self, message):
-        if message.guild.id not in {857789766312394752, 739510335949635736}:
+        if message.guild.id not in {857789766312394752, 739510335949635736} or message.embeds:
             return
         
         channel = self.bot.get_channel(config.logs_channel_id)
@@ -49,7 +49,7 @@ class Logging(commands.Cog):
     # Edited Message Logger
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if after.guild.id not in {857789766312394752, 739510335949635736} or after.embeds:
+        if after.guild.id not in {857789766312394752, 739510335949635736} or before.embeds:
             return
         
         channel = self.bot.get_channel(config.logs_channel_id)
