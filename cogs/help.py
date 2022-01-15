@@ -66,7 +66,7 @@ class Help(commands.Cog):
 
                 help.add_field(
                     name=f"{cog} Commands!",
-                    value="``" + "`` | ``".join(command_list[cog]) + "``"
+                    value="`" + "` | `".join(command_list[cog]) + "`"
                 )
 
             help.set_footer(
