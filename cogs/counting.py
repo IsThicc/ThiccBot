@@ -67,7 +67,7 @@ class Counting(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
-    async def counting(self, ctx: discord.Context):
+    async def counting(self, ctx: commands.Context):
         async with self._lock:
             embed = discord.Embed(colour=discord.Colour.green())
             result = await self.bot.db.execute_one(

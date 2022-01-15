@@ -75,7 +75,7 @@ class Alphabet(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
-    async def alphabet(self, ctx: discord.Context):
+    async def alphabet(self, ctx: commands.Context):
         async with self._lock:
             embed = discord.Embed(colour=discord.Colour.green())
             result = await self.bot.db.execute_one(
@@ -87,7 +87,7 @@ class Alphabet(commands.Cog):
             if result is None:
                 embed.description = "You haven't setup alphabet in this channel yet!"
             else:
-                embed.description = f"You are currently at **{self.alphabet.index(result[0])}**"
+                embed.description = f"You are currently at **{result[0]}**"
 
             await ctx.send(embed=embed)
 
