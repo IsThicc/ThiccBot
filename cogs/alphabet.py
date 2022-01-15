@@ -118,7 +118,7 @@ class Alphabet(commands.Cog):
                 return
 
             next_letter = (self.alphabet.index(result[0]) + 1)
-            next_letter = next_letter if next_letter <= len(self.alphabet) else 0
+            next_letter = next_letter if next_letter <= (len(self.alphabet) - 1) else 0
 
             if next_letter != pos:
                 return await self.report_incorrect(message)
