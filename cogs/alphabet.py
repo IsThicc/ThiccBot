@@ -5,9 +5,10 @@
 #
 #
 import discord, asyncio, config, string, enum
-from discord  import Embed as em
+from discord import Embed as em
 from datetime import datetime as d
 from discord.ext import commands
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -20,6 +21,7 @@ class Modes(enum.Enum):
     Z_A = ""
     SKIP_TWO = ""
 """
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -72,6 +74,25 @@ class Alphabet(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @commands.command()
+    async def alphabet(self, ctx: discord.Context):
+        async with self._lock:
+            embed = discord.Embed(colour=discord.Colour.green())
+            result = await self.bot.db.execute_one(
+                "SELECT Letter FROM Alphabet WHERE ChannelID = {CHANNEL};".format(
+                    CHANNEL=self.alphabet_channel
+                )
+            )
+
+            if result is None:
+                embed.description = "You haven't setup counting in this channel yet!"
+            else:
+                embed.description = f"You are currently at **{self.alphabet.index(result[0])}**"
+
+            await ctx.send(embed=embed)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     # TODO: Determining what mode we're in. Ie. backwards, forwards, skip a letter, etc.
 
     @commands.Cog.listener(name="on_message")
@@ -94,7 +115,7 @@ class Alphabet(commands.Cog):
 
         async with self._lock:
             try:
-                result  = await self.bot.db.execute_one(
+                result = await self.bot.db.execute_one(
                     "SELECT Letter, LastUser FROM Alphabet WHERE ChannelID = {CHANNEL};".format(
                         CHANNEL=self.alphabet_channel
                     )
@@ -128,6 +149,7 @@ class Alphabet(commands.Cog):
                     .format(LETTER=self.alphabet[next_letter], USER=message.author.id, CHANNEL=self.alphabet_channel)
             )
             await self.good_react(message)
+
 
 #
 #

@@ -66,6 +66,25 @@ class Counting(commands.Cog):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    @commands.command()
+    async def counting(self, ctx: discord.Context):
+        async with self._lock:
+            embed = discord.Embed(colour=discord.Colour.green())
+            result = await self.bot.db.execute_one(
+                "SELECT Count FROM Counting WHERE ChannelID = {CHANNEL};".format(
+                    CHANNEL=self.counting_channel
+                )
+            )
+
+            if result is None:
+                embed.description = "You haven't setup counting in this channel yet!"
+            else:
+                embed.description = f"You are currently at **#{result[0]}**"
+
+            await ctx.send(embed=embed)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message: discord.Message):
 
