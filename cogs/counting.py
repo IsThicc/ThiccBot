@@ -79,7 +79,7 @@ class Counting(commands.Cog):
             if result is None:
                 embed.description = "You haven't setup counting in this channel yet!"
             else:
-                embed.description = f"You are currently at **#{result[0]}**"
+                embed.description = f"Counting is currently at **#{result[0]}**"
 
             await ctx.send(embed=embed)
 
