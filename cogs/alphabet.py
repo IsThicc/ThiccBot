@@ -85,7 +85,7 @@ class Alphabet(commands.Cog):
             )
 
             if result is None:
-                embed.description = "You haven't setup counting in this channel yet!"
+                embed.description = "You haven't setup alphabet in this channel yet!"
             else:
                 embed.description = f"You are currently at **{self.alphabet.index(result[0])}**"
 
