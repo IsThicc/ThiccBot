@@ -20,6 +20,9 @@ class Suggestions(commands.Cog):
         self.cache = []
         self.latest = None
 
+        self.up_emoji   = '⬆️'
+        self.down_emoji = '⬇️'
+
         self.suggestion_channel = config.suggestion_channel
         self.suggestion_submit_channel = config.suggestion_submit_channel
 
@@ -57,8 +60,8 @@ class Suggestions(commands.Cog):
  
         msg = await self.bot.get_channel(self.suggestion_channel).send(embed=embed)
 
-        await msg.add_reaction('⬆️')
-        await msg.add_reaction('⬇️')
+        await msg.add_reaction(self.up_emoji)
+        await msg.add_reaction(self.down_emoji)
 
         await message.reply(f'{msg.jump_url}', delete_after=5, mention_author=False)
         await message.delete()
@@ -66,37 +69,39 @@ class Suggestions(commands.Cog):
         self.cache.append(msg.id)
         self.latest = msg
 
-    #   saccept  [id]    (reason)
-    #   sdeny    [id]    (reason)
-    #   react with      ✅      to accept
-    #   react with      ❎      to deny
+        #   saccept  [id]    (reason)
+        #   sdeny    [id]    (reason)
+        #   react with      ✅      to accept
+        #   react with      ❎      to deny
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
-    @commands.has_role(config.staff_role)  # staff role
+    @commands.has_role(config.admin_role)  # staff role
     async def saccept(self, ctx, *args):
         await self.confirm(ctx, list(args), True)
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
     @commands.command()
-    @commands.has_role(config.staff_role)
+    @commands.has_role(config.admin_role)
     async def sdeny(self, ctx, *args):
         await self.confirm(ctx, list(args), False)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def confirm(self, ctx, args: list, accept: bool):
 
         # could be message id or suggestion index id
         uid = args.pop(0)
-        reason = ""
-        for arg in args:
-            reason += " " + arg
-
-        # # # # # # # # # # # #
+        reason = " ".join(arg for arg in args) if args else "No reason specified."
 
         async def do_thing(owner, target):
             embed = target.embeds[0]
             
             # ?saccept [id] (reason)
             if accept:
-                if "Accepted" in embed.footer:
+                if "Accepted" in embed.footer.text:
                     return await owner.send("That suggestion has already been accepted")
 
                 embed.color = discord.Colour.green()
@@ -106,7 +111,7 @@ class Suggestions(commands.Cog):
 
             # ?sdeny [id] (reason)
             else:
-                if "Denied" in embed.footer:
+                if "Denied" in embed.footer.text:
                     return await owner.send("That suggestion has already been denied")
 
                 embed.color = discord.Colour.red()
@@ -126,7 +131,7 @@ class Suggestions(commands.Cog):
                 await do_thing(ctx, msg)
 
             except Exception:
-                return await ctx.send("No message with that ID found")
+                return await ctx.send(f"No message with that ID found {e}")
 
         else:
             if self.latest.id == uid:
@@ -141,7 +146,9 @@ class Suggestions(commands.Cog):
 
             await ctx.send("No suggestion with that ID found in the cache, try using a message ID instead")
 
-    @commands.Cog.listener()
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.Cog.listener(name="on_raw_reaction_add")
     async def on_raw_reaction_add(self, payload):
         if payload.channel_id != self.suggestion_channel:
             return
@@ -149,12 +156,7 @@ class Suggestions(commands.Cog):
         isthicc = self.bot.get_guild(739510335949635736)
         member  = isthicc.get_member(payload.user_id)
 
-        x = False
-        for role in member.roles:
-            if role.id == 744012353808498808:
-                x = True
-                break
-        if not x:
+        if config.admin_role not in {role.id for role in member.roles}:
             return
 
         message = isthicc.get_channel(payload.channel_id)
@@ -162,12 +164,12 @@ class Suggestions(commands.Cog):
         embed = message.embeds[0]
         emoji = str(payload.emoji)
 
-        if emoji == "✅":
+        if emoji == self.up_emoji:  # "✅":
             embed.color = discord.Colour.green()
             embed.set_footer(text = "Status: Accepted")
             await message.edit(embed=embed)
 
-        elif emoji == "❎":
+        elif emoji == self.down_emoji:  # "❎":
             embed.color = discord.Colour.red()
             embed.set_footer(text = "Status: Denied")
             await message.edit(embed=embed)
