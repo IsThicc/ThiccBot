@@ -4,11 +4,10 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-from aiohttp.helpers import TimeoutHandle
-import discord, asyncio, re, datetime
-from discord import Embed as em
-from discord import team
+import discord, asyncio, re, datetime, config
+from discord import Embed as em, team
 from discord.ext import commands
+from aiohttp.helpers import TimeoutHandle
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -17,42 +16,46 @@ from discord.ext import commands
 class Suggestions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.index = 0
+        self.index = 0  # TODO: Move index to a db select because this won't be persistent
         self.cache = []
         self.latest = None
+
+        self.suggestion_channel = config.suggestion_channel
+        self.suggestion_submit_channel = config.suggestion_submit_channel
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
     async def on_message(self, message):
 
-        if message.channel.id != 801929449124790353 or message.author.bot: return
+        if message.channel.id != self.suggestion_submit_channel or message.author.bot:
+            return
         
-        #content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
+        # content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
             
         self.index += 1
         
-        embed = em( 
-            colour      =   discord.Colour.aqua(),
-            description =   message.content,
-            title       =   f"Suggestion #{self.index}",
-            timestamp   =   datetime.datetime.utcnow()
+        embed = em(
+            title=f"Suggestion #{self.index}",
+            colour=discord.Colour.blue(),
+            timestamp=datetime.datetime.utcnow(),
+            description=message.content
         ).set_author(
-            name        =   message.author,
-            icon_url    =   message.author.avatar_url
+            name=message.author,
+            icon_url=message.author.avatar_url
         ).set_footer(
-            text        =   "Status: Pending"
+            text="Status: Pending"
         )
 
         if message.attachments:
             try:
-               embed.set_image(url=attachment[0].url)
-               if len(message.attachments) != 1:
-                   embed.add_field("Attachments", "\n".join(a.url for a in message.attachments))
+                embed.set_image(url=message.attachments[0].url)
+                if len(message.attachments) != 1:
+                    embed.add_field("Attachments", "\n".join(a.url for a in message.attachments))
             except Exception as e:
                 await message.channel.send(e)
  
-        msg = await self.bot.get_channel(801929480875802624).send(embed=embed)
+        msg = await self.bot.get_channel(self.suggestion_channel).send(embed=embed)
 
         await msg.add_reaction('⬆️')
         await msg.add_reaction('⬇️')
@@ -69,19 +72,19 @@ class Suggestions(commands.Cog):
     #   react with      ❎      to deny
 
     @commands.command()
-    @commands.has_role(858814638502576148) # staff role
+    @commands.has_role(config.staff_role)  # staff role
     async def saccept(self, ctx, *args):
-        self.confirm(ctx, args, True)
+        await self.confirm(ctx, list(args), True)
 
     @commands.command()
-    @commands.has_role(858814638502576148)
+    @commands.has_role(config.staff_role)
     async def sdeny(self, ctx, *args):
-        self.confirm(ctx, args, False)
+        await self.confirm(ctx, list(args), False)
 
-    async def confirm(self, ctx, args, accept):
+    async def confirm(self, ctx, args: list, accept: bool):
 
         # could be message id or suggestion index id
-        uid = args.pop(0);
+        uid = args.pop(0)
         reason = ""
         for arg in args:
             reason += " " + arg
@@ -89,7 +92,7 @@ class Suggestions(commands.Cog):
         # # # # # # # # # # # #
 
         async def do_thing(owner, target):
-            embed = target.embeds[0];
+            embed = target.embeds[0]
             
             # ?saccept [id] (reason)
             if accept:
@@ -97,7 +100,7 @@ class Suggestions(commands.Cog):
                     return await owner.send("That suggestion has already been accepted")
 
                 embed.color = discord.Colour.green()
-                embed.set_footer(text = "Status: Accepted")
+                embed.set_footer(text="Status: Accepted")
 
                 await owner.send("Suggestion accepted")
 
@@ -107,40 +110,44 @@ class Suggestions(commands.Cog):
                     return await owner.send("That suggestion has already been denied")
 
                 embed.color = discord.Colour.red()
-                embed.set_footer(text = "Status: Denied")
+                embed.set_footer(text="Status: Denied")
 
                 await owner.send("Suggestion denied")
 
-            if reason != "":
+            if reason != "" or not reason.isspace():
                 embed.description = embed.description + "\n\nReason: " + reason
 
-            await target.edit(embeds = [embed])
+            await target.edit(embed=embed)
 
         if len(uid) > 10:
             try:
-                msg = await self.bot.get_channel(801929480875802624).fetch_message(uid)
-                do_thing(ctx, msg)
+                msg = self.bot.get_channel(self.suggestion_channel)
+                msg = await msg.fetch_message(uid)
+                await do_thing(ctx, msg)
 
-            except:
-                await ctx.send("No message with that ID found")
+            except Exception:
+                return await ctx.send("No message with that ID found")
 
         else:
             if self.latest.id == uid:
-                return do_thing(ctx, self.latest)
+                return await do_thing(ctx, self.latest)
 
             for id in self.cache:
                 if id == uid:
-                    msg = await self.guild.get_channel(801929480875802624).fetch_message(id)
-                    return do_thing(ctx, msg)
+                    msg = self.bot.get_guild(739510335949635736)
+                    msg = msg.get_channel(config.suggestion_channel)
+                    msg = await msg.fetch_message(id)
+                    return await do_thing(ctx, msg)
 
             await ctx.send("No suggestion with that ID found in the cache, try using a message ID instead")
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if payload.channel_id != 801929480875802624:
+        if payload.channel_id != self.suggestion_channel:
             return
 
-        member = self.guild.get_member(payload.user_id)
+        isthicc = self.bot.get_guild(739510335949635736)
+        member  = isthicc.get_member(payload.user_id)
 
         x = False
         for role in member.roles:
@@ -150,19 +157,21 @@ class Suggestions(commands.Cog):
         if not x:
             return
 
-        message = self.guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
+        message = isthicc.get_channel(payload.channel_id)
+        message = await message.fetch_message(payload.message_id)
         embed = message.embeds[0]
         emoji = str(payload.emoji)
 
         if emoji == "✅":
             embed.color = discord.Colour.green()
             embed.set_footer(text = "Status: Accepted")
-            await message.edit(embeds = [embed])
+            await message.edit(embed=embed)
 
         elif emoji == "❎":
             embed.color = discord.Colour.red()
             embed.set_footer(text = "Status: Denied")
-            await message.edit(embeds = [embed])
+            await message.edit(embed=embed)
+
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

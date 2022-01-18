@@ -12,6 +12,7 @@ mysql_user = "root"
 mysql_password = ""
 VERIFY_URL = ""
 
+staff_role = 0
 logs_channel_id = 0
 
 tickets_category_id = 0
@@ -20,6 +21,7 @@ tickets_open_channel_id = 0
 
 counting_channel = 0
 alphabet_channel = 0
+suggestion_channel = 0
 #
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

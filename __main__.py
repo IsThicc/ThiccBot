@@ -4,7 +4,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-import asyncio, os, aiomysql
+import asyncio, os, aiomysql, config  # FIXME: Make all imports use the config module, not from config
 from config   import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
 from discord  import Activity, ActivityType, Status, Intents
 from datetime import datetime, timezone
@@ -23,6 +23,9 @@ async def get_prefix(bot, message):
     :param message: Discord message.
     :return: Returns available prefix's.
     """
+    if "PREFIX" in dir(config):
+        return commands.when_mentioned_or(config.PREFIX)(bot, message)
+
     prefixes = ["I!", "i!", "isthicc ", "thicc "]
     # prefixes = ["t "]
     return commands.when_mentioned_or(*prefixes)(bot, message)
