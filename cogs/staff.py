@@ -102,7 +102,8 @@ class Staff(commands.Cog):
     @commands.has_role(744012353808498808)
     async def staff(self, ctx):
 
-        if ctx.invoked_subcommand is not None: return
+        if ctx.invoked_subcommand is not None:
+            return
 
         return await ctx.send(embed=em(
             title="Uh Oh!",
