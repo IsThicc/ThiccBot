@@ -43,7 +43,7 @@ class GitHub(commands.Cog):
 
             elif self.repo_cache is None:
                 await update_caches()
-                return self.repo_cache
+                return self.repo_cache  # noqa - self.repo_cache is updated in update_caches
             return self.repo_cache
 
         await update_caches()
@@ -75,7 +75,7 @@ class GitHub(commands.Cog):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     async def send_prs(self, ctx, prs, public: bool = True):
-        status = 'Public' if public else 'Private/Public'
+        status = ('Public' if public else 'Private/Public')
         if len(prs) == 0:
             return await ctx.send(embed=em(
                 title=f"No {status} Pull Requests are open in the IsThicc Organization!",
