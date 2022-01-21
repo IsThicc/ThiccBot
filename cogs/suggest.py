@@ -16,8 +16,8 @@ from aiohttp.helpers import TimeoutHandle
 
 #   saccept  [id]    (reason)
 #   sdeny    [id]    (reason)
-#   react with      ✅      to accept
-#   react with      ❎      to deny
+#   react with      ⬆️      to accept
+#   react with      ⬇️      to deny
 
 class Suggestions(commands.Cog):
     def __init__(self, bot):
