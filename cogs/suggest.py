@@ -13,19 +13,22 @@ from aiohttp.helpers import TimeoutHandle
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+
+#   saccept  [id]    (reason)
+#   sdeny    [id]    (reason)
+#   react with      ✅      to accept
+#   react with      ❎      to deny
+
 class Suggestions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.index = 0  # TODO: Move index to a db select because this won't be persistent
-        self.cache = []
-        self.latest = None
 
         self.up_emoji   = '⬆️'
         self.down_emoji = '⬇️'
 
         self.suggestion_channel = config.suggestion_channel
         self.suggestion_submit_channel = config.suggestion_submit_channel
-
+        
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.Cog.listener()
@@ -34,20 +37,23 @@ class Suggestions(commands.Cog):
         if message.channel.id != self.suggestion_submit_channel or message.author.bot:
             return
         
-        # content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
+        #content = re.sub(r'~~|\|\||__|\*\*|`+', "", message.content)
             
-        self.index += 1
-        
-        embed = em(
-            title=f"Suggestion #{self.index}",
-            colour=discord.Colour.blue(),
-            timestamp=datetime.datetime.utcnow(),
-            description=message.content
+        index = 1
+
+        if self.bot.db.execute("SELECT COUNT(*) FROM suggestions;") != 0:
+            index = self.bot.db.execute("SELECT MAX(index) FROM suggestions;") + 1
+
+        embed = em( 
+            title       =   f"Suggestion #{index}",
+            description =   message.content,
+            colour      =   discord.Colour.blue(),
+            timestamp   =   datetime.datetime.utcnow()
         ).set_author(
-            name=message.author,
-            icon_url=message.author.avatar_url
+            name        =   message.author,
+            icon_url    =   message.author.avatar_url
         ).set_footer(
-            text="Status: Pending"
+            text        =   "Status: Pending"
         )
 
         if message.attachments:
@@ -66,91 +72,25 @@ class Suggestions(commands.Cog):
         await message.reply(f'{msg.jump_url}', delete_after=5, mention_author=False)
         await message.delete()
 
-        self.cache.append(msg.id)
-        self.latest = msg
+        sql = "INSERT INTO suggestions (owner, index, id, content, status, reason) VALUES (%s, %s, %s, %s, %s, %s);"
+        sql = sql % (message.author.id, index, message.id, message.content, None, None)
+        
+        await self.bot.db.execute(sql)
 
-        #   saccept  [id]    (reason)
-        #   sdeny    [id]    (reason)
-        #   react with      ✅      to accept
-        #   react with      ❎      to deny
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        if message.channel_id != 801929480875802624:
+            return;
+        
+        if await self.db.execute(f"SELECT COUNT(id) FROM suggestions WHERE id = {message.id};") > 0:
+            await self.db.execute(f"DELETE FROM suggestions WHERE WHERE id = {message.id};")
 
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    @commands.command()
-    @commands.has_role(config.admin_role)  # staff role
-    async def saccept(self, ctx, *args):
-        await self.confirm(ctx, list(args), True)
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    @commands.command()
-    @commands.has_role(config.admin_role)
-    async def sdeny(self, ctx, *args):
-        await self.confirm(ctx, list(args), False)
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    async def confirm(self, ctx, args: list, accept: bool):
-
-        # could be message id or suggestion index id
-        uid = args.pop(0)
-        reason = " ".join(arg for arg in args) if args else "No reason specified."
-
-        async def do_thing(owner, target):
-            embed = target.embeds[0]
-            
-            # ?saccept [id] (reason)
-            if accept:
-                if "Accepted" in embed.footer.text:
-                    return await owner.send("That suggestion has already been accepted")
-
-                embed.color = discord.Colour.green()
-                embed.set_footer(text="Status: Accepted")
-
-                await owner.send("Suggestion accepted")
-
-            # ?sdeny [id] (reason)
-            else:
-                if "Denied" in embed.footer.text:
-                    return await owner.send("That suggestion has already been denied")
-
-                embed.color = discord.Colour.red()
-                embed.set_footer(text="Status: Denied")
-
-                await owner.send("Suggestion denied")
-
-            if reason != "" or not reason.isspace():
-                embed.description = embed.description + "\n\nReason: " + reason
-
-            await target.edit(embed=embed)
-
-        if len(uid) > 10:
-            try:
-                msg = self.bot.get_channel(self.suggestion_channel)
-                msg = await msg.fetch_message(uid)
-                await do_thing(ctx, msg)
-
-            except Exception:
-                return await ctx.send(f"No message with that ID found {e}")
-
-        else:
-            if self.latest.id == uid:
-                return await do_thing(ctx, self.latest)
-
-            for id in self.cache:
-                if id == uid:
-                    msg = self.bot.get_guild(739510335949635736)
-                    msg = msg.get_channel(config.suggestion_channel)
-                    msg = await msg.fetch_message(id)
-                    return await do_thing(ctx, msg)
-
-            await ctx.send("No suggestion with that ID found in the cache, try using a message ID instead")
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    @commands.Cog.listener(name="on_raw_reaction_add")
+    @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if payload.channel_id != self.suggestion_channel:
+            return
+
+        if await self.db.execute(f"SELECT COUNT(id) FROM suggestions WHERE id = {payload.message_id};") == 0:
             return
 
         isthicc = self.bot.get_guild(739510335949635736)
@@ -164,15 +104,94 @@ class Suggestions(commands.Cog):
         embed = message.embeds[0]
         emoji = str(payload.emoji)
 
-        if emoji == self.up_emoji:  # "✅":
+        if emoji == self.up_emoji:
             embed.color = discord.Colour.green()
             embed.set_footer(text = "Status: Accepted")
-            await message.edit(embed=embed)
+            await message.edit(embeds = [embed])
 
-        elif emoji == self.down_emoji:  # "❎":
+            sql = f"UPDATE suggestions SET status = True WHERE id = {payload.message_id};"
+            await self.bot.db.execute(sql)
+
+        elif emoji == self.down_emoji:
             embed.color = discord.Colour.red()
             embed.set_footer(text = "Status: Denied")
-            await message.edit(embed=embed)
+            await message.edit(embeds = [embed])
+
+            sql = f"UPDATE suggestions SET status = False WHERE id = {payload.message_id};"
+            await self.bot.db.execute(sql)
+    
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    @commands.command()
+    @commands.has_role(858814638502576148) # staff role
+    async def saccept(self, ctx, *args):
+        await self.confirm(ctx, list(args), True)
+
+    @commands.command()
+    @commands.has_role(858814638502576148)
+    async def sdeny(self, ctx, *args):
+        await self.confirm(ctx, list(args), False)
+
+    async def confirm(self, ctx, args, accept):
+
+        async def do_thing(owner, target):
+            reason = " ".join(arg for arg in args) if args else "No reason specified."
+            embed = target.embeds[0];
+            
+            # ?saccept [id] (reason)
+            if accept:
+                if "Accepted" in embed.footer.text:
+                    return await owner.send("That suggestion has already been accepted")
+
+                embed.color = discord.Colour.green()
+                embed.set_footer(text = "Status: Accepted")
+
+                await owner.send("Suggestion accepted")
+
+                sql = f"UPDATE suggestions SET status = True, reason = {reason} WHERE id = {target.id};"
+                await self.db.execute(sql)
+
+            # ?sdeny [id] (reason)
+            else:
+                if "Denied" in embed.footer.text:
+                    return await owner.send("That suggestion has already been denied")
+
+                embed.color = discord.Colour.red()
+                embed.set_footer(text = "Status: Denied")
+
+                await owner.send("Suggestion denied")
+
+                sql = f"UPDATE suggestions SET status = False, reason = {reason} WHERE id = {target.id};"
+                await self.db.execute(sql)
+
+            if reason != "" or not reason.isspace():
+                embed.description = embed.description + "\n\nReason: " + reason
+
+            await target.edit(embed=embed)
+
+        # # # # # # # # # # # # 
+
+        # could be message id, suggestion index or nothing to get the latest sent suggestion in the channel
+        uid = args.pop(0) if args[0].isdigit() else None;
+        channel = self.bot.get_channel(self.suggestion_channel)
+
+        # # # # # # # # # # # # 
+        
+        if uid == None:
+            return await do_thing(ctx, await channel.fetch_message(channel.last_message_id))
+
+        if await self.db.execute(f"SELECT COUNT(id) FROM suggestions WHERE index = {uid};") != 0:
+            ids = await self.db.execute(f"SELECT id FROM suggestions")
+
+            # TODO: Check this loop pls!!
+            for item in ids:
+                if item == uid:
+                    return await do_thing(ctx, await channel.fetch_message(item))
+
+        elif await self.db.execute(f"SELECT COUNT(id) FROM suggestions WHERE id = {uid};") != 0:
+            await do_thing(ctx, await channel.fetch_message(uid))
+
+        await ctx.send("No suggestion with that ID or index found in the db")
 
 #
 #
