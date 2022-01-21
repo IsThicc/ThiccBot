@@ -6,7 +6,7 @@
 #
 import asyncio, os, aiomysql
 from config   import TOKEN, mysql_db, mysql_host, mysql_password, mysql_user
-from discord  import Activity, ActivityType, Status, Intents
+from discord  import Activity, ActivityType, Status, Intents, Embed
 from datetime import datetime, timezone
 from db.database import Pool
 from discord.ext import commands
@@ -16,6 +16,20 @@ from discord_slash import SlashCommand
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
+class Bot(commands.Bot):
+    def embed_footer(self, embed: Embed, section: str, include_timestamp: bool = True):
+        if include_timestamp:
+            embed.timestamp = datetime.utcnow()
+
+        return embed.set_footer(
+            text=f"IsThicc {section}",
+            icon_url=self.user.avatar_url
+        )
+
+    ef = embed_footer
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 async def get_prefix(bot, message):
     """
     Get the bot's prefix.
@@ -29,7 +43,7 @@ async def get_prefix(bot, message):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-bot = commands.Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
+bot = Bot(command_prefix=get_prefix, intents=Intents.all(), case_insensitive=True)
 bot.slash = SlashCommand(bot)
 bot.remove_command('help')
 bot.load_extension('jishaku')
@@ -62,10 +76,8 @@ bot.loop.run_until_complete(_init_async())
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #
-dont_import = {"dontimportme.py"}
-
 for cog in os.listdir("cogs"):
-    if cog.endswith('.py') and cog not in dont_import:
+    if cog.endswith('.py') and not cog.startswith('_'):
         bot.load_extension(f"cogs.{cog[:-3]}")
         print(f"Loaded cog: cogs.{cog[:-3]}")
 
