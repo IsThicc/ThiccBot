@@ -72,8 +72,8 @@ class Suggestions(commands.Cog):
         await message.reply(f'{msg.jump_url}', delete_after=5, mention_author=False)
         await message.delete()
 
-        sql = "INSERT INTO suggestions (owner, index, id, content, status, reason) VALUES (%s, %s, %s, %s, %s, %s);"
-        sql = sql % (message.author.id, index, message.id, message.content, None, None)
+        sql = "INSERT INTO suggestions (index, id, status) VALUES (%s, %s, %s);"
+        sql = sql % (index, message.id, None)
         
         await self.bot.db.execute(sql)
 
@@ -107,23 +107,21 @@ class Suggestions(commands.Cog):
         if emoji == self.up_emoji:
             embed.color = discord.Colour.green()
             embed.set_footer(text = "Status: Accepted")
-            await message.edit(embeds = [embed])
 
-            sql = f"UPDATE suggestions SET status = True WHERE id = {payload.message_id};"
-            await self.bot.db.execute(sql)
+            await message.edit(embeds = [embed])
+            await self.bot.db.execute(f"UPDATE suggestions SET status = True WHERE id = {payload.message_id};")
 
         elif emoji == self.down_emoji:
             embed.color = discord.Colour.red()
             embed.set_footer(text = "Status: Denied")
-            await message.edit(embeds = [embed])
 
-            sql = f"UPDATE suggestions SET status = False WHERE id = {payload.message_id};"
-            await self.bot.db.execute(sql)
+            await message.edit(embeds = [embed])
+            await self.bot.db.execute(f"UPDATE suggestions SET status = False WHERE id = {payload.message_id};")
     
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     @commands.command()
-    @commands.has_role(858814638502576148) # staff role
+    @commands.has_role(858814638502576148)
     async def saccept(self, ctx, *args):
         await self.confirm(ctx, list(args), True)
 
