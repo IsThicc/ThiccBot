@@ -31,3 +31,12 @@ CREATE TABLE IF NOT EXISTS Alphabet (
     Letter    VARCHAR(1) NOT NULL DEFAULT 'a',
     ChannelID BIGINT     NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS suggestions (
+    owner   BIGINT      NOT NULL, 
+    index   INT         NOT NULL, 
+    id      BIGINT      NOT NULL, 
+    content TEXT        NOT NULL, 
+    status  BOOL, 
+    reason  TEXT
+);

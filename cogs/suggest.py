@@ -79,7 +79,7 @@ class Suggestions(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if message.channel_id != 801929480875802624:
+        if message.channel_id != self.suggestion_channel:
             return;
         
         if await self.db.execute(f"SELECT COUNT(id) FROM suggestions WHERE id = {message.id};") > 0:
